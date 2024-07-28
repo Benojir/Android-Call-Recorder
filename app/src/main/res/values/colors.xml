@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_500">#04BAA8</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="hp_theme_color_light">#FC2258</color>
+    <color name="hp_theme_color_dark">#111111</color>
+    <color name="selected_item_color">#F1D8DF</color>
+    <color name="dark_yellow">#FFC107</color>
+    <color name="dark_grey">#2B2A2A</color>
+    <color name="light_link_blue">#2196F3</color>
+</resources>

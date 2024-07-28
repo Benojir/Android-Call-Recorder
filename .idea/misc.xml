@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/border_style.xml" value="0.216" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_info.xml" value="0.216" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_mode_edit_24.xml" value="0.216" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_settings_24.xml" value="0.216" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/shape_for_dialog_box.xml" value="0.216" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/activity_settings.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/bottom_sheet_dialog_control_btns.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/dialog_property_file.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/dialog_rename_file.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/header_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/sample_rv_layout_main_activity.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/appearance_value_popup_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/nav_drawer_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/sort_by_popup_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/done_icon.xml" value="0.2185" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_done_24.xml" value="0.2185" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_keyboard_voice.xml" value="0.2185" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_settings_24.xml" value="0.2165" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_unselect_all_24.xml" value="0.2185" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/activity_main.xml" value="0.35833333333333334" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/activity_settings.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/bottom_sheet_dialog_control_btns.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/bottom_sheet_dialog_selected_ctrl_btns.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/dialog_property_file.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/dialog_rename_file.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/header_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/sample_rv_layout_main_activity.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/menu_dropdown_right_corner.xml" value="0.36666666666666664" />
+        <entry key="..\:/Hidden-Pirates/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/nav_drawer_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call Recorder/app/src/main/res/drawable/ic_baseline_check_circle_24.xml" value="0.229" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call Recorder/app/src/main/res/drawable/ic_get_app.xml" value="0.229" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call Recorder/app/src/main/res/drawable/ic_keyboard_voice.xml" value="0.229" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call Recorder/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call Recorder/app/src/main/res/layout/activity_start_forground.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call Recorder/app/src/main/res/layout/overlay_layout.xml" value="0.36102564102564105" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call Recorder/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.229" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/bottom_sheet_round_corder.xml" value="0.23" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/done_icon.xml" value="0.216" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_browser_icon.xml" value="0.2265" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_delete_24.xml" value="0.216" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_donation.xml" value="0.2265" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_get_app.xml" value="0.1395" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_mode_edit_24.xml" value="0.216" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/drawable/ic_play_arrow_24.xml" value="0.1055" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/activity_main.xml" value="0.36102564102564105" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/activity_settings.xml" value="0.3574074074074074" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/bottom_sheet_dialog_control_btns.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/fragment_bottom_sheet_on_file_click.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/header_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/sample_edittext_layout.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/sample_rv_layout_main_activitry.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/layout/toolbar.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/menu_dropdown_right_corner.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/more_options_in_download_btn.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/nav_drawer_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/sidebar_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/menu/sort_by_menu.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/xml/provider_paths.xml" value="0.36666666666666664" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/Call-Recorder/app/src/main/res/xml/shortcuts.xml" value="0.18802083333333333" />
+        <entry key="..\:/My_Files_Pogramms/Android_Projects/VoiceRecorder/app/src/main/res/layout/activity_main.xml" value="0.36666666666666664" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.15589569160997732" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

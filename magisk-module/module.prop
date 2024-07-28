@@ -1,0 +1,7 @@
+id=com.venomdino.callrecorder
+name=Call Recorder
+version=v1.0
+versionCode=1
+author=VenomDino
+description=Record calls automatically without announcement.
+updateJson=https://github.com/VenomDino/Android-Call-Recorder/raw/master/magisk/updates/release/info.json

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:elevation="5dp"
+    android:background="?attr/main_theme_color"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
+    app:title="@string/app_name"
+    app:titleTextAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+    android:focusable="true"
+    android:layout_marginBottom="10dp">
+</androidx.appcompat.widget.Toolbar>

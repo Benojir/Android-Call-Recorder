@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Call Recorder</string>
+
+    <string name="not_system_app_message_title">App is not a system app.</string>
+    <string name="not_system_app_message_body">
+        After Android 9 or greater, it is not possible to record calls by using third party apps. So that\'s why you have to manually make this app as a system app. If you don\'t know how to make a third party app to system app, then you should read this tutorial post.
+    </string>
+    <string name="tutorial_post_link">https://www.droidwin.com/how-to-convert-any-android-app-to-system-app/</string>
+    <string name="header_layout_sub_text">Call Recorder</string>
+    <string name="app_sharing_message">"Best automatic call recorder ever. Download it from GitHub now. "</string>
+
+    <string name="sort_by_new">Newest</string>
+    <string name="sort_by_old">Oldest</string>
+    <string name="sort_by_name_ascending">A-Z (Ascending)</string>
+    <string name="sort_by_name_descending">Z-A (Descending)</string>
+    <string name="device_default">Device default</string>
+    <string name="dark_mode">Dark mode</string>
+    <string name="light_mode">Light mode</string>
+
+    <string name="compose_shortcut_label_for_settings">Settings</string>
+
+    <string name="report_issue_text">Something went wrong. Please report this issue.</string>
+
+    <string name="github_release_page_link">https://github.com/VenomDino/Android-Call-Recorder/releases</string>
+    <string name="github_release_tag_page_link">https://github.com/VenomDino/Android-Call-Recorder/releases/tag/</string>
+
+    <string name="app_issue_page_link">https://github.com/VenomDino/Android-Call-Recorder/issues/</string>
+    <string name="more_apps_in_play_store">https://play.google.com/store/search?q=pub: Creative Papa&amp;c=apps</string>
+    <string name="website_link">https://venomdino.github.io/portfolio</string>
+    <string name="github_profile_link">https://github.com/VenomDino</string>
+    <string name="facebook_page_link">https://t.me/CreativePapa</string>
+    <string name="donation_page_link">https://t.me/CreativePapa</string>
+    <string name="app_info_page_opening_failed_message">Failed to open application setting info page. Please open app info page and allow all permissions manually from settings.</string>
+
+</resources>

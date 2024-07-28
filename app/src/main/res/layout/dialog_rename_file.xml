@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_for_dialog_box"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    tools:ignore="HardcodedText">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name:"
+        android:textSize="18sp"
+        android:paddingTop="10dp"
+        android:textColor="?attr/text_color"
+        android:paddingBottom="10dp"/>
+
+    <EditText
+        android:id="@+id/new_file_name_et"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:hint="Enter new name"
+        tools:ignore="Autofill"
+        android:textSize="17sp"
+        android:singleLine="true"
+        android:ellipsize="middle"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:inputType="text"
+        android:background="@drawable/border_style" />
+
+    <LinearLayout
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:weightSum="2"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/rename_confirm_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Rename"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/rename_cancel_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Cancel"
+            style="?android:attr/buttonBarButtonStyle"
+            tools:ignore="ButtonOrder" />
+    </LinearLayout>
+
+</LinearLayout>
