@@ -8,7 +8,7 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="hp_theme_color_light">#FC2258</color>
-    <color name="hp_theme_color_dark">#111111</color>
+    <color name="hp_theme_color_dark">#1E1E1E</color>
     <color name="selected_item_color">#F1D8DF</color>
     <color name="dark_yellow">#FFC107</color>
     <color name="dark_grey">#2B2A2A</color>

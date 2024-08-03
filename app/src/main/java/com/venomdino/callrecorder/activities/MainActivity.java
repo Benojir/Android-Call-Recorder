@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //--------------------------------------------------------------------------------------------------
+
         if (new SharedPrefs(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.dark_mode))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else if (new SharedPrefs(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.light_mode))) {

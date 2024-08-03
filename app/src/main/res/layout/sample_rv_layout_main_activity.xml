@@ -12,7 +12,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:layout_marginBottom="3dp"
     android:focusable="true"
-    android:backgroundTint="?attr/recording_item_bg">
+    android:backgroundTint="?attr/recordingItemBg">
 
     <RelativeLayout
         android:padding="10dp"
@@ -34,7 +34,7 @@
                 android:layout_marginBottom="5dp"
                 android:singleLine="true"
                 android:text="+915454552522d Nur Alam"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:textSize="17sp" />
 
             <TextView

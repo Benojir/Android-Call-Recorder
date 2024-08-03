@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="?attr/colorOnPrimary">
+    android:background="?attr/backgroundColor">
 
     <LinearLayout
         android:id="@+id/fileNameContainerLLinBottomDialog"
@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textAlignment="center"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/textColor"
             android:textSize="18sp"
             android:padding="10dp" />
     </LinearLayout>
@@ -37,7 +37,7 @@
         card_view:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/backgroundColor"
         android:focusable="true">
 
         <LinearLayout
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Select"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -78,7 +78,7 @@
         card_view:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/backgroundColor"
         android:focusable="true">
 
         <LinearLayout
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Play"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -120,7 +120,7 @@
         card_view:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/backgroundColor"
         android:focusable="true">
 
         <LinearLayout
@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Share"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -162,7 +162,7 @@
         card_view:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/backgroundColor"
         android:focusable="true">
 
         <LinearLayout
@@ -183,7 +183,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rename"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -203,7 +203,7 @@
         card_view:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/backgroundColor"
         android:focusable="true">
 
         <LinearLayout
@@ -224,7 +224,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delete"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -244,7 +244,7 @@
         card_view:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/colorOnPrimary"
+        android:backgroundTint="?attr/backgroundColor"
         android:focusable="true">
 
         <LinearLayout
@@ -265,7 +265,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Property"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>

@@ -12,7 +12,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/nav_header_img"
-        android:background="?attr/main_theme_color"
+        android:background="?attr/backgroundColor"
         android:contentDescription="App Logo"
         tools:ignore="HardcodedText"
         android:layout_marginTop="10dp"

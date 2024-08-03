@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Select all"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -52,10 +52,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="0dp"
+        app:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:focusable="true"
@@ -71,15 +70,16 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_deselect_24"
                 android:layout_marginEnd="10dp"
-                android:contentDescription="Play" />
+                android:contentDescription="Play"
+                android:src="@drawable/ic_deselect_24"
+                tools:ignore="ImageContrastCheck" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Deselect all"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -93,10 +93,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="5dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="0dp"
+        app:cardUseCompatPadding="false"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
         android:focusable="true">
@@ -111,16 +110,17 @@
             <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/ic_share_24"
                 android:layout_marginEnd="10dp"
+                android:contentDescription="Play"
+                android:src="@drawable/ic_share_24"
                 app:tint="@color/teal_500"
-                android:contentDescription="Play" />
+                tools:ignore="ImageContrastCheck" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Share"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
@@ -160,7 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delete"
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:layout_gravity="center_vertical"
                 android:textSize="18sp"
                 android:textStyle="bold"/>

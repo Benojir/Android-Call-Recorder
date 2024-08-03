@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layoutDirection="rtl"
             android:text="Show recording start toast"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/textColor"
             android:textSize="17sp" />
 
       </RelativeLayout>
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layoutDirection="rtl"
             android:text="Show recording saved toast"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/textColor"
             android:textSize="17sp" />
 
       </RelativeLayout>
@@ -95,7 +95,7 @@
             android:layout_height="wrap_content"
             android:text="Appearance:"
             android:textSize="17sp"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/textColor"
             android:layout_marginBottom="5dp"/>
 
         <TextView
@@ -105,7 +105,7 @@
             android:layout_height="wrap_content"
             android:text="Device default"
             android:textSize="13sp"
-            android:textColor="?attr/text_color"/>
+            android:textColor="?attr/textColor"/>
 
       </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -130,7 +130,7 @@
             android:layout_height="wrap_content"
             android:layoutDirection="ltr"
             android:text="Call recording"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/textColor"
             android:textSize="17sp" />
 
       </RelativeLayout>
@@ -160,7 +160,7 @@
             android:layout_height="wrap_content"
             android:text="Sort recordings by:"
             android:textSize="17sp"
-            android:textColor="?attr/text_color"
+            android:textColor="?attr/textColor"
             android:layout_marginBottom="5dp"/>
 
         <TextView
@@ -170,7 +170,7 @@
             android:layout_height="wrap_content"
             android:text="Newest first"
             android:textSize="13sp"
-            android:textColor="?attr/text_color"/>
+            android:textColor="?attr/textColor"/>
 
       </LinearLayout>
     </androidx.cardview.widget.CardView>

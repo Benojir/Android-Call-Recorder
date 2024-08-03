@@ -66,7 +66,7 @@
                 android:id="@+id/total_file_loading_progressbar"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:indeterminateTint="?attr/main_theme_color" />
+                android:indeterminateTint="?attr/backgroundColor" />
 
             <TextView
                 android:id="@+id/total_file_loaded_tv"
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:text="Files are sorting..."
-                android:textColor="?attr/text_color"
+                android:textColor="?attr/textColor"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -87,7 +87,7 @@
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="25dp"
             android:adjustViewBounds="true"
-            android:backgroundTint="?attr/main_theme_color"
+            android:backgroundTint="?attr/backgroundColor"
             android:contentDescription="Scroll to Top"
             android:src="@drawable/ic_arrow_upward"
             app:borderWidth="0dp"
@@ -104,7 +104,7 @@
             android:layout_marginEnd="25dp"
             android:layout_marginBottom="25dp"
             android:adjustViewBounds="true"
-            android:backgroundTint="?attr/main_theme_color"
+            android:backgroundTint="?attr/backgroundColor"
             android:contentDescription="Scroll to Top"
             android:src="@drawable/ic_arrow_downward"
             app:borderWidth="0dp"
