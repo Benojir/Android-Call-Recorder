@@ -41,7 +41,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.venomdino.callrecorder.BuildConfig;
 import com.venomdino.callrecorder.R;
-import com.venomdino.callrecorder.adapters.RVAdapterFileList;
+import com.venomdino.callrecorder.adapters.RecordingsListRVAdapter;
 import com.venomdino.callrecorder.helpers.CustomFunctions;
 import com.venomdino.callrecorder.helpers.SharedPrefs;
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     public static MenuItem searchBtn, settingsBtn, menu_selected_items_count;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private RVAdapterFileList rvAdapterFileList;
+    private RecordingsListRVAdapter recordingsListRVAdapter;
     private FloatingActionButton scrollBackToTopBtn, scrollToBottomBtn;
     private TextView totalFileLoadedTv;
     private final JSONArray allFilesInformationJsonArray = new JSONArray();
@@ -303,8 +303,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 fileLoadingInfoContainer.setVisibility(View.GONE);
 
-                                rvAdapterFileList = new RVAdapterFileList(MainActivity.this, allFilesInformationJsonArray, allPositions, allFilesUriList);
-                                allFilesRecyclerView.setAdapter(rvAdapterFileList);
+                                recordingsListRVAdapter = new RecordingsListRVAdapter(MainActivity.this, allFilesInformationJsonArray, allPositions, allFilesUriList);
+                                allFilesRecyclerView.setAdapter(recordingsListRVAdapter);
 
                                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -379,7 +379,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                rvAdapterFileList.getFilter().filter(newText);
+                recordingsListRVAdapter.getFilter().filter(newText);
                 return false;
             }
         });

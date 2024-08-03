@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="?attr/backgroundColor">
+    tools:ignore="ContentDescription">
 
     <LinearLayout
         android:id="@+id/fileNameContainerLLinBottomDialog"
@@ -16,262 +16,112 @@
         android:background="?android:attr/selectableItemBackground">
 
         <TextView
-            android:id="@+id/fileNameTVinBottomDialog"
+            android:id="@+id/fileNameTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_name"
             android:textAlignment="center"
             android:textColor="?attr/textColor"
             android:textSize="18sp"
-            android:padding="10dp" />
+            android:paddingVertical="10dp"
+            android:paddingHorizontal="20dp"/>
     </LinearLayout>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/selectBtnCV"
+    <TextView
+        android:id="@+id/selectOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        android:text="@string/select"
+        android:textColor="?attr/textColor"
+        android:layout_gravity="center_vertical"
+        app:drawableLeftCompat="@drawable/ic_done_24"
+        android:drawablePadding="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/backgroundColor"
-        android:focusable="true">
+        android:textSize="18sp"/>
 
-        <LinearLayout
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_done_24"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="Play" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select"
-                android:textColor="?attr/textColor"
-                android:layout_gravity="center_vertical"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/playBtnCV"
+    <TextView
+        android:id="@+id/playOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        android:text="@string/play"
+        android:textColor="?attr/textColor"
+        android:layout_gravity="center_vertical"
+        app:drawableLeftCompat="@drawable/ic_play_circle_24"
+        android:drawablePadding="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/backgroundColor"
-        android:focusable="true">
+        android:textSize="18sp"/>
 
-        <LinearLayout
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_play_circle_24"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="Play" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Play"
-                android:textColor="?attr/textColor"
-                android:layout_gravity="center_vertical"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/shareRecordingBtnCV"
+    <TextView
+        android:id="@+id/shareOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        android:text="@string/share"
+        android:textColor="?attr/textColor"
+        android:layout_gravity="center_vertical"
+        app:drawableLeftCompat="@drawable/ic_share_24"
+        android:drawablePadding="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/backgroundColor"
-        android:focusable="true">
+        android:textSize="18sp"/>
 
-        <LinearLayout
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_share_24"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="Play"
-                app:tint="@color/teal_500"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Share"
-                android:textColor="?attr/textColor"
-                android:layout_gravity="center_vertical"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/renameBtnCV"
+    <TextView
+        android:id="@+id/renameOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        android:text="@string/rename"
+        android:textColor="?attr/textColor"
+        android:layout_gravity="center_vertical"
+        app:drawableLeftCompat="@drawable/ic_mode_edit_24"
+        android:drawablePadding="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/backgroundColor"
-        android:focusable="true">
+        android:textSize="18sp"/>
 
-        <LinearLayout
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_mode_edit_24"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="Play" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rename"
-                android:textColor="?attr/textColor"
-                android:layout_gravity="center_vertical"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/deleteBtnCV"
+    <TextView
+        android:id="@+id/deleteOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        android:text="@string/delete"
+        android:textColor="?attr/textColor"
+        android:layout_gravity="center_vertical"
+        app:drawableLeftCompat="@drawable/ic_delete_24"
+        android:drawablePadding="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/backgroundColor"
-        android:focusable="true">
+        android:textSize="18sp"/>
 
-        <LinearLayout
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_delete_24"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="Play" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Delete"
-                android:textColor="?attr/textColor"
-                android:layout_gravity="center_vertical"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/infoBtnCV"
+    <TextView
+        android:id="@+id/showFileInfoOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="HardcodedText"
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        card_view:cardCornerRadius="0dp"
-        card_view:cardElevation="0dp"
-        card_view:cardUseCompatPadding="false"
+        android:text="@string/properties"
+        android:textColor="?attr/textColor"
+        android:layout_gravity="center_vertical"
+        app:drawableLeftCompat="@drawable/ic_info"
+        android:drawablePadding="10dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp"
         android:clickable="true"
+        android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:backgroundTint="?attr/backgroundColor"
-        android:focusable="true">
-
-        <LinearLayout
-            android:padding="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_info"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="Play" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Property"
-                android:textColor="?attr/textColor"
-                android:layout_gravity="center_vertical"
-                android:textSize="18sp"
-                android:textStyle="bold"/>
-
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"/>
 
 </LinearLayout>
