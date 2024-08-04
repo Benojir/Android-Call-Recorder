@@ -3,7 +3,7 @@
     <shortcut
         android:shortcutId="settings"
         android:enabled="true"
-        android:icon="@drawable/ic_settings_for_shortcut_24"
+        android:icon="@drawable/settings_for_shortcut_24"
         android:shortcutShortLabel="@string/compose_shortcut_label_for_settings"
         android:shortcutLongLabel="@string/compose_shortcut_label_for_settings">
         <intent

@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity {
 
             builder.setTitle(getString(R.string.not_system_app_message_title));
             builder.setMessage(getString(R.string.not_system_app_message_body));
-            builder.setIcon(R.drawable.ic_error);
+            builder.setIcon(R.drawable.error);
             builder.setCancelable(false);
             builder.setPositiveButton("Ok", (dialog, which) -> {
                 dialog.dismiss();
@@ -446,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
             } catch (Exception e) {
-                CustomFunctions.simpleAlert(this, "Error", getString(R.string.app_info_page_opening_failed_message), "Ok", AppCompatResources.getDrawable(this, R.drawable.ic_error));
+                CustomFunctions.simpleAlert(this, "Error", getString(R.string.app_info_page_opening_failed_message), "Ok", AppCompatResources.getDrawable(this, R.drawable.error));
             }
         } else {
 

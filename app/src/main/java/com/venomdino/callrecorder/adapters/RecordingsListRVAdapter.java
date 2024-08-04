@@ -187,7 +187,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     builder.setCancelable(true);
                     builder.setTitle("Delete files");
                     builder.setMessage("Selected files will be deleted.");
-                    builder.setIcon(R.drawable.ic_delete_24);
+                    builder.setIcon(R.drawable.delete_24);
                     builder.setPositiveButton("Delete", (dialogInterface, i) -> {
 
                         selectedItemsPositionsList.sort(Collections.reverseOrder());
@@ -298,7 +298,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     builder.setCancelable(true);
                     builder.setTitle("Delete");
                     builder.setMessage("Do you really want to delete?");
-                    builder.setIcon(R.drawable.ic_delete_24);
+                    builder.setIcon(R.drawable.delete_24);
                     builder.setPositiveButton("Delete", (dialogInterface, i) -> {
                         try {
 
@@ -365,7 +365,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                                 .setTitle("Rename to:")
                                 .setView(container)
                                 .setCancelable(false)
-                                .setIcon(R.drawable.ic_mode_edit_24)
+                                .setIcon(R.drawable.mode_edit_24)
                                 .setPositiveButton("Rename", (dialogInterface, i) -> {
 
                                     String newName = inputField.getText().toString();

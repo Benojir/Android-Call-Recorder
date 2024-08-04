@@ -13,13 +13,13 @@
     <item
         android:title="Search"
         android:id="@+id/menu_search_action"
-        android:icon="@drawable/ic_search_24"
+        android:icon="@drawable/search_24"
         app:showAsAction="ifRoom"
         app:actionViewClass="androidx.appcompat.widget.SearchView"/>
 
     <item
         android:title="Settings"
         android:id="@+id/menu_settings_action"
-        android:icon="@drawable/ic_settings_24"
+        android:icon="@drawable/settings_24"
         app:showAsAction="always" />
 </menu>

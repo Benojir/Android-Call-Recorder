@@ -9,12 +9,12 @@
             <item
                 android:id="@+id/check_update_action"
                 android:title="Check New Update"
-                android:icon="@drawable/ic_update_24"/>
+                android:icon="@drawable/update_24"/>
 
             <item
                 android:id="@+id/donate_me_action"
                 android:title="Donate"
-                android:icon="@drawable/ic_donation"/>
+                android:icon="@drawable/donation"/>
         </menu>
     </item>
     <item android:title="Feedback"
@@ -32,7 +32,7 @@
             <item
                 android:id="@+id/share_app_action"
                 android:title="Share"
-                android:icon="@drawable/ic_share_24"/>
+                android:icon="@drawable/share_24"/>
 
             <item
                 android:id="@+id/more_app_action"
@@ -46,17 +46,17 @@
             <item
                 android:id="@+id/visitWeb_app_action"
                 android:title="Website"
-                android:icon="@drawable/ic_browser_icon"/>
+                android:icon="@drawable/browser_icon"/>
 
             <item
                 android:id="@+id/visitGitHub_app_action"
                 android:title="GitHub"
-                android:icon="@drawable/ic_github"/>
+                android:icon="@drawable/github"/>
 
             <item
                 android:id="@+id/visitFb_app_action"
                 android:title="Facebook"
-                android:icon="@drawable/ic_facebook"/>
+                android:icon="@drawable/facebook"/>
         </menu>
 
     </item>

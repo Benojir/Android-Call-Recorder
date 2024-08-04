@@ -49,7 +49,7 @@ public class RecorderInCallService extends InCallService {
 
                         notificationBuilder.setContentTitle("Call Recorder");
                         notificationBuilder.setContentText("Call recording in progress");
-                        notificationBuilder.setSmallIcon(R.drawable.ic_keyboard_voice);
+                        notificationBuilder.setSmallIcon(R.drawable.keyboard_voice);
                         notificationBuilder.setOngoing(true);
 
 
