@@ -42,5 +42,6 @@
     <string name="deselect_all">Deselect All</string>
     <string name="share_selected">Share</string>
     <string name="delete_selected">Delete</string>
+    <string name="unknown">Unknown</string>
 
 </resources>

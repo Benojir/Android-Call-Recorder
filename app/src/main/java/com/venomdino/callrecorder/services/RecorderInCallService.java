@@ -15,7 +15,7 @@ import androidx.core.app.NotificationCompat;
 import com.venomdino.callrecorder.BuildConfig;
 import com.venomdino.callrecorder.R;
 import com.venomdino.callrecorder.helpers.RecordingHelper;
-import com.venomdino.callrecorder.helpers.SharedPrefs;
+import com.venomdino.callrecorder.helpers.SharedPreferencesHelper;
 
 public class RecorderInCallService extends InCallService {
 
@@ -42,7 +42,7 @@ public class RecorderInCallService extends InCallService {
                 if (state == Call.STATE_ACTIVE) {
 
 
-                    if (new SharedPrefs(sContext).isCallRecordingEnabled()) {
+                    if (new SharedPreferencesHelper(sContext).isCallRecordingEnabled()) {
                         createNotificationChannel();
 
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(sContext, CHANNEL_ID);

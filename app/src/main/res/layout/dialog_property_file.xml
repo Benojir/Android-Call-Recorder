@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="15dp"
     android:background="@drawable/shape_for_dialog_box"
@@ -45,7 +44,6 @@
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
             android:textSize="17sp" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -63,32 +61,18 @@
             android:textColor="?attr/textColor"
             android:textSize="16sp" />
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/fileDurationCVinFilePropertyDialog"
+        <TextView
+            android:id="@+id/callDurationTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="4dp"
             android:layout_marginStart="20dp"
+            android:text="14:05:51"
+            android:textColor="?attr/textColor"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardElevation="0dp"
-            app:cardUseCompatPadding="false"
-            tools:ignore="TouchTargetSizeCheck">
-
-            <TextView
-                android:id="@+id/fileDurationTVinFilePropertyDialog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
-                android:text="00:12:47"
-                android:textColor="?attr/textColor"
-                android:textSize="17sp" />
-
-        </androidx.cardview.widget.CardView>
-
+            android:textSize="17sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -106,33 +90,19 @@
             android:textColor="?attr/textColor"
             android:textSize="16sp" />
 
-        <androidx.cardview.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/filePathCVinFilePropertyDialog"
+        <TextView
+            android:id="@+id/filePathTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:paddingHorizontal="4dp"
             android:layout_marginStart="20dp"
+            android:text="File path here"
+            android:textColor="?attr/textColor"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            app:cardBackgroundColor="@android:color/transparent"
-            card_view:cardElevation="0dp"
-            card_view:cardUseCompatPadding="false">
-
-            <TextView
-                android:id="@+id/fileLocationTVinFilePropertyDialog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="4dp"
-                android:paddingEnd="4dp"
-                android:text="Open in File ManagerOpen in File ManagerOpen in File ManagerOpen in File Manager"
-                android:textColor="?attr/textColor"
-                android:textSize="17sp" />
-
-        </androidx.cardview.widget.CardView>
-
+            android:textSize="17sp" />
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -149,20 +119,19 @@
             android:textColor="?attr/textColor"
             android:textSize="16sp" />
 
-
         <TextView
-            android:id="@+id/typeTVinFilePropertyDialog"
+            android:id="@+id/fileTypeTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
+            android:paddingHorizontal="4dp"
             android:layout_marginStart="20dp"
-            android:text="Audio (M4A)"
+            android:text="Audio (.m4a)"
             android:textColor="?attr/textColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
             android:textSize="17sp" />
-
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -179,20 +148,20 @@
             android:textColor="?attr/textColor"
             android:textSize="16sp" />
 
-
         <TextView
-            android:id="@+id/fileSizeTVinFilePropertyDialog"
+            android:id="@+id/fileSizeTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
             android:layout_marginStart="20dp"
-            android:text="Open in File ManagerOpen in File ManagerOpen in File ManagerOpen in File Manager"
+            android:text="13.5 MB"
             android:textColor="?attr/textColor"
-            android:textSize="17sp" />
-
+            android:textSize="17sp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"/>
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -205,23 +174,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:text="Modified:"
+            android:text="Last Modified:"
             android:textColor="?attr/textColor"
             android:textSize="16sp" />
 
-
         <TextView
-            android:id="@+id/fileModifiedTVinFilePropertyDialog"
+            android:id="@+id/lastModifiedTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
             android:layout_marginStart="20dp"
-            android:text="Open in File ManagerOpen in File ManagerOpen in File ManagerOpen in File Manager"
+            android:text="14/05/24"
             android:textColor="?attr/textColor"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
             android:textSize="17sp" />
-
     </LinearLayout>
-
 
 </LinearLayout>

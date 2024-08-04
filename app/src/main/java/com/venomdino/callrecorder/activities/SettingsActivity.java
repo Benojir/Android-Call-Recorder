@@ -16,7 +16,7 @@ import androidx.cardview.widget.CardView;
 
 import com.venomdino.callrecorder.BuildConfig;
 import com.venomdino.callrecorder.R;
-import com.venomdino.callrecorder.helpers.SharedPrefs;
+import com.venomdino.callrecorder.helpers.SharedPreferencesHelper;
 
 import java.util.Objects;
 
@@ -63,21 +63,21 @@ public class SettingsActivity extends AppCompatActivity {
             });
         }
 
-        SharedPrefs sharedPrefs = new SharedPrefs(SettingsActivity.this);
+        SharedPreferencesHelper sharedPreferencesHelper = new SharedPreferencesHelper(SettingsActivity.this);
 //..................................................................................................
 
-        startToastCB.setChecked(sharedPrefs.isStartRecordingToastEnabled());
-        stopToastCB.setChecked(sharedPrefs.isStopRecordingToastEnabled());
-        recordingOnOffSwitch.setChecked(sharedPrefs.isCallRecordingEnabled());
-        appearanceValueTV.setText(sharedPrefs.getAppearanceValue());
-        savedSortByNameTV.setText(sharedPrefs.getRecordingSortOrder());
+        startToastCB.setChecked(sharedPreferencesHelper.isStartRecordingToastEnabled());
+        stopToastCB.setChecked(sharedPreferencesHelper.isStopRecordingToastEnabled());
+        recordingOnOffSwitch.setChecked(sharedPreferencesHelper.isCallRecordingEnabled());
+        appearanceValueTV.setText(sharedPreferencesHelper.getAppearanceValue());
+        savedSortByNameTV.setText(sharedPreferencesHelper.getRecordingSortOrder());
 //..................................................................................................
 
-        startToastCB.setOnCheckedChangeListener((compoundButton, isChecked) -> sharedPrefs.saveRecordingStartToastBoolean(isChecked));
-        stopToastCB.setOnCheckedChangeListener((compoundButton, isChecked) -> sharedPrefs.saveRecordingStopToastBoolean(isChecked));
+        startToastCB.setOnCheckedChangeListener((compoundButton, isChecked) -> sharedPreferencesHelper.saveRecordingStartToastBoolean(isChecked));
+        stopToastCB.setOnCheckedChangeListener((compoundButton, isChecked) -> sharedPreferencesHelper.saveRecordingStopToastBoolean(isChecked));
 
 //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-        recordingOnOffSwitch.setOnCheckedChangeListener((compoundButton, isEnabled) -> sharedPrefs.saveCallRecordingEnabledOrNotBoolean(isEnabled));
+        recordingOnOffSwitch.setOnCheckedChangeListener((compoundButton, isEnabled) -> sharedPreferencesHelper.saveCallRecordingEnabledOrNotBoolean(isEnabled));
 //,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
 
         appearanceCV.setOnClickListener(view -> {
@@ -85,7 +85,7 @@ public class SettingsActivity extends AppCompatActivity {
             popupMenu.getMenuInflater().inflate(R.menu.appearance_value_popup_menu, popupMenu.getMenu());
 
             popupMenu.setOnMenuItemClickListener(menuItem -> {
-                sharedPrefs.saveAppearanceValue(menuItem.getTitle().toString());
+                sharedPreferencesHelper.saveAppearanceValue(menuItem.getTitle().toString());
                 appearanceValueTV.setText(menuItem.getTitle().toString());
 
                 if (menuItem.getTitle().toString().equalsIgnoreCase(getString(R.string.dark_mode))){
@@ -108,7 +108,7 @@ public class SettingsActivity extends AppCompatActivity {
             popupMenu.getMenuInflater().inflate(R.menu.sort_by_popup_menu, popupMenu.getMenu());
 
             popupMenu.setOnMenuItemClickListener(menuItem -> {
-                sharedPrefs.saveSortRecordingOrder(menuItem.getTitle().toString());
+                sharedPreferencesHelper.saveSortRecordingOrder(menuItem.getTitle().toString());
                 savedSortByNameTV.setText(menuItem.getTitle().toString());
                 Toast.makeText(SettingsActivity.this, "Restart the app to see effect.", Toast.LENGTH_LONG).show();
                 return true;

@@ -43,7 +43,7 @@ import com.venomdino.callrecorder.BuildConfig;
 import com.venomdino.callrecorder.R;
 import com.venomdino.callrecorder.adapters.RecordingsListRVAdapter;
 import com.venomdino.callrecorder.helpers.CustomFunctions;
-import com.venomdino.callrecorder.helpers.SharedPrefs;
+import com.venomdino.callrecorder.helpers.SharedPreferencesHelper;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
 //--------------------------------------------------------------------------------------------------
 
-        if (new SharedPrefs(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.dark_mode))) {
+        if (new SharedPreferencesHelper(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.dark_mode))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else if (new SharedPrefs(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.light_mode))) {
+        } else if (new SharedPreferencesHelper(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.light_mode))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
 //--------------------------------------------------------------------------------------------------
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
                     new Thread(() -> {
 
-                        String sortOrder = new SharedPrefs(MainActivity.this).getRecordingSortOrder();
+                        String sortOrder = new SharedPreferencesHelper(MainActivity.this).getRecordingSortOrder();
 
                         if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_name_ascending))) {
                             CustomFunctions.sortFilesByNameAscending(recordedFiles);

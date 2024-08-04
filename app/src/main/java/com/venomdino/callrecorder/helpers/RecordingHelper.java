@@ -63,7 +63,7 @@ public class RecordingHelper {
                 recorder.prepare();
                 recorder.start();
 
-                if (new SharedPrefs(context).isStartRecordingToastEnabled()){
+                if (new SharedPreferencesHelper(context).isStartRecordingToastEnabled()){
                     Toast.makeText(context, "Recording started", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -83,14 +83,14 @@ public class RecordingHelper {
             recorder.reset();
             recorder = null;
 
-            if (new SharedPrefs(context).isStopRecordingToastEnabled()){
+            if (new SharedPreferencesHelper(context).isStopRecordingToastEnabled()){
                 Toast.makeText(context, "Recording saved to: " + finalFileName, Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Log.e(TAG, "stopVoiceRecoding:", e);
             recorder = null;
 
-            if (new SharedPrefs(context).isStopRecordingToastEnabled()){
+            if (new SharedPreferencesHelper(context).isStopRecordingToastEnabled()){
                 Toast.makeText(context, "Recording saved", Toast.LENGTH_SHORT).show();
             }
             Log.d(TAG, "stopVoiceRecoding: " + e.getMessage());

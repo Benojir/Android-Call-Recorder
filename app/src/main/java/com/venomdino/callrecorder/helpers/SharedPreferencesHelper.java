@@ -5,13 +5,13 @@ import android.content.SharedPreferences;
 
 import com.venomdino.callrecorder.R;
 
-public class SharedPrefs {
+public class SharedPreferencesHelper {
     private static final String APP_PREFS_NAME = "CallRecorderPreference";
     private final SharedPreferences mPreference;
     private final SharedPreferences.Editor mPrefEditor;
     private final Context context;
 
-    public SharedPrefs(Context context) {
+    public SharedPreferencesHelper(Context context) {
         this.mPreference = context.getSharedPreferences(APP_PREFS_NAME, Context.MODE_PRIVATE);
         this.mPrefEditor = mPreference.edit();
         this.context = context;

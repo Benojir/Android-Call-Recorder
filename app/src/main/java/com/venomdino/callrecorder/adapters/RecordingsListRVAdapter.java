@@ -27,7 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.venomdino.callrecorder.R;
 import com.venomdino.callrecorder.activities.MainActivity;
 import com.venomdino.callrecorder.helpers.CustomFunctions;
-import com.venomdino.callrecorder.helpers.ViewDialog;
+import com.venomdino.callrecorder.dialogs.FileInfoDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,16 +40,15 @@ import java.util.Collections;
 public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsListRVAdapter.MyCustomViewHolder> implements Filterable {
 
     private static final String TAG = MainActivity.TAG;
-    Context context;
-    JSONArray fileInfos;
-    JSONArray fileInfos2;
-    boolean isSelectModeOn, isSelectAllOptionClicked;
-    ArrayList<Integer> selectedItemsPositionsList = new ArrayList<>();
-    ArrayList<Uri> selectedFilesUriList = new ArrayList<>();
-    ArrayList<Integer> allPositions;
-    ArrayList<Uri> allFilesUriList;
-
-
+    private final Context context;
+    private JSONArray fileInfos;
+    private final JSONArray fileInfos2;
+    private boolean isSelectModeOn, isSelectAllOptionClicked;
+    private final ArrayList<Integer> selectedItemsPositionsList = new ArrayList<>();
+    private final ArrayList<Uri> selectedFilesUriList = new ArrayList<>();
+    private final ArrayList<Integer> allPositions;
+    private final ArrayList<Uri> allFilesUriList;
+    
     public RecordingsListRVAdapter(Context context, JSONArray fileInfos, ArrayList<Integer> allPositions, ArrayList<Uri> allFilesUriList) {
         this.context = context;
         this.fileInfos = fileInfos;
@@ -424,14 +423,13 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
 
                 bottomSheetDialog.findViewById(R.id.showFileInfoOption).setOnClickListener(view1 -> {
                     try {
-                        new ViewDialog().showFileInfoDialog(context, fileInfos.getJSONObject(holder.getAdapterPosition()));
+                        JSONObject fileInfo = fileInfos.getJSONObject(holder.getAdapterPosition());
+                        new FileInfoDialog(context, fileInfo).show();
                         bottomSheetDialog.dismiss();
                     } catch (JSONException e) {
-                        Log.e(TAG, "onBindViewHolder: ", e);
                         Toast.makeText(context, "Something went wrong. Please report this issue.", Toast.LENGTH_SHORT).show();
                     }
                 });
-
             }
 
             bottomSheetDialog.show();
