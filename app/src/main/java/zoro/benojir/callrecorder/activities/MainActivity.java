@@ -39,7 +39,7 @@ import com.google.android.material.snackbar.Snackbar;
 
 import zoro.benojir.callrecorder.BuildConfig;
 import zoro.benojir.callrecorder.R;
-import zoro.benojir.callrecorder.adapters.RecordingsListRVAdapter;
+import zoro.benojir.callrecorder.adapters.RecordingsListAdapter;
 import zoro.benojir.callrecorder.databinding.ActivityMainBinding;
 import zoro.benojir.callrecorder.helpers.CustomFunctions;
 import zoro.benojir.callrecorder.helpers.SharedPreferencesHelper;
@@ -49,7 +49,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -60,10 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = "MADARA";
     private boolean doubleBackPressed;
     public static MenuItem searchBtn, settingsBtn, selectedItemsCountMenu;
-    private RecordingsListRVAdapter recyclerViewAdapter;
-    private final JSONArray allFilesInformationJsonArray = new JSONArray();
-    private final ArrayList<Integer> allPositions = new ArrayList<>();
-    private final ArrayList<Uri> allFilesUriList = new ArrayList<>();
+    private RecordingsListAdapter recyclerViewAdapter;
+    private final JSONArray allFilesInfoJArray = new JSONArray();
     private boolean isBottomScrollButton;
 
     @Override
@@ -213,12 +210,12 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject fileInfo = new JSONObject();
 
                             try {
-                                fileInfo.put("name", recordFile.getName());
+                                fileInfo.put("file_name", recordFile.getName());
                                 fileInfo.put("size", CustomFunctions.fileSizeFormatter(recordFile.length()));
                                 fileInfo.put("modified_date", CustomFunctions.timeFormatter(recordFile.lastModified()));
                                 fileInfo.put("absolute_path", recordFile.getAbsolutePath());
 
-                                allFilesInformationJsonArray.put(fileInfo);
+                                allFilesInfoJArray.put(fileInfo);
                             } catch (Exception e) {
                                 Log.e(TAG, "onCreate: ", e);
                             }
@@ -227,11 +224,11 @@ public class MainActivity extends AppCompatActivity {
 
                     runOnUiThread(() -> {
 
-                        if (allFilesInformationJsonArray.length() > 0) {
+                        if (allFilesInfoJArray.length() > 0) {
 
                             binding.filesLoadingDesignContainer.setVisibility(View.GONE);
 
-                            recyclerViewAdapter = new RecordingsListRVAdapter(MainActivity.this, allFilesInformationJsonArray, allPositions, allFilesUriList);
+                            recyclerViewAdapter = new RecordingsListAdapter(MainActivity.this, allFilesInfoJArray);
                             binding.recyclerView.setAdapter(recyclerViewAdapter);
 
                             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

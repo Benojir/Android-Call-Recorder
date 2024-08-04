@@ -15,4 +15,5 @@
     <color name="dark_grey">#3E3D3D</color>
     <color name="grey">#888888</color>
     <color name="light_link_blue">#2196F3</color>
+    <color name="fade_blue">#3AA8FF</color>
 </resources>

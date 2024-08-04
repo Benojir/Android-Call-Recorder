@@ -45,7 +45,7 @@ public class FileInfoDialog {
         try {
             fileSizeTV.setText(fileInfoJObj.get("size").toString());
             fileLastModifiedTV.setText(fileInfoJObj.getString("modified_date"));
-            fileNameTV.setText(fileInfoJObj.getString("name"));
+            fileNameTV.setText(fileInfoJObj.getString("file_name"));
             filePathTV.setText(fileInfoJObj.getString("absolute_path"));
 
             try(MediaMetadataRetriever retriever = new MediaMetadataRetriever()) {
