@@ -47,6 +47,6 @@
         android:contentDescription="Selected"
         android:src="@drawable/done_icon"
         android:visibility="gone"
-        app:tint="@color/teal_500" />
+        app:tint="@color/black" />
 
 </RelativeLayout>
