@@ -26,7 +26,7 @@ public class SingleFileControlDialog {
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.bottom_sheet_dialog_control_btns);
+        dialog.setContentView(R.layout.dialog_single_file_options);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
         fileNameTV = dialog.findViewById(R.id.fileNameTV);

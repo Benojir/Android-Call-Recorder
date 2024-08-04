@@ -22,7 +22,7 @@ public class MultipleFilesControlDialog {
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
-        dialog.setContentView(R.layout.bottom_sheet_dialog_selected_ctrl_btns);
+        dialog.setContentView(R.layout.dialog_multiple_selected_files_options);
         dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
 
         selectAllOption = dialog.findViewById(R.id.selectAllOption);

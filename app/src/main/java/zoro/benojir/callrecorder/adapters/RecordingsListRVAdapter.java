@@ -151,7 +151,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
             bottomSheetDialog.getBehavior().setState(BottomSheetBehavior.STATE_EXPANDED);
 
             if (isSelectModeOn) {
-                bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_selected_ctrl_btns);
+                bottomSheetDialog.setContentView(R.layout.dialog_multiple_selected_files_options);
 
                 bottomSheetDialog.findViewById(R.id.selectAllOption).setOnClickListener(view1 -> {
                     selectedItemsPositionsList.clear();
@@ -239,7 +239,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                 });
             } else {
 
-                bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_control_btns);
+                bottomSheetDialog.setContentView(R.layout.dialog_single_file_options);
 
                 TextView fileNameTVinBottomDialog = bottomSheetDialog.findViewById(R.id.fileNameTV);
 
