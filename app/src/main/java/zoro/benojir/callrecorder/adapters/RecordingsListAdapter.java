@@ -2,7 +2,11 @@ package zoro.benojir.callrecorder.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,8 +40,10 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
     private final Activity activity;
     private JSONArray fileInfos;
     private final JSONArray fileInfos2;
+
     private boolean isSelectionModeOn;
     private final ArrayList<Integer> selectedItemsPositionsList = new ArrayList<>();
+    private final ArrayList<Uri> selectedFilesUriList = new ArrayList<>();
 
     public RecordingsListAdapter(Activity activity, JSONArray fileInfos) {
         this.activity = activity;
@@ -87,6 +93,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                     } else {
                         selectedItemsPositionsList.add(holder.getAdapterPosition());
                         setSelectedItemUI(holder);
+                        selectedFilesUriList.add(Uri.fromFile(file));
                     }
                 } else {
                     fileOptionsHelper.playRecording();
@@ -129,25 +136,32 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
                             @Override
                             public void onShareAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList) {
-                                Toast.makeText(activity, "Share all clicked.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                                intent.putExtra(Intent.EXTRA_SUBJECT, "Here are some files.");
+                                intent.setType("audio/mpeg");
+                                intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, selectedFilesUriList);
+                                activity.startActivity(Intent.createChooser(intent, "Share to"));
                             }
 
                             @Override
-                            public void onDeleteAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList) {
-                                Toast.makeText(activity, "Delete all in new thread and confirm dialog.", Toast.LENGTH_SHORT).show();
+                            public void onDeleteAllOptionClicked() {
+                                deleteAllSelectedItems();
                             }
                         });
-                    } else {
 
+                    } else {
                         JSONObject fileInfo = fileInfos.getJSONObject(holder.getAdapterPosition());
                         SingleFileControlDialog singleFileControlDialog = new SingleFileControlDialog(activity, fileInfo, holder.getAdapterPosition());
 
                         singleFileControlDialog.show(new OnSingleItemLongClickListener() {
                             @Override
                             public void onSelectOptionClicked(int position) {
+
                                 isSelectionModeOn = true;
                                 selectedItemsPositionsList.add(holder.getAdapterPosition());
                                 setSelectedItemUI(holder);
+                                selectedFilesUriList.add(Uri.fromFile(file));
                             }
 
                             @Override
@@ -270,6 +284,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
         }
     }
 
+//    ----------------------------------------------------------------------------------------------
+
     private void setSelectedItemUI(MyCustomViewHolder holder) {
         holder.mainLayout.setBackgroundColor(activity.getColor(R.color.fade_blue));
         holder.selectionIcon.setVisibility(View.VISIBLE);
@@ -281,12 +297,24 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
         holder.selectionIcon.setVisibility(View.GONE);
     }
 
-    //    ----------------------------------------------------------------------------------------------
+//    ----------------------------------------------------------------------------------------------
+
     private void selectAllItems() {
         new Thread(() -> {
+
             selectedItemsPositionsList.clear();
+            selectedFilesUriList.clear();
+
             for (int i = 0; i < fileInfos.length(); i++) {
+
                 selectedItemsPositionsList.add(i);
+
+                try {
+                    File file = new File(fileInfos.getJSONObject(i).getString("absolute_path"));
+                    selectedFilesUriList.add(Uri.fromFile(file));
+                } catch (Exception e){
+                    Log.e(TAG, "onBindViewHolder: ", e);
+                }
             }
             activity.runOnUiThread(new Runnable() {
                 @SuppressLint("NotifyDataSetChanged")
@@ -300,7 +328,10 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
     private void deselectAllItems() {
         new Thread(() -> {
+
             selectedItemsPositionsList.clear();
+            selectedFilesUriList.clear();
+
             activity.runOnUiThread(new Runnable() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
@@ -309,6 +340,58 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                 }
             });
         }).start();
+    }
+
+//    ----------------------------------------------------------------------------------------------
+
+    /**
+     * Why reverse deleting?
+     * While modifying the list itself it remove an item from a list while iterating over it, it can cause
+     * index shifting, which might lead to skipping elements.
+     * To avoid this issue, you can iterate over the list in reverse order,
+     * which ensures that removing an item does not affect the subsequent elements that need to be removed. */
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void deleteAllSelectedItems() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setCancelable(true);
+        builder.setTitle("Delete files");
+        builder.setMessage("Selected files will be deleted.");
+        builder.setIcon(R.drawable.delete_24);
+        builder.setPositiveButton("Delete", (dialogInterface, which) -> {
+
+            dialogInterface.dismiss();
+
+            ProgressDialog pd = new ProgressDialog(activity);
+            pd.setCancelable(false);
+            pd.setMessage("Deleting files...");
+            pd.show();
+
+            new Thread(() -> {
+                // Iterate in reverse order to avoid index shifting issues
+                for (int i = selectedItemsPositionsList.size() - 1; i >= 0; i--) {
+                    try {
+                        int position = selectedItemsPositionsList.get(i);
+                        File file = new File(fileInfos.getJSONObject(position).getString("absolute_path"));
+
+                        if (file.delete()) {
+                            fileInfos.remove(position);
+                            selectedItemsPositionsList.remove(i);
+                            selectedFilesUriList.remove(i);
+                        }
+                    } catch (JSONException e) {
+                        Log.e(TAG, "deleteAllSelectedItems: ", e);
+                    }
+                }
+
+                activity.runOnUiThread(() -> {
+                    notifyDataSetChanged();
+                    pd.dismiss();
+                });
+            }).start();
+        });
+        builder.setNegativeButton("Cancel", (dialogInterface, which) -> dialogInterface.dismiss());
+        builder.show();
     }
 
 //    ----------------------------------------------------------------------------------------------
@@ -334,6 +417,6 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
         void onShareAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList);
 
-        void onDeleteAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList);
+        void onDeleteAllOptionClicked();
     }
 }

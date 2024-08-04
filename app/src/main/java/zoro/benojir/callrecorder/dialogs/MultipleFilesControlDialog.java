@@ -53,7 +53,7 @@ public class MultipleFilesControlDialog {
         });
 
         deleteAllOption.setOnClickListener(view -> {
-            listener.onDeleteAllOptionClicked(selectedItemsPositionsList);
+            listener.onDeleteAllOptionClicked();
             dialog.dismiss();
         });
     }
