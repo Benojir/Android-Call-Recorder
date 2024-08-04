@@ -76,7 +76,6 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             SingleFileOptionsHelper fileOptionsHelper = new SingleFileOptionsHelper(activity, file);
 
             //................................................................
-            Log.d(TAG, "onBindViewHolder total size: " + selectedItemsPositionsList.size());
 
             holder.itemView.setOnClickListener(view -> {
 
@@ -224,49 +223,49 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
     @Override
     public Filter getFilter() {
-        return filesFilter;
-    }
 
-    private final Filter filesFilter = new Filter() {
-        @Override
-        protected FilterResults performFiltering(CharSequence charSequence) {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
 
-            JSONArray filteredFileInfos = new JSONArray();
+                JSONArray filteredFiles= new JSONArray();
 
-            if (charSequence == null || charSequence.length() == 0) {
-                filteredFileInfos = fileInfos2;
-            } else {
-                String search_term = charSequence.toString().trim().toLowerCase();
+                if (charSequence == null || charSequence.length() == 0) {
+                    filteredFiles = fileInfos2;
+                } else {
+                    String searchTerm = charSequence.toString().trim().toLowerCase();
 
-                for (int i = 0; i < fileInfos2.length(); i++) {
+                    for (int i = 0; i < fileInfos2.length(); i++) {
 
-                    try {
-                        boolean doesNameContainSearchTerm = fileInfos2.getJSONObject(i).getString("name").toLowerCase().contains(search_term);
-                        boolean doesModifiedDateContainSearchTerm = fileInfos2.getJSONObject(i).getString("modified_date").toLowerCase().contains(search_term);
+                        try {
+                            JSONObject fileInfoJObj = fileInfos2.getJSONObject(i);
+                            boolean doesNameContainSearchTerm = fileInfoJObj.getString("file_name").toLowerCase().contains(searchTerm);
+                            boolean doesModifiedDateContainSearchTerm = fileInfoJObj.getString("modified_date").toLowerCase().contains(searchTerm);
 
-                        if (doesNameContainSearchTerm || doesModifiedDateContainSearchTerm) {
-                            filteredFileInfos.put(fileInfos2.getJSONObject(i));
+                            if (doesNameContainSearchTerm || doesModifiedDateContainSearchTerm) {
+                                filteredFiles.put(fileInfoJObj);
+                            }
+                        } catch (JSONException e) {
+                            Log.e(TAG, "onBindViewHolder: ", e);
                         }
-                    } catch (JSONException e) {
-                        Log.e(TAG, "onBindViewHolder: ", e);
                     }
                 }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredFiles;
+                filterResults.count = filteredFiles.length();
+
+                return filterResults;
             }
 
-            FilterResults filterResults = new FilterResults();
-            filterResults.values = filteredFileInfos;
-            filterResults.count = filteredFileInfos.length();
-
-            return filterResults;
-        }
-
-        @SuppressLint("NotifyDataSetChanged")
-        @Override
-        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-            fileInfos = (JSONArray) filterResults.values;
-            notifyDataSetChanged();
-        }
-    };
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                fileInfos = (JSONArray) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
 
     public static class MyCustomViewHolder extends RecyclerView.ViewHolder {
 

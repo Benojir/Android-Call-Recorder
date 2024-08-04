@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private RecordingsListAdapter recyclerViewAdapter;
     private final JSONArray allFilesInfoJArray = new JSONArray();
     private boolean isBottomScrollButton;
+    private boolean iconSettingDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -249,11 +250,13 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
 
 
-                if (isBottomScrollButton) {
-                    binding.scrollButtonTopBottomFAB.setOnClickListener(view -> binding.recyclerView.scrollToPosition(binding.recyclerView.getAdapter().getItemCount() - 1));
-                } else {
-                    binding.scrollButtonTopBottomFAB.setOnClickListener(view -> binding.recyclerView.scrollToPosition(0));
-                }
+                binding.scrollButtonTopBottomFAB.setOnClickListener(v -> {
+                    if (isBottomScrollButton){
+                        binding.recyclerView.scrollToPosition(binding.recyclerView.getAdapter().getItemCount() - 1);
+                    } else {
+                        binding.recyclerView.scrollToPosition(0);
+                    }
+                });
 
                 binding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
                     @Override
@@ -261,6 +264,7 @@ public class MainActivity extends AppCompatActivity {
 
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) { // No scrolling
                             new Handler().postDelayed(() -> binding.scrollButtonTopBottomFAB.setVisibility(View.GONE), 2000); // delay of 2 seconds before hiding the fab
+                            iconSettingDone = false;
                         }
                     }
 
@@ -269,8 +273,20 @@ public class MainActivity extends AppCompatActivity {
 
                         if (dy > 0) { // scrolling down
                             isBottomScrollButton = true;
+                            Log.d(TAG, "onScrolled down: " + isBottomScrollButton);
+
+                            if (!iconSettingDone) {
+                                binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_downward);
+                                iconSettingDone = true;
+                            }
                         } else if (dy < 0) { // scrolling up
                             isBottomScrollButton = false;
+                            Log.d(TAG, "onScrolled up: " + isBottomScrollButton);
+
+                            if (!iconSettingDone) {
+                                binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_upward);
+                                iconSettingDone = true;
+                            }
                         }
                         binding.scrollButtonTopBottomFAB.setVisibility(View.VISIBLE);
                     }
@@ -377,7 +393,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.menu_settings_action) {
 
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+            Intent intent = new Intent(MainActivity.this, OldSettingsActivity.class);
             intent.putExtra("activity_started_by", getPackageName());
             startActivity(intent);
             return true;

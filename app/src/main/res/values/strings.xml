@@ -44,5 +44,28 @@
     <string name="delete_selected">Delete</string>
     <string name="unknown">Unknown</string>
     <string name="app_version">"Version: "</string>
+    <string name="title_activity_settings">SettingsActivity</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="call_recording_title">Call recording</string>
+    <string name="call_recording_summary_on">Calls will be recorded automatically</string>
+    <string name="call_recording_summary_off">Calls will not be recorded automatically</string>
+    <string name="general_header">General</string>
+    <string name="start_toast">Recording start toast</string>
+    <string name="start_toast_summary_on">A toast will be shown when recrding will be started</string>
+    <string name="start_toast_summary_off">No toast will be shown when recording started</string>
 
 </resources>
