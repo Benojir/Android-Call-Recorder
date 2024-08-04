@@ -3,6 +3,8 @@ package zoro.benojir.callrecorder.adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +21,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import zoro.benojir.callrecorder.R;
 import zoro.benojir.callrecorder.dialogs.FileInfoDialog;
+import zoro.benojir.callrecorder.dialogs.MultipleFilesControlDialog;
 import zoro.benojir.callrecorder.dialogs.SingleFileControlDialog;
-import zoro.benojir.callrecorder.helpers.RecordingFilesOptionsHelper;
+import zoro.benojir.callrecorder.helpers.SingleFileOptionsHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,7 +69,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             holder.fileInfoTV.setText(fileSizeAndDate);
 
             File file = new File(fileInfos.getJSONObject(holder.getAdapterPosition()).getString("absolute_path"));
-            RecordingFilesOptionsHelper fileOptionsHelper = new RecordingFilesOptionsHelper(activity, file);
+            SingleFileOptionsHelper fileOptionsHelper = new SingleFileOptionsHelper(activity, file);
 
             //................................................................
 
@@ -88,9 +91,47 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             //................................................................
 
             holder.itemView.setOnLongClickListener(view -> {
-                try{
+                try {
                     if (isSelectionModeOn) {
-                        Toast.makeText(activity, "Selection mode is already on.", Toast.LENGTH_SHORT).show();
+                        MultipleFilesControlDialog multipleFilesControlDialog = new MultipleFilesControlDialog(activity, selectedItemsPositionsList);
+
+                        multipleFilesControlDialog.show(new OnMultipleItemsLongClickListener() {
+                            @Override
+                            public void onSelectAllOptionClicked() {
+                                new Thread(() -> {
+                                    for (int i = 0; i < fileInfos2.length(); i++) {
+                                        selectedItemsPositionsList.add(i);
+                                        int finalI = i;
+                                        new Handler(Looper.getMainLooper()).post(() -> {
+                                            notifyItemChanged(finalI);
+                                            setSelection(holder);
+                                        });
+                                    }
+                                }).start();
+                            }
+
+                            @Override
+                            public void onDeselectAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList) {
+                                for (int i = 0; i < selectedItemsPositionsList.size(); i++) {
+                                    selectedItemsPositionsList.add(i);
+                                    int finalI = i;
+                                    new Handler(Looper.getMainLooper()).post(() -> {
+                                        removeSelection(holder);
+                                        notifyItemChanged(finalI);
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onShareAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList) {
+                                Toast.makeText(activity, "Share all clicked.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onDeleteAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList) {
+                                Toast.makeText(activity, "Delete all in new thread and confirm dialog.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } else {
 
                         JSONObject fileInfo = fileInfos.getJSONObject(holder.getAdapterPosition());
@@ -132,7 +173,6 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                                         fileInfos.remove(position);
                                         notifyItemRemoved(position);
                                         selectedItemsPositionsList.remove((Integer) position);
-                                        isSelectionModeOn = false;
                                     } else {
                                         Toast.makeText(activity, "Failed to delete file.", Toast.LENGTH_SHORT).show();
                                     }
@@ -145,7 +185,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                             }
                         });
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     Log.e(TAG, "onBindViewHolder: ", e);
                 }
                 return true;
@@ -240,10 +280,25 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
     public interface OnSingleItemLongClickListener {
         void onSelectOptionClicked(int position);
+
         void onPlayOptionClicked(int position);
+
         void onShareOptionClicked(int position);
+
         void onRenameOptionClicked(int position);
+
         void onDeleteOptionClicked(int position);
+
         void onShowFileInfoOptionClicked(int position);
+    }
+
+    public interface OnMultipleItemsLongClickListener {
+        void onSelectAllOptionClicked();
+
+        void onDeselectAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList);
+
+        void onShareAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList);
+
+        void onDeleteAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList);
     }
 }

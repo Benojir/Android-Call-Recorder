@@ -21,13 +21,13 @@ import java.io.File;
 
 import zoro.benojir.callrecorder.R;
 
-public class RecordingFilesOptionsHelper {
+public class SingleFileOptionsHelper {
 
     private static final String TAG = "MADARA";
     private final File file;
     private final Activity activity;
 
-    public RecordingFilesOptionsHelper(Activity activity, File file) {
+    public SingleFileOptionsHelper(Activity activity, File file) {
         this.activity = activity;
         this.file = file;
     }
@@ -164,13 +164,6 @@ public class RecordingFilesOptionsHelper {
             if (file.delete()) {
                 Toast.makeText(activity, "Recorded file deleted successfully.", Toast.LENGTH_SHORT).show();
                 listener.onComplete(true);
-
-//                    fileInfos.remove(holder.getAdapterPosition());
-//                    notifyDataSetChanged();
-//                    notifyItemRemoved(holder.getAdapterPosition());
-//                    allPositionsList.remove((Integer) holder.getAdapterPosition());
-//                    allFilesUriList.remove(Uri.fromFile(new File(fileInfos.getJSONObject(holder.getAdapterPosition()).get("absolute_path").toString())));
-
             } else {
                 Toast.makeText(activity, "Failed to delete file.", Toast.LENGTH_SHORT).show();
                 listener.onComplete(false);

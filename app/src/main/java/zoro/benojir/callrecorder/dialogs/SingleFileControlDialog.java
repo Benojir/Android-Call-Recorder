@@ -14,14 +14,12 @@ import zoro.benojir.callrecorder.adapters.RecordingsListAdapter;
 
 public class SingleFileControlDialog {
 
-    private final Activity activity;
     private final JSONObject fileInfo;
     private final Dialog dialog;
     private final TextView fileNameTV, selectOption, playOption, shareOption, renameOption, deleteOption, fileInfoOption;
-    private int itemPosition;
+    private final int itemPosition;
 
     public SingleFileControlDialog(Activity activity, JSONObject fileInfo, int position) {
-        this.activity = activity;
         this.fileInfo = fileInfo;
         this.itemPosition = position;
 
