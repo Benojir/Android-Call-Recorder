@@ -43,12 +43,12 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
     private final Context context;
     private JSONArray fileInfos;
     private final JSONArray fileInfos2;
-    private boolean isSelectModeOn, isSelectAllOptionClicked;
+    private boolean isSelectModeOn;
     private final ArrayList<Integer> selectedItemsPositionsList = new ArrayList<>();
     private final ArrayList<Uri> selectedFilesUriList = new ArrayList<>();
     private final ArrayList<Integer> allPositions;
     private final ArrayList<Uri> allFilesUriList;
-    
+
     public RecordingsListRVAdapter(Context context, JSONArray fileInfos, ArrayList<Integer> allPositions, ArrayList<Uri> allFilesUriList) {
         this.context = context;
         this.fileInfos = fileInfos;
@@ -102,8 +102,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     if (selectedItemsPositionsList.contains(holder.getAdapterPosition())) {
 
                         try {
-                            selectedItemsPositionsList.remove((Integer) holder.getAdapterPosition()); // eta object er maddhomey remove korchhi
-//                            selectedItemsPositionsList.remove(selectedItemsPositionsList.indexOf(holder.getAdapterPosition())); //ota na hole eta index er maddhome remove korchh
+                            selectedItemsPositionsList.remove((Integer) holder.getAdapterPosition());
 
                             try {
                                 selectedFilesUriList.remove(Uri.fromFile(new File(fileInfos.getJSONObject(holder.getAdapterPosition()).getString("absolute_path"))));
@@ -113,7 +112,6 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                             }
 
                             holder.itemView.findViewById(R.id.selectionIcon).setVisibility(View.GONE);
-                            isSelectAllOptionClicked = false;
                             MainActivity.menu_selected_items_count.setTitle(selectedItemsPositionsList.size() + "");
 
                         } catch (Exception e) {
@@ -154,7 +152,6 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                 bottomSheetDialog.setContentView(R.layout.bottom_sheet_dialog_selected_ctrl_btns);
 
                 bottomSheetDialog.findViewById(R.id.selectAllOption).setOnClickListener(view1 -> {
-                    isSelectAllOptionClicked = true;
                     selectedItemsPositionsList.clear();
                     selectedItemsPositionsList.addAll(allPositions);
                     selectedFilesUriList.clear();
@@ -164,7 +161,6 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                 });
 
                 bottomSheetDialog.findViewById(R.id.deselectAllOption).setOnClickListener(view1 -> {
-                    isSelectAllOptionClicked = false;
                     selectedItemsPositionsList.clear();
                     selectedFilesUriList.clear();
                     isSelectModeOn = false;
