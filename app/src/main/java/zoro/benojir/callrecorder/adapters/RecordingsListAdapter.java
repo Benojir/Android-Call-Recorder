@@ -3,8 +3,6 @@ package zoro.benojir.callrecorder.adapters;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -96,30 +94,20 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                         MultipleFilesControlDialog multipleFilesControlDialog = new MultipleFilesControlDialog(activity, selectedItemsPositionsList);
 
                         multipleFilesControlDialog.show(new OnMultipleItemsLongClickListener() {
+                            @SuppressLint("NotifyDataSetChanged")
                             @Override
                             public void onSelectAllOptionClicked() {
-                                new Thread(() -> {
-                                    for (int i = 0; i < fileInfos2.length(); i++) {
-                                        selectedItemsPositionsList.add(i);
-                                        int finalI = i;
-                                        new Handler(Looper.getMainLooper()).post(() -> {
-                                            notifyItemChanged(finalI);
-                                            setSelection(holder);
-                                        });
-                                    }
-                                }).start();
+                                selectedItemsPositionsList.add(holder.getAdapterPosition());
+                                setSelection(holder);
+                                notifyDataSetChanged();
                             }
 
+                            @SuppressLint("NotifyDataSetChanged")
                             @Override
                             public void onDeselectAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList) {
-                                for (int i = 0; i < selectedItemsPositionsList.size(); i++) {
-                                    selectedItemsPositionsList.add(i);
-                                    int finalI = i;
-                                    new Handler(Looper.getMainLooper()).post(() -> {
-                                        removeSelection(holder);
-                                        notifyItemChanged(finalI);
-                                    });
-                                }
+                                selectedItemsPositionsList.remove(holder.getAdapterPosition());
+                                removeSelection(holder);
+                                notifyDataSetChanged();
                             }
 
                             @Override
