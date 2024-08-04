@@ -70,21 +70,41 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             SingleFileOptionsHelper fileOptionsHelper = new SingleFileOptionsHelper(activity, file);
 
             //................................................................
+            Log.d(TAG, "onBindViewHolder total size: " + selectedItemsPositionsList.size());
 
             holder.itemView.setOnClickListener(view -> {
+
                 if (isSelectionModeOn) {
+
                     if (selectedItemsPositionsList.contains(holder.getAdapterPosition())) {
-                        removeSelection(holder);
+
+                        selectedItemsPositionsList.remove((Integer) holder.getAdapterPosition());
+                        removeUnselectedItemUI(holder);
+
                         if (selectedItemsPositionsList.isEmpty()) {
                             isSelectionModeOn = false;
                         }
                     } else {
-                        setSelection(holder);
+                        selectedItemsPositionsList.add(holder.getAdapterPosition());
+                        setSelectedItemUI(holder);
                     }
                 } else {
                     fileOptionsHelper.playRecording();
                 }
             });
+
+            //................................................................
+
+            // Update selection state here for all selected items. Because onDeselectAllOptionClicked will not trigger when onBindViewHolder is called.
+            if (selectedItemsPositionsList.contains(holder.getAdapterPosition())) {
+                setSelectedItemUI(holder);
+            } else {
+                removeUnselectedItemUI(holder);
+
+                if (selectedItemsPositionsList.isEmpty()) {
+                    isSelectionModeOn = false;
+                }
+            }
 
             //................................................................
 
@@ -97,17 +117,14 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                             @SuppressLint("NotifyDataSetChanged")
                             @Override
                             public void onSelectAllOptionClicked() {
-                                selectedItemsPositionsList.add(holder.getAdapterPosition());
-                                setSelection(holder);
-                                notifyDataSetChanged();
+                                isSelectionModeOn = true;
+                                selectAllItems();
                             }
 
                             @SuppressLint("NotifyDataSetChanged")
                             @Override
                             public void onDeselectAllOptionClicked(ArrayList<Integer> selectedItemsPositionsList) {
-                                selectedItemsPositionsList.remove(holder.getAdapterPosition());
-                                removeSelection(holder);
-                                notifyDataSetChanged();
+                                deselectAllItems();
                             }
 
                             @Override
@@ -129,7 +146,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                             @Override
                             public void onSelectOptionClicked(int position) {
                                 isSelectionModeOn = true;
-                                setSelection(holder);
+                                selectedItemsPositionsList.add(holder.getAdapterPosition());
+                                setSelectedItemUI(holder);
                             }
 
                             @Override
@@ -252,16 +270,45 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
         }
     }
 
-    private void setSelection(MyCustomViewHolder holder) {
+    private void setSelectedItemUI(MyCustomViewHolder holder) {
         holder.mainLayout.setBackgroundColor(activity.getColor(R.color.fade_blue));
         holder.selectionIcon.setVisibility(View.VISIBLE);
-        selectedItemsPositionsList.add(holder.getAdapterPosition());
+        Log.d(TAG, "setSelection holder.getAdapterPosition(): " + holder.getAdapterPosition());
     }
 
-    private void removeSelection(MyCustomViewHolder holder) {
+    private void removeUnselectedItemUI(MyCustomViewHolder holder) {
         holder.mainLayout.setBackgroundColor(Color.TRANSPARENT);
         holder.selectionIcon.setVisibility(View.GONE);
-        selectedItemsPositionsList.remove((Integer) holder.getAdapterPosition());
+    }
+
+    //    ----------------------------------------------------------------------------------------------
+    private void selectAllItems() {
+        new Thread(() -> {
+            selectedItemsPositionsList.clear();
+            for (int i = 0; i < fileInfos.length(); i++) {
+                selectedItemsPositionsList.add(i);
+            }
+            activity.runOnUiThread(new Runnable() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            });
+        }).start();
+    }
+
+    private void deselectAllItems() {
+        new Thread(() -> {
+            selectedItemsPositionsList.clear();
+            activity.runOnUiThread(new Runnable() {
+                @SuppressLint("NotifyDataSetChanged")
+                @Override
+                public void run() {
+                    notifyDataSetChanged();
+                }
+            });
+        }).start();
     }
 
 //    ----------------------------------------------------------------------------------------------

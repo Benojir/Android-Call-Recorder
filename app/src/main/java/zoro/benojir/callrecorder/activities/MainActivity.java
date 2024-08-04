@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button updateBtn = headView.findViewById(R.id.updateBtnInHeaderLayout);
 
-        CustomFunctions.checkForUpdateOnStartApp(this, updateBtn);
+//        CustomFunctions.checkForUpdateOnStartApp(this, updateBtn);
 
         updateBtn.setOnClickListener(view -> {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_release_page_link)));
