@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<Integer> allPositions = new ArrayList<>();
     private final ArrayList<Uri> allFilesUriList = new ArrayList<>();
 
-
-    @SuppressLint({"UseCompatLoadingForDrawables", "SetTextI18n"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,10 +100,11 @@ public class MainActivity extends AppCompatActivity {
         View headView = navigationView.getHeaderView(0);
 
         if (CustomFunctions.isDarkModeOn(this)) {
-            headView.setBackground(getDrawable(R.drawable.header_bg2));
+            headView.setBackground(AppCompatResources.getDrawable(this, R.drawable.header_bg2));
         }
 
-        ((TextView) headView.findViewById(R.id.header_layout_version_tv)).setText("Version: " + BuildConfig.VERSION_NAME);
+        String versionString = getString(R.string.app_version) + BuildConfig.VERSION_NAME;
+        ((TextView) headView.findViewById(R.id.header_layout_version_tv)).setText(versionString);
 
         Button updateBtnInHeaderLayout = headView.findViewById(R.id.updateBtnInHeaderLayout);
 

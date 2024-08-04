@@ -43,5 +43,6 @@
     <string name="share_selected">Share</string>
     <string name="delete_selected">Delete</string>
     <string name="unknown">Unknown</string>
+    <string name="app_version">"Version: "</string>
 
 </resources>
