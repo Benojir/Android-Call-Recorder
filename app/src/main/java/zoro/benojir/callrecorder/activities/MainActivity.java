@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setMessage(getString(R.string.not_system_app_message_body));
             builder.setIcon(R.drawable.error);
             builder.setCancelable(false);
-            builder.setPositiveButton("Ok", (dialog, which) -> {
+            builder.setPositiveButton("OK", (dialog, which) -> {
                 dialog.dismiss();
                 finishAndRemoveTask();
             });

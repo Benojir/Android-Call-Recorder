@@ -3,7 +3,7 @@
 
 . /tmp/backuptool.functions
 
-files="priv-app/com.venomdino.callrecorder/app-release.apk etc/permissions/privapp-permissions-com.venomdino.callrecorder.xml"
+files="priv-app/zoro.benojir.callrecorder/app-release.apk etc/permissions/privapp-permissions-zoro.benojir.callrecorder.xml"
 
 case "${1}" in
 backup|restore)

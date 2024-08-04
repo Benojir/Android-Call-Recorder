@@ -1,7 +1,7 @@
-id=com.venomdino.callrecorder
+id=zoro.benojir.callrecorder
 name=Call Recorder
 version=v1.0
 versionCode=1
-author=VenomDino
+author=Benojir Sultana
 description=Record calls automatically without announcement.
-updateJson=https://github.com/VenomDino/Android-Call-Recorder/raw/master/magisk/updates/release/info.json
+updateJson=https://github.com/Benojir/Android-Call-Recorder/raw/master/magisk/updates/release/info.json

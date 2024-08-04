@@ -63,7 +63,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
     public MyCustomViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View view = layoutInflater.inflate(R.layout.sample_rv_layout_main_activity, parent, false);
+        View view = layoutInflater.inflate(R.layout.sample_recording_item_design, parent, false);
         return new MyCustomViewHolder(view);
     }
 
