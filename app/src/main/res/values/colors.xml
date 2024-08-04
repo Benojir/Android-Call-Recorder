@@ -7,10 +7,12 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="hp_theme_color_light">#FC2258</color>
-    <color name="hp_theme_color_dark">#1E1E1E</color>
+    <color name="theme_color_light">#007ADC</color>
+    <color name="theme_color_dark">#1E1E1E</color>
+
     <color name="selected_item_color">#F1D8DF</color>
     <color name="dark_yellow">#FFC107</color>
-    <color name="dark_grey">#2B2A2A</color>
+    <color name="dark_grey">#3E3D3D</color>
+    <color name="grey">#888888</color>
     <color name="light_link_blue">#2196F3</color>
 </resources>

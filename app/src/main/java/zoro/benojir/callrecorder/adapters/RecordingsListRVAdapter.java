@@ -340,9 +340,9 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                         inputField.setSingleLine(true);
                         inputField.setInputType(InputType.TYPE_CLASS_TEXT);
                         if (CustomFunctions.isDarkModeOn(context)) {
-                            inputField.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.hp_theme_color_dark)));
+                            inputField.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.theme_color_dark)));
                         } else {
-                            inputField.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.hp_theme_color_light)));
+                            inputField.setBackgroundTintList(ColorStateList.valueOf(context.getColor(R.color.theme_color_light)));
                         }
                         inputField.setPadding(
                                 context.getResources().getDimensionPixelSize(R.dimen.input_box_padding_lr),

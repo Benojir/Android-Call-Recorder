@@ -36,6 +36,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -88,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         initVariables();
 
         getSupportFragmentManager();
-        Toolbar toolbar = findViewById(R.id.main_toolbar);
+        MaterialToolbar toolbar = findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_name));
 
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
         View headView = navigationView.getHeaderView(0);
 
         if (CustomFunctions.isDarkModeOn(this)) {
-            headView.setBackground(AppCompatResources.getDrawable(this, R.drawable.header_bg2));
+            headView.setBackground(AppCompatResources.getDrawable(this, R.drawable.header_bg_night));
         }
 
         String versionString = getString(R.string.app_version) + BuildConfig.VERSION_NAME;

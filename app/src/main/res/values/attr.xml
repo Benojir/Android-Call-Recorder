@@ -3,6 +3,7 @@
     <declare-styleable name="theme">
         <attr name="backgroundColor" format="color" />
         <attr name="textColor" format="color" />
-        <attr name="recordingItemBg" format="color"/>
+        <attr name="recordingItemBackgroundColor" format="color"/>
+        <attr name="scrollButtonBackgroundColor" format="color"/>
     </declare-styleable>
 </resources>

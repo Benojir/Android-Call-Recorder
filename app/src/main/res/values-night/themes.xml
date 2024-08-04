@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.VoiceRecorder" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/dark_grey</item>
+        <item name="colorPrimary">@color/theme_color_light</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
@@ -11,9 +11,10 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/backgroundColor</item>
+
         <!-- Customize your theme here. -->
-        <item name="backgroundColor">@color/hp_theme_color_dark</item>
+        <item name="backgroundColor">@color/theme_color_dark</item>
         <item name="textColor">@color/white</item>
-        <item name="recordingItemBg">@color/hp_theme_color_dark</item>
+        <item name="scrollButtonBackgroundColor">@color/theme_color_dark</item>
     </style>
 </resources>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,53 +8,44 @@
     android:clickable="true"
     android:focusable="true"
     android:foreground="?android:attr/selectableItemBackground"
-    card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="0dp"
-    card_view:cardUseCompatPadding="false">
+    android:padding="10dp"
+    tools:ignore="HardcodedText">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        tools:ignore="HardcodedText">
+        android:layout_marginEnd="7dp"
+        android:orientation="vertical"
+        tools:ignore="HardcodedText,UselessParent">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/fileNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="7dp"
-            android:orientation="vertical"
-            tools:ignore="HardcodedText,UselessParent">
+            android:layout_marginBottom="5dp"
+            android:singleLine="true"
+            android:text="+915454552522d Nur Alam"
+            android:textColor="?attr/textColor"
+            android:textSize="17sp" />
 
-            <TextView
-                android:id="@+id/fileNameTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:singleLine="true"
-                android:text="+915454552522d Nur Alam"
-                android:textColor="?attr/textColor"
-                android:textSize="17sp" />
-
-            <TextView
-                android:id="@+id/fileInfoTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="25-10-2022    577.6 KB"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/selectionIcon"
+        <TextView
+            android:id="@+id/fileInfoTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="Selected"
-            android:src="@drawable/done_icon"
-            android:visibility="gone"
-            app:tint="@color/teal_500" />
+            android:singleLine="true"
+            android:text="25-10-2022    577.6 KB"
+            android:textSize="13sp" />
+    </LinearLayout>
 
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/selectionIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="Selected"
+        android:src="@drawable/done_icon"
+        android:visibility="gone"
+        app:tint="@color/teal_500" />
 
-</androidx.cardview.widget.CardView>
+</RelativeLayout>
