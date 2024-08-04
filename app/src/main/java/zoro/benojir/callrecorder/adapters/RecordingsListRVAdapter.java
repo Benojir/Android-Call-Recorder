@@ -47,14 +47,14 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
     private boolean isSelectModeOn;
     private final ArrayList<Integer> selectedItemsPositionsList = new ArrayList<>();
     private final ArrayList<Uri> selectedFilesUriList = new ArrayList<>();
-    private final ArrayList<Integer> allPositions;
+    private final ArrayList<Integer> allPositionsList;
     private final ArrayList<Uri> allFilesUriList;
 
-    public RecordingsListRVAdapter(Context context, JSONArray fileInfos, ArrayList<Integer> allPositions, ArrayList<Uri> allFilesUriList) {
+    public RecordingsListRVAdapter(Context context, JSONArray fileInfos, ArrayList<Integer> allPositionsList, ArrayList<Uri> allFilesUriList) {
         this.context = context;
         this.fileInfos = fileInfos;
         fileInfos2 = fileInfos;
-        this.allPositions = allPositions;
+        this.allPositionsList = allPositionsList;
         this.allFilesUriList = allFilesUriList;
     }
 
@@ -67,20 +67,21 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
         return new MyCustomViewHolder(view);
     }
 
-    @SuppressLint({"NotifyDataSetChanged", "UseCompatLoadingForDrawables"})
     @Override
     public void onBindViewHolder(@NonNull MyCustomViewHolder holder, int position) {
 
         try {
-            holder.fileNameTV.setText(fileInfos.getJSONObject(holder.getAdapterPosition()).getString("name"));
+            String fileName = fileInfos.getJSONObject(holder.getAdapterPosition()).getString("name");
             String fileSizeAndDate = fileInfos.getJSONObject(holder.getAdapterPosition()).get("modified_date") + "\t\t (" + fileInfos.getJSONObject(holder.getAdapterPosition()).get("size") + ")";
+
+            holder.fileNameTV.setText(fileName);
             holder.fileInfoTV.setText(fileSizeAndDate);
         } catch (JSONException e) {
             Log.e(TAG, "onBindViewHolder: ", e);
         }
 
         if (isSelectModeOn) {
-            MainActivity.menu_selected_items_count.setTitle(selectedItemsPositionsList.size() + "");
+            MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size() + "");
         }
 
         if (selectedItemsPositionsList.contains(holder.getAdapterPosition())) {
@@ -98,7 +99,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     isSelectModeOn = false;
                     MainActivity.searchBtn.setVisible(true);
                     MainActivity.settingsBtn.setVisible(true);
-                    MainActivity.menu_selected_items_count.setVisible(false);
+                    MainActivity.selectedItemsCountMenu.setVisible(false);
                 } else {
                     if (selectedItemsPositionsList.contains(holder.getAdapterPosition())) {
 
@@ -113,7 +114,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                             }
 
                             holder.itemView.findViewById(R.id.selectionIcon).setVisibility(View.GONE);
-                            MainActivity.menu_selected_items_count.setTitle(selectedItemsPositionsList.size() + "");
+                            MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size() + "");
 
                         } catch (Exception e) {
                             Log.d(TAG, "onBindViewHolder s4: " + e.getMessage());
@@ -121,7 +122,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     } else {
                         holder.itemView.findViewById(R.id.selectionIcon).setVisibility(View.VISIBLE);
                         selectedItemsPositionsList.add(holder.getAdapterPosition());
-                        MainActivity.menu_selected_items_count.setTitle(selectedItemsPositionsList.size() + "");
+                        MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size() + "");
                         try {
                             selectedFilesUriList.add(Uri.fromFile(new File(fileInfos.getJSONObject(holder.getAdapterPosition()).getString("absolute_path"))));
                         } catch (JSONException e) {
@@ -154,7 +155,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
 
                 bottomSheetDialog.findViewById(R.id.selectAllOption).setOnClickListener(view1 -> {
                     selectedItemsPositionsList.clear();
-                    selectedItemsPositionsList.addAll(allPositions);
+                    selectedItemsPositionsList.addAll(allPositionsList);
                     selectedFilesUriList.clear();
                     selectedFilesUriList.addAll(allFilesUriList);
                     notifyDataSetChanged();
@@ -169,7 +170,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     bottomSheetDialog.dismiss();
                     MainActivity.searchBtn.setVisible(true);
                     MainActivity.settingsBtn.setVisible(true);
-                    MainActivity.menu_selected_items_count.setVisible(false);
+                    MainActivity.selectedItemsCountMenu.setVisible(false);
                 });
 
                 bottomSheetDialog.findViewById(R.id.shareAllOption).setOnClickListener(view1 -> {
@@ -205,7 +206,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
 
                                 if (temp_file.delete()) {
                                     fileInfos.remove(filePosition);
-                                    allPositions.remove(filePosition);
+                                    allPositionsList.remove(filePosition);
                                     allFilesUriList.remove(Uri.fromFile(new File(fileInfos.getJSONObject(filePosition).get("absolute_path").toString())));
                                     k++;
                                 }
@@ -224,12 +225,12 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                         notifyDataSetChanged();
                         MainActivity.settingsBtn.setVisible(true);
                         MainActivity.searchBtn.setVisible(true);
-                        MainActivity.menu_selected_items_count.setVisible(false);
+                        MainActivity.selectedItemsCountMenu.setVisible(false);
                         bottomSheetDialog.dismiss();
 
                         if (fileInfos.length() <= 0) {
-                            MainActivity.allFilesRecyclerView.setVisibility(View.GONE);
-                            MainActivity.emptyFileIconContainer.setVisibility(View.VISIBLE);
+//                            MainActivity.allFilesRecyclerView.setVisibility(View.GONE);
+//                            MainActivity.emptyFileIconContainer.setVisibility(View.VISIBLE);
                         }
                     });
 
@@ -261,8 +262,8 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     bottomSheetDialog.dismiss();
                     MainActivity.searchBtn.setVisible(false);
                     MainActivity.settingsBtn.setVisible(false);
-                    MainActivity.menu_selected_items_count.setVisible(true);
-                    MainActivity.menu_selected_items_count.setTitle(selectedItemsPositionsList.size() + "");
+                    MainActivity.selectedItemsCountMenu.setVisible(true);
+                    MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size() + "");
                 });
 
                 bottomSheetDialog.findViewById(R.id.playOption).setOnClickListener(view1 -> {
@@ -312,7 +313,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                                 fileInfos.remove(holder.getAdapterPosition());
                                 notifyDataSetChanged();
                                 notifyItemRemoved(holder.getAdapterPosition());
-                                allPositions.remove((Integer) holder.getAdapterPosition());
+                                allPositionsList.remove((Integer) holder.getAdapterPosition());
                                 allFilesUriList.remove(Uri.fromFile(new File(fileInfos.getJSONObject(holder.getAdapterPosition()).get("absolute_path").toString())));
 
                                 bottomSheetDialog.dismiss();

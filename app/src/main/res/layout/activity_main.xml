@@ -2,7 +2,7 @@
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawerLayout"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
@@ -13,26 +13,27 @@
         tools:ignore="HardcodedText">
 
         <include
-            android:id="@+id/main_toolbar"
+            android:id="@+id/toolbar_include"
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/allFilesRecyclerView"
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/main_toolbar"
+            android:layout_below="@+id/toolbar_include"
             android:padding="3dp"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/empty_file_icon_container"
+            android:id="@+id/nothingFoundDesignContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
+            android:layout_below="@id/toolbar_include"
             tools:ignore="UseCompoundDrawables">
 
             <ImageView
@@ -53,21 +54,22 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/file_loading_info_container"
+            android:id="@+id/filesLoadingDesignContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:layout_below="@+id/toolbar_include"
             android:orientation="vertical"
             android:visibility="invisible">
 
             <ProgressBar
-                android:id="@+id/total_file_loading_progressbar"
+                android:id="@+id/totalFilesLoadingProgressBar"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:indeterminateTint="?attr/backgroundColor" />
 
             <TextView
-                android:id="@+id/total_file_loaded_tv"
+                android:id="@+id/totalFilesLoadedTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
@@ -77,7 +79,7 @@
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/scrollBackToTopBtn"
+            android:id="@+id/scrollButtonTopBottomFAB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -93,27 +95,10 @@
             app:fabSize="normal"
             app:tint="@color/white" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/scrollToBottomBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="25dp"
-            android:adjustViewBounds="true"
-            android:backgroundTint="?attr/scrollButtonBackgroundColor"
-            android:contentDescription="Scroll to Top"
-            android:src="@drawable/arrow_downward"
-            android:visibility="gone"
-            app:borderWidth="0dp"
-            app:fabSize="normal"
-            app:tint="@color/white" />
-
     </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigation_drawer"
+        android:id="@+id/navigationViewMenu"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"

@@ -16,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,12 +35,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
 import zoro.benojir.callrecorder.BuildConfig;
 import zoro.benojir.callrecorder.R;
 import zoro.benojir.callrecorder.adapters.RecordingsListRVAdapter;
+import zoro.benojir.callrecorder.databinding.ActivityMainBinding;
 import zoro.benojir.callrecorder.helpers.CustomFunctions;
 import zoro.benojir.callrecorder.helpers.SharedPreferencesHelper;
 
@@ -52,24 +51,20 @@ import org.json.JSONObject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityMainBinding binding;
     private static final int REQUEST_PERMISSION_CODE = 4528;
     public static final String TAG = "MADARA";
-    private boolean doubleBackPressed = false;
-    @SuppressLint("StaticFieldLeak")
-    public static LinearLayout emptyFileIconContainer, fileLoadingInfoContainer;
-    public static RecyclerView allFilesRecyclerView;
-    public static MenuItem searchBtn, settingsBtn, menu_selected_items_count;
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
-    private RecordingsListRVAdapter recordingsListRVAdapter;
-    private FloatingActionButton scrollBackToTopBtn, scrollToBottomBtn;
-    private TextView totalFileLoadedTv;
+    private boolean doubleBackPressed;
+    public static MenuItem searchBtn, settingsBtn, selectedItemsCountMenu;
+    private RecordingsListRVAdapter recyclerViewAdapter;
     private final JSONArray allFilesInformationJsonArray = new JSONArray();
     private final ArrayList<Integer> allPositions = new ArrayList<>();
     private final ArrayList<Uri> allFilesUriList = new ArrayList<>();
+    private boolean isBottomScrollButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,23 +74,21 @@ public class MainActivity extends AppCompatActivity {
         } else if (new SharedPreferencesHelper(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.light_mode))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
 //--------------------------------------------------------------------------------------------------
-
-        initVariables();
-
         getSupportFragmentManager();
-        MaterialToolbar toolbar = findViewById(R.id.main_toolbar);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar_include);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_name));
-
+//--------------------------------------------------------------------------------------------------
         /* App is crashing when sharing multi files at once if I don't set this */
         StrictMode.VmPolicy.Builder smBuilder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(smBuilder.build());
 //--------------------------------------------------------------------------------------------------
 
-        View headView = navigationView.getHeaderView(0);
+        View headView = binding.navigationViewMenu.getHeaderView(0);
 
         if (CustomFunctions.isDarkModeOn(this)) {
             headView.setBackground(AppCompatResources.getDrawable(this, R.drawable.header_bg_night));
@@ -104,11 +97,11 @@ public class MainActivity extends AppCompatActivity {
         String versionString = getString(R.string.app_version) + BuildConfig.VERSION_NAME;
         ((TextView) headView.findViewById(R.id.header_layout_version_tv)).setText(versionString);
 
-        Button updateBtnInHeaderLayout = headView.findViewById(R.id.updateBtnInHeaderLayout);
+        Button updateBtn = headView.findViewById(R.id.updateBtnInHeaderLayout);
 
-        CustomFunctions.checkForUpdateOnStartApp(this, updateBtnInHeaderLayout);
+        CustomFunctions.checkForUpdateOnStartApp(this, updateBtn);
 
-        updateBtnInHeaderLayout.setOnClickListener(view -> {
+        updateBtn.setOnClickListener(view -> {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_release_page_link)));
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
@@ -116,9 +109,9 @@ public class MainActivity extends AppCompatActivity {
 
 //--------------------------------------------------------------------------------------------------
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, 0, 0);
-        drawerLayout.addDrawerListener(toggle);
-        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.getRoot(), toolbar, 0, 0);
+        binding.getRoot().addDrawerListener(toggle);
+        binding.getRoot().addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
                 CustomFunctions.hideKeyboard(MainActivity.this, drawerView);
@@ -141,59 +134,10 @@ public class MainActivity extends AppCompatActivity {
         });
         toggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(item -> {
-            Intent intent1;
-
-            if (item.getItemId() == R.id.check_update_action) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_release_page_link))));
-                return true;
-
-            } else if (item.getItemId() == R.id.donate_me_action) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.donation_page_link))));
-                return true;
-
-            } else if (item.getItemId() == R.id.send_mail_action) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.app_issue_page_link))));
-                return true;
-
-            } else if (item.getItemId() == R.id.share_app_action) {
-
-                intent1 = new Intent(Intent.ACTION_SEND);
-                intent1.setType("text/plain");
-                intent1.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.app_sharing_message) + "\n" + getString(R.string.github_release_page_link));
-                startActivity(Intent.createChooser(intent1, "Share via"));
-                return true;
-
-            } else if (item.getItemId() == R.id.more_app_action) {
-
-                intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.more_apps_in_play_store)));
-                startActivity(intent1);
-                return true;
-
-            } else if (item.getItemId() == R.id.visitWeb_app_action) {
-
-                intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_link)));
-                startActivity(intent1);
-                return true;
-
-            } else if (item.getItemId() == R.id.visitGitHub_app_action) {
-                intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_profile_link)));
-                startActivity(intent1);
-                return true;
-
-            } else if (item.getItemId() == R.id.visitFb_app_action) {
-
-                intent1 = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_page_link)));
-                startActivity(intent1);
-                return true;
-
-            } else {
-                return false;
-            }
-        });
+        navigationViewItemsClickedActions();
 
 //        ------------------------------------------------------------------------------------------
-//
+
         if (!CustomFunctions.isSystemApp(this)) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -220,136 +164,178 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
 
         } else {
+            checkPermissions();
 
-            if (!isPermissionGranted()) {
-                askPermission();
-                Toast.makeText(this, "Please allow all permissions.", Toast.LENGTH_SHORT).show();
-            } else {
+            File recordingFolderPath = getExternalFilesDir("/recordings/");
 
-                File recordingFolderPath = getExternalFilesDir("/recordings/");
-
-                if (!recordingFolderPath.exists()) {
-                    recordingFolderPath.mkdirs();
-                }
-
-                File[] recordedFiles = recordingFolderPath.listFiles();
-
-                Log.d(TAG, recordedFiles.length + "");
-
-                if (recordedFiles != null && recordedFiles.length > 0) {
-
-                    emptyFileIconContainer.setVisibility(View.GONE);
-                    allFilesRecyclerView.setVisibility(View.VISIBLE);
-                    fileLoadingInfoContainer.setVisibility(View.VISIBLE);
-
-                    Handler handler = new Handler();
-
-                    new Thread(() -> {
-
-                        String sortOrder = new SharedPreferencesHelper(MainActivity.this).getRecordingSortOrder();
-
-                        if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_name_ascending))) {
-                            CustomFunctions.sortFilesByNameAscending(recordedFiles);
-                        } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_name_descending))) {
-                            CustomFunctions.sortFilesByNameDescending(recordedFiles);
-                        } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_new))) {
-                            CustomFunctions.sortNewestFilesFirst(recordedFiles);
-                        } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_old))) {
-                            CustomFunctions.sortOldestFilesFirst(recordedFiles);
-                        } else {
-                            CustomFunctions.sortNewestFilesFirst(recordedFiles);
-                        }
-
-                        int i = 1, j = 0;
-
-                        for (File recordFile : recordedFiles) {
-
-                            int finalI = i;
-
-                            handler.post(() -> totalFileLoadedTv.setText("Loading files " + finalI + "/" + recordedFiles.length));
-
-                            i++;
-
-                            if (recordFile.isFile() && FilenameUtils.getExtension(recordFile.getAbsolutePath()).equalsIgnoreCase("m4a") && recordFile.length() > 0) {
-
-
-                                JSONObject fileInfo = new JSONObject();
-
-                                try {
-                                    fileInfo.put("name", recordFile.getName());
-                                    fileInfo.put("size", CustomFunctions.fileSizeFormatter(recordFile.length()));
-                                    fileInfo.put("modified_date", CustomFunctions.timeFormatter(recordFile.lastModified()));
-                                    fileInfo.put("absolute_path", recordFile.getAbsolutePath());
-
-                                    allFilesInformationJsonArray.put(fileInfo);
-                                    allPositions.add(j);
-                                    j++;
-                                    allFilesUriList.add(Uri.fromFile(new File(recordFile.getAbsolutePath())));
-                                } catch (Exception e) {
-                                    Log.e(TAG, "onCreate: ", e);
-                                }
-                            }
-                        }
-
-                        handler.post(() -> {
-
-                            if (allFilesInformationJsonArray.length() > 0) {
-
-                                if (searchBtn != null)
-                                    searchBtn.setVisible(true);
-
-                                fileLoadingInfoContainer.setVisibility(View.GONE);
-
-                                recordingsListRVAdapter = new RecordingsListRVAdapter(MainActivity.this, allFilesInformationJsonArray, allPositions, allFilesUriList);
-                                allFilesRecyclerView.setAdapter(recordingsListRVAdapter);
-
-                                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-                                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-                                allFilesRecyclerView.setLayoutManager(linearLayoutManager);
-                                allFilesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                            } else {
-                                emptyFileIconContainer.setVisibility(View.VISIBLE);
-                                allFilesRecyclerView.setVisibility(View.GONE);
-                                fileLoadingInfoContainer.setVisibility(View.GONE);
-                            }
-                        });
-
-                    }).start();
-
-
-//                  33333333333333333333333333333333333333333333333333333333333333333333333333333333
-
-                    scrollBackToTopBtn.setOnClickListener(view -> allFilesRecyclerView.scrollToPosition(0));
-                    scrollToBottomBtn.setOnClickListener(view -> allFilesRecyclerView.scrollToPosition(allFilesRecyclerView.getAdapter().getItemCount() - 1));
-
-                    allFilesRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-
-                            if (newState == RecyclerView.SCROLL_STATE_IDLE) { // No scrolling
-                                new Handler().postDelayed(() -> scrollBackToTopBtn.setVisibility(View.GONE), 2000); // delay of 2 seconds before hiding the fab
-                                new Handler().postDelayed(() -> scrollToBottomBtn.setVisibility(View.GONE), 2000); // delay of 2 seconds before hiding the fab
-                            }
-                        }
-
-                        @Override
-                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-
-                            if (dy > 0) { // scrolling down
-                                scrollBackToTopBtn.setVisibility(View.GONE);
-                                scrollToBottomBtn.setVisibility(View.VISIBLE);
-                            } else if (dy < 0) { // scrolling up
-                                scrollBackToTopBtn.setVisibility(View.VISIBLE);
-                                scrollToBottomBtn.setVisibility(View.GONE);
-                            }
-                        }
-                    });
-                }
+            if (!recordingFolderPath.exists()) {
+                recordingFolderPath.mkdirs();
             }
 
+            File[] recordedFiles = recordingFolderPath.listFiles();
+            AtomicInteger increment = new AtomicInteger(1);
+
+            if (recordedFiles != null && recordedFiles.length > 0) {
+
+                binding.nothingFoundDesignContainer.setVisibility(View.GONE);
+                binding.recyclerView.setVisibility(View.VISIBLE);
+                binding.filesLoadingDesignContainer.setVisibility(View.VISIBLE);
+
+                new Thread(() -> {
+
+                    String sortOrder = new SharedPreferencesHelper(MainActivity.this).getRecordingSortOrder();
+
+                    if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_name_ascending))) {
+                        CustomFunctions.sortFilesByNameAscending(recordedFiles);
+                    } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_name_descending))) {
+                        CustomFunctions.sortFilesByNameDescending(recordedFiles);
+                    } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_new))) {
+                        CustomFunctions.sortNewestFilesFirst(recordedFiles);
+                    } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_old))) {
+                        CustomFunctions.sortOldestFilesFirst(recordedFiles);
+                    } else {
+                        CustomFunctions.sortNewestFilesFirst(recordedFiles);
+                    }
+
+                    for (File recordFile : recordedFiles) {
+
+                        runOnUiThread(() -> {
+                            String loadingFiles = "Loading files " + increment + "/" + recordedFiles.length;
+                            binding.totalFilesLoadedTV.setText(loadingFiles);
+                        });
+
+                        increment.getAndIncrement();
+
+                        boolean isValidRecordedFile = recordFile.isFile() && FilenameUtils.getExtension(recordFile.getAbsolutePath()).equalsIgnoreCase("m4a") && recordFile.length() > 0;
+
+                        if (isValidRecordedFile) {
+
+                            JSONObject fileInfo = new JSONObject();
+
+                            try {
+                                fileInfo.put("name", recordFile.getName());
+                                fileInfo.put("size", CustomFunctions.fileSizeFormatter(recordFile.length()));
+                                fileInfo.put("modified_date", CustomFunctions.timeFormatter(recordFile.lastModified()));
+                                fileInfo.put("absolute_path", recordFile.getAbsolutePath());
+
+                                allFilesInformationJsonArray.put(fileInfo);
+                            } catch (Exception e) {
+                                Log.e(TAG, "onCreate: ", e);
+                            }
+                        }
+                    }
+
+                    runOnUiThread(() -> {
+
+                        if (allFilesInformationJsonArray.length() > 0) {
+
+                            binding.filesLoadingDesignContainer.setVisibility(View.GONE);
+
+                            recyclerViewAdapter = new RecordingsListRVAdapter(MainActivity.this, allFilesInformationJsonArray, allPositions, allFilesUriList);
+                            binding.recyclerView.setAdapter(recyclerViewAdapter);
+
+                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+                            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+
+                            binding.recyclerView.setLayoutManager(linearLayoutManager);
+                            binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+                            if (searchBtn != null) {
+                                searchBtn.setVisible(true);
+                            }
+                        } else {
+                            binding.nothingFoundDesignContainer.setVisibility(View.VISIBLE);
+                            binding.recyclerView.setVisibility(View.GONE);
+                            binding.filesLoadingDesignContainer.setVisibility(View.GONE);
+                        }
+                    });
+                }).start();
+
+
+                if (isBottomScrollButton) {
+                    binding.scrollButtonTopBottomFAB.setOnClickListener(view -> binding.recyclerView.scrollToPosition(binding.recyclerView.getAdapter().getItemCount() - 1));
+                } else {
+                    binding.scrollButtonTopBottomFAB.setOnClickListener(view -> binding.recyclerView.scrollToPosition(0));
+                }
+
+                binding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+
+                        if (newState == RecyclerView.SCROLL_STATE_IDLE) { // No scrolling
+                            new Handler().postDelayed(() -> binding.scrollButtonTopBottomFAB.setVisibility(View.GONE), 2000); // delay of 2 seconds before hiding the fab
+                        }
+                    }
+
+                    @Override
+                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+
+                        if (dy > 0) { // scrolling down
+                            isBottomScrollButton = true;
+                        } else if (dy < 0) { // scrolling up
+                            isBottomScrollButton = false;
+                        }
+                        binding.scrollButtonTopBottomFAB.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
         }
-//        ------------------------------------------------------------------------------------------
+    }
+
+//    ----------------------------------------------------------------------------------------------
+
+    private void navigationViewItemsClickedActions() {
+        binding.navigationViewMenu.setNavigationItemSelectedListener(item -> {
+
+            Intent intent;
+
+            if (item.getItemId() == R.id.check_update_action) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_release_page_link))));
+                return true;
+
+            } else if (item.getItemId() == R.id.donate_me_action) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.donation_page_link))));
+                return true;
+
+            } else if (item.getItemId() == R.id.send_mail_action) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.app_issue_page_link))));
+                return true;
+
+            } else if (item.getItemId() == R.id.share_app_action) {
+
+                intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.app_sharing_message) + "\n" + getString(R.string.github_release_page_link));
+                startActivity(Intent.createChooser(intent, "Share via"));
+                return true;
+
+            } else if (item.getItemId() == R.id.more_app_action) {
+
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.more_apps_in_play_store)));
+                startActivity(intent);
+                return true;
+
+            } else if (item.getItemId() == R.id.visitWeb_app_action) {
+
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_link)));
+                startActivity(intent);
+                return true;
+
+            } else if (item.getItemId() == R.id.visitGitHub_app_action) {
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_profile_link)));
+                startActivity(intent);
+                return true;
+
+            } else if (item.getItemId() == R.id.visitFb_app_action) {
+
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_page_link)));
+                startActivity(intent);
+                return true;
+
+            } else {
+                return false;
+            }
+        });
     }
 
 //__________________________________________________________________________________________________
@@ -361,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
 
         searchBtn = menu.findItem(R.id.menu_search_action);
         settingsBtn = menu.findItem(R.id.menu_settings_action);
-        menu_selected_items_count = menu.findItem(R.id.menu_selected_items_count);
+        selectedItemsCountMenu = menu.findItem(R.id.menu_selected_items_count);
 
         searchBtn.setVisible(false);
 
@@ -376,7 +362,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                recordingsListRVAdapter.getFilter().filter(newText);
+                recyclerViewAdapter.getFilter().filter(newText);
                 return false;
             }
         });
@@ -403,18 +389,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    //__________________________________________________________________________________________________
+//__________________________________________________________________________________________________
+
+    private void checkPermissions() {
+
+        boolean arePermissionsGranted = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
+
+        if (!arePermissionsGranted) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.RECORD_AUDIO,
+                    Manifest.permission.READ_CONTACTS
+            }, REQUEST_PERMISSION_CODE);
+        }
+    }
+
+//__________________________________________________________________________________________________
+
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
+        if (binding.getRoot().isDrawerOpen(GravityCompat.START)) {
+            binding.getRoot().closeDrawer(GravityCompat.START);
         } else {
             if (doubleBackPressed) {
                 super.onBackPressed();
                 finish();
             } else {
                 this.doubleBackPressed = true;
-                Snackbar.make(drawerLayout, "Double back press to exit.", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(binding.getRoot(), "Double back press to exit.", Snackbar.LENGTH_LONG).show();
                 new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackPressed = false, 2000);
             }
         }
@@ -429,6 +431,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // _________________________________________________________________________________________________
+
     @SuppressLint("BatteryLife")
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -443,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
             try {
                 startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
             } catch (Exception e) {
-                CustomFunctions.simpleAlert(this, "Error", getString(R.string.app_info_page_opening_failed_message), "Ok", AppCompatResources.getDrawable(this, R.drawable.error));
+                CustomFunctions.simpleAlert(this, "Error", getString(R.string.app_info_page_opening_failed_message), "OK", AppCompatResources.getDrawable(this, R.drawable.error));
             }
         } else {
 
@@ -457,32 +460,5 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
-    }
-
-//__________________________________________________________________________________________________
-
-    private boolean isPermissionGranted() {
-
-        return ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void askPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.READ_CONTACTS
-        }, REQUEST_PERMISSION_CODE);
-    }
-
-
-    private void initVariables() {
-        emptyFileIconContainer = findViewById(R.id.empty_file_icon_container);
-        fileLoadingInfoContainer = findViewById(R.id.file_loading_info_container);
-        drawerLayout = findViewById(R.id.drawerLayout);
-        navigationView = findViewById(R.id.navigation_drawer);
-        allFilesRecyclerView = findViewById(R.id.allFilesRecyclerView);
-        scrollBackToTopBtn = findViewById(R.id.scrollBackToTopBtn);
-        scrollToBottomBtn = findViewById(R.id.scrollToBottomBtn);
-        totalFileLoadedTv = findViewById(R.id.total_file_loaded_tv);
     }
 }
