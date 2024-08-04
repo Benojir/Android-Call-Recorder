@@ -6,26 +6,22 @@
     android:orientation="vertical"
     tools:ignore="ContentDescription">
 
-    <LinearLayout
-        android:id="@+id/fileNameContainerLLinBottomDialog"
+    <TextView
+        android:id="@+id/fileNameTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="5dp"
-        android:background="?android:attr/selectableItemBackground">
+        android:text="@string/app_name"
+        android:textAlignment="center"
+        android:textColor="?attr/textColor"
+        android:textSize="18sp"
+        android:paddingVertical="20dp"
+        android:paddingHorizontal="25dp"/>
 
-        <TextView
-            android:id="@+id/fileNameTV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textAlignment="center"
-            android:textColor="?attr/textColor"
-            android:textSize="18sp"
-            android:paddingVertical="10dp"
-            android:paddingHorizontal="20dp"/>
-    </LinearLayout>
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="5dp"/>
 
     <TextView
         android:id="@+id/selectOption"

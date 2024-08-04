@@ -246,7 +246,7 @@ public class RecordingsListRVAdapter extends RecyclerView.Adapter<RecordingsList
                     fileNameTVinBottomDialog.setText(fileInfos.getJSONObject(holder.getAdapterPosition()).getString("name"));
                 } catch (JSONException e) {
                     Log.e(TAG, "onBindViewHolder: ", e);
-                    bottomSheetDialog.findViewById(R.id.fileNameContainerLLinBottomDialog).setVisibility(View.GONE);
+                    bottomSheetDialog.findViewById(R.id.fileNameTV).setVisibility(View.GONE);
                 }
 
                 bottomSheetDialog.findViewById(R.id.selectOption).setOnClickListener(view1 -> {

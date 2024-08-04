@@ -28,7 +28,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -75,15 +74,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-//--------------------------------------------------------------------------------------------------
-
         if (new SharedPreferencesHelper(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.dark_mode))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else if (new SharedPreferencesHelper(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.light_mode))) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+        setContentView(R.layout.activity_main);
+
 //--------------------------------------------------------------------------------------------------
 
         initVariables();
