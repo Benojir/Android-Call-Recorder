@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.services;
+package zoro.benojir.callrecorder.services;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -12,10 +12,10 @@ import android.telecom.InCallService;
 
 import androidx.core.app.NotificationCompat;
 
-import com.venomdino.callrecorder.BuildConfig;
-import com.venomdino.callrecorder.R;
-import com.venomdino.callrecorder.helpers.RecordingHelper;
-import com.venomdino.callrecorder.helpers.SharedPreferencesHelper;
+import zoro.benojir.callrecorder.BuildConfig;
+import zoro.benojir.callrecorder.R;
+import zoro.benojir.callrecorder.helpers.RecordingHelper;
+import zoro.benojir.callrecorder.helpers.SharedPreferencesHelper;
 
 public class RecorderInCallService extends InCallService {
 
@@ -67,7 +67,6 @@ public class RecorderInCallService extends InCallService {
                 }
             }
         });
-
     }
 
     @Override

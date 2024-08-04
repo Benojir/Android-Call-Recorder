@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.activities;
+package zoro.benojir.callrecorder.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,9 +14,9 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
-import com.venomdino.callrecorder.BuildConfig;
-import com.venomdino.callrecorder.R;
-import com.venomdino.callrecorder.helpers.SharedPreferencesHelper;
+import zoro.benojir.callrecorder.BuildConfig;
+import zoro.benojir.callrecorder.R;
+import zoro.benojir.callrecorder.helpers.SharedPreferencesHelper;
 
 import java.util.Objects;
 

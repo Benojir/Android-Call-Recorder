@@ -6,7 +6,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     tools:ignore="HardcodedText"
     android:orientation="vertical"
-    tools:context="com.venomdino.callrecorder.activities.SettingsActivity">
+    tools:context=".activities.SettingsActivity">
 
   <include
       android:id="@+id/settings_toolbar"

@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.dialogs;
+package zoro.benojir.callrecorder.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -9,8 +9,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.venomdino.callrecorder.R;
-import com.venomdino.callrecorder.helpers.CustomFunctions;
+import zoro.benojir.callrecorder.R;
+import zoro.benojir.callrecorder.helpers.CustomFunctions;
 
 import org.json.JSONException;
 import org.json.JSONObject;

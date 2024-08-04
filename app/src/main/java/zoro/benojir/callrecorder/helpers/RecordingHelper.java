@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.helpers;
+package zoro.benojir.callrecorder.helpers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.media.MediaRecorder;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.venomdino.callrecorder.activities.MainActivity;
+import zoro.benojir.callrecorder.activities.MainActivity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;

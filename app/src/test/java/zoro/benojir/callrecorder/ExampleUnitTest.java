@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder;
+package zoro.benojir.callrecorder;
 
 import org.junit.Test;
 

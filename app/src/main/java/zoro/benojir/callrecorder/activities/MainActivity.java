@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.activities;
+package zoro.benojir.callrecorder.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -39,11 +39,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.venomdino.callrecorder.BuildConfig;
-import com.venomdino.callrecorder.R;
-import com.venomdino.callrecorder.adapters.RecordingsListRVAdapter;
-import com.venomdino.callrecorder.helpers.CustomFunctions;
-import com.venomdino.callrecorder.helpers.SharedPreferencesHelper;
+import zoro.benojir.callrecorder.BuildConfig;
+import zoro.benojir.callrecorder.R;
+import zoro.benojir.callrecorder.adapters.RecordingsListRVAdapter;
+import zoro.benojir.callrecorder.helpers.CustomFunctions;
+import zoro.benojir.callrecorder.helpers.SharedPreferencesHelper;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_name));
 
-        /* Strict mode add korar karon holo multiple files share korar somoi app crash kore jachhe*/
+        /* App is crashing when sharing multi files at once if I don't set this */
         StrictMode.VmPolicy.Builder smBuilder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(smBuilder.build());
 //--------------------------------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <permissions>
-    <privapp-permissions package="com.venomdino.callrecorder">
+    <privapp-permissions package="com.benojir.callrecorder">
         <permission name="android.permission.CAPTURE_AUDIO_OUTPUT" />
         <permission name="android.permission.CONTROL_INCALL_EXPERIENCE" />
     </privapp-permissions>

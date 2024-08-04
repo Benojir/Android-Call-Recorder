@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.helpers;
+package zoro.benojir.callrecorder.helpers;
 
 import android.Manifest;
 import android.content.Context;
@@ -18,7 +18,7 @@ public class ContactsHelper {
 
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED){
 
-            if (phone_number.equals("")){
+            if (phone_number.isEmpty()){
                 contactName = "Unknown_";
             }
             else{
@@ -35,7 +35,7 @@ public class ContactsHelper {
                     cursor.close();
                 }
 
-                if (contactName.equals("")){
+                if (contactName.isEmpty()){
                     contactName = "Unknown";
                 }
             }

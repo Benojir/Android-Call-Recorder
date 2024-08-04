@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.helpers;
+package zoro.benojir.callrecorder.helpers;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 
-import com.venomdino.callrecorder.BuildConfig;
-import com.venomdino.callrecorder.R;
+import zoro.benojir.callrecorder.BuildConfig;
+import zoro.benojir.callrecorder.R;
 
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.comparator.NameFileComparator;
@@ -173,8 +173,7 @@ public class CustomFunctions {
                 button.setVisibility(View.VISIBLE);
             }
             catch (IOException e) {
-                e.printStackTrace();
-                Log.d("MADARA", "checkForUpdateOnStartApp: " + e.getMessage());
+                Log.e("MADARA", "error: ", e);
             }
         }).start();
     }

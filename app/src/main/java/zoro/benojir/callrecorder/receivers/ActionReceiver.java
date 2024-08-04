@@ -1,11 +1,11 @@
-package com.venomdino.callrecorder.receivers;
+package zoro.benojir.callrecorder.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.venomdino.callrecorder.services.RecorderInCallService;
+import zoro.benojir.callrecorder.services.RecorderInCallService;
 
 public class ActionReceiver extends BroadcastReceiver {
 

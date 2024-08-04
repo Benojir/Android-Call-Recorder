@@ -1,9 +1,9 @@
-package com.venomdino.callrecorder.helpers;
+package zoro.benojir.callrecorder.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.venomdino.callrecorder.R;
+import zoro.benojir.callrecorder.R;
 
 public class SharedPreferencesHelper {
     private static final String APP_PREFS_NAME = "CallRecorderPreference";

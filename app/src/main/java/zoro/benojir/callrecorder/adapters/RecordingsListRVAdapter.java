@@ -1,4 +1,4 @@
-package com.venomdino.callrecorder.adapters;
+package zoro.benojir.callrecorder.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -24,10 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.venomdino.callrecorder.R;
-import com.venomdino.callrecorder.activities.MainActivity;
-import com.venomdino.callrecorder.helpers.CustomFunctions;
-import com.venomdino.callrecorder.dialogs.FileInfoDialog;
+
+import zoro.benojir.callrecorder.R;
+import zoro.benojir.callrecorder.activities.MainActivity;
+import zoro.benojir.callrecorder.helpers.CustomFunctions;
+import zoro.benojir.callrecorder.dialogs.FileInfoDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
