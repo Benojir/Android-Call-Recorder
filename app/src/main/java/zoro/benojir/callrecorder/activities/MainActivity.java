@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private RecordingsListAdapter recyclerViewAdapter;
     private final JSONArray allFilesInfoJArray = new JSONArray();
     private boolean isBottomScrollButton;
-    private boolean iconSettingDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -264,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
 
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) { // No scrolling
                             new Handler().postDelayed(() -> binding.scrollButtonTopBottomFAB.setVisibility(View.GONE), 2000); // delay of 2 seconds before hiding the fab
-                            iconSettingDone = false;
                         }
                     }
 
@@ -273,18 +271,10 @@ public class MainActivity extends AppCompatActivity {
 
                         if (dy > 0) { // scrolling down
                             isBottomScrollButton = true;
-
-                            if (!iconSettingDone) {
-                                binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_downward);
-                                iconSettingDone = true;
-                            }
+                            binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_downward);
                         } else if (dy < 0) { // scrolling up
                             isBottomScrollButton = false;
-
-                            if (!iconSettingDone) {
-                                binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_upward);
-                                iconSettingDone = true;
-                            }
+                            binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_upward);
                         }
                         binding.scrollButtonTopBottomFAB.setVisibility(View.VISIBLE);
                     }
