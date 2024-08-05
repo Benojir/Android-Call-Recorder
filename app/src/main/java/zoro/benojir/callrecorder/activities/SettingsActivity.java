@@ -1,11 +1,10 @@
 package zoro.benojir.callrecorder.activities;
 
 import android.os.Bundle;
-import android.view.View;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.preference.ListPreference;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.appbar.MaterialToolbar;
@@ -39,6 +38,15 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+
+            // Add a listener to restart the activity when the theme is changed
+            ListPreference appearancePreference = findPreference("appearance");
+            if (appearancePreference != null) {
+                appearancePreference.setOnPreferenceChangeListener((preference, newValue) -> {
+                    getActivity().recreate();
+                    return true;
+                });
+            }
         }
     }
 }
