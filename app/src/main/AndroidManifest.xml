@@ -34,7 +34,7 @@
         tools:targetApi="r" >
         <activity
             android:name=".activities.SettingsActivity"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/title_activity_settings" />
 
         <provider
@@ -61,10 +61,6 @@
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <activity
-            android:name=".activities.OldSettingsActivity"
-            android:enabled="true"
-            android:exported="true" />
 
         <receiver
             android:name=".receivers.ActionReceiver"
