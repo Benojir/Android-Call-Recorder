@@ -23,12 +23,10 @@ import zoro.benojir.callrecorder.R;
 
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.comparator.NameFileComparator;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -173,8 +171,6 @@ public class CustomFunctions {
                 if (BuildConfig.VERSION_CODE < Integer.parseInt(versionObject.getString("versionCode"))) {
                     new Handler(Looper.getMainLooper()).post(() -> button.setVisibility(View.VISIBLE));
                 }
-
-                Log.d(TAG, "checkForUpdateOnStartApp: "+ versionObject.toString());
             } catch (Exception e) {
                 Log.e(TAG, "error: ", e);
             }
