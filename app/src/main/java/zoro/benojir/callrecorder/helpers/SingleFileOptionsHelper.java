@@ -163,10 +163,10 @@ public class SingleFileOptionsHelper {
 
             if (file.delete()) {
                 Toast.makeText(activity, "Recorded file deleted successfully.", Toast.LENGTH_SHORT).show();
-                listener.onComplete(true);
+                listener.onComplete(true, file);
             } else {
                 Toast.makeText(activity, "Failed to delete file.", Toast.LENGTH_SHORT).show();
-                listener.onComplete(false);
+                listener.onComplete(false, file);
             }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss());
@@ -179,6 +179,6 @@ public class SingleFileOptionsHelper {
         void onComplete(JSONObject fileInfo, boolean success) throws JSONException;
     }
     public interface OnFileDeletedListener {
-        void onComplete(boolean success);
+        void onComplete(boolean success, File file);
     }
 }

@@ -22,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import zoro.benojir.callrecorder.R;
+import zoro.benojir.callrecorder.activities.MainActivity;
 import zoro.benojir.callrecorder.dialogs.FileInfoDialog;
 import zoro.benojir.callrecorder.dialogs.MultipleFilesControlDialog;
 import zoro.benojir.callrecorder.dialogs.SingleFileControlDialog;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAdapter.MyCustomViewHolder> implements Filterable {
 
@@ -85,14 +87,18 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
                         selectedItemsPositionsList.remove((Integer) holder.getAdapterPosition());
                         removeUnselectedItemUI(holder);
+                        selectedFilesUriList.remove(Uri.fromFile(file));
+                        enableSelectedItemCountMenu();
 
                         if (selectedItemsPositionsList.isEmpty()) {
                             isSelectionModeOn = false;
+                            disableSelectedItemCountMenu();
                         }
                     } else {
                         selectedItemsPositionsList.add(holder.getAdapterPosition());
                         setSelectedItemUI(holder);
                         selectedFilesUriList.add(Uri.fromFile(file));
+                        enableSelectedItemCountMenu();
                     }
                 } else {
                     fileOptionsHelper.playRecording();
@@ -100,6 +106,10 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             });
 
             //................................................................
+
+            if (isSelectionModeOn) {
+                enableSelectedItemCountMenu();
+            }
 
             // Update selection state here for all selected items. Because onDeselectAllOptionClicked will not trigger when onBindViewHolder is called.
             if (selectedItemsPositionsList.contains(holder.getAdapterPosition())) {
@@ -109,6 +119,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
                 if (selectedItemsPositionsList.isEmpty()) {
                     isSelectionModeOn = false;
+                    disableSelectedItemCountMenu();
                 }
             }
 
@@ -161,6 +172,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                                 selectedItemsPositionsList.add(holder.getAdapterPosition());
                                 setSelectedItemUI(holder);
                                 selectedFilesUriList.add(Uri.fromFile(file));
+                                enableSelectedItemCountMenu();
                             }
 
                             @Override
@@ -187,11 +199,27 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
                             @Override
                             public void onDeleteOptionClicked(int position) {
-                                fileOptionsHelper.deleteFile(success -> {
+
+                                fileOptionsHelper.deleteFile((success, file1) -> {
+
                                     if (success) {
+
                                         fileInfos.remove(position);
                                         notifyItemRemoved(position);
                                         selectedItemsPositionsList.remove((Integer) position);
+
+                                        new Thread(() -> {
+                                            for (int i = 0; i < fileInfos2.length(); i++) {
+                                                try {
+                                                    if (fileInfos2.getJSONObject(i).getString("absolute_path").equals(file1.getAbsolutePath())) {
+                                                        fileInfos2.remove(i);
+                                                        break;
+                                                    }
+                                                } catch (JSONException e) {
+                                                    Log.e(TAG, "onDeleteOptionClicked: ", e);
+                                                }
+                                            }
+                                        }).start();
                                     } else {
                                         Toast.makeText(activity, "Failed to delete file.", Toast.LENGTH_SHORT).show();
                                     }
@@ -288,7 +316,6 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
     private void setSelectedItemUI(MyCustomViewHolder holder) {
         holder.mainLayout.setBackgroundColor(activity.getColor(R.color.fade_blue));
         holder.selectionIcon.setVisibility(View.VISIBLE);
-        Log.d(TAG, "setSelection holder.getAdapterPosition(): " + holder.getAdapterPosition());
     }
 
     private void removeUnselectedItemUI(MyCustomViewHolder holder) {
@@ -366,17 +393,27 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             pd.setMessage("Deleting files...");
             pd.show();
 
+            Collections.sort(selectedItemsPositionsList);
             new Thread(() -> {
+
                 // Iterate in reverse order to avoid index shifting issues
                 for (int i = selectedItemsPositionsList.size() - 1; i >= 0; i--) {
                     try {
                         int position = selectedItemsPositionsList.get(i);
+
                         File file = new File(fileInfos.getJSONObject(position).getString("absolute_path"));
 
                         if (file.delete()) {
                             fileInfos.remove(position);
                             selectedItemsPositionsList.remove(i);
                             selectedFilesUriList.remove(i);
+
+                            for (int j = 0; j < fileInfos2.length(); j++) {
+                                if (fileInfos2.getJSONObject(j).getString("absolute_path").equals(file.getAbsolutePath())) {
+                                    fileInfos2.remove(j);
+                                    break;
+                                }
+                            }
                         }
                     } catch (JSONException e) {
                         Log.e(TAG, "deleteAllSelectedItems: ", e);
@@ -384,8 +421,11 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                 }
 
                 activity.runOnUiThread(() -> {
-                    notifyDataSetChanged();
                     pd.dismiss();
+                    // Notify RecyclerView about data changes
+                    notifyDataSetChanged();
+                    isSelectionModeOn = false;
+                    disableSelectedItemCountMenu();
                 });
             }).start();
         });
@@ -393,6 +433,20 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
         builder.show();
     }
 
+//    ----------------------------------------------------------------------------------------------
+
+    private void enableSelectedItemCountMenu(){
+        MainActivity.searchBtn.setVisible(false);
+        MainActivity.settingsBtn.setVisible(false);
+        MainActivity.selectedItemsCountMenu.setVisible(true);
+        MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size()+"");
+    }
+
+    private void disableSelectedItemCountMenu(){
+        MainActivity.searchBtn.setVisible(true);
+        MainActivity.settingsBtn.setVisible(true);
+        MainActivity.selectedItemsCountMenu.setVisible(false);
+    }
 //    ----------------------------------------------------------------------------------------------
 
     public interface OnSingleItemLongClickListener {

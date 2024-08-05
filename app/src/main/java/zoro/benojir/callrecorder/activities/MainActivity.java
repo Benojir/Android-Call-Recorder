@@ -273,7 +273,6 @@ public class MainActivity extends AppCompatActivity {
 
                         if (dy > 0) { // scrolling down
                             isBottomScrollButton = true;
-                            Log.d(TAG, "onScrolled down: " + isBottomScrollButton);
 
                             if (!iconSettingDone) {
                                 binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_downward);
@@ -281,7 +280,6 @@ public class MainActivity extends AppCompatActivity {
                             }
                         } else if (dy < 0) { // scrolling up
                             isBottomScrollButton = false;
-                            Log.d(TAG, "onScrolled up: " + isBottomScrollButton);
 
                             if (!iconSettingDone) {
                                 binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_upward);
