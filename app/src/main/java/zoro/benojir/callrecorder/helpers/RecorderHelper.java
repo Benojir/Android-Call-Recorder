@@ -3,6 +3,8 @@ package zoro.benojir.callrecorder.helpers;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.MediaRecorder;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -55,12 +57,12 @@ public class RecorderHelper {
             recorder.start();
 
             if (preferences.getBoolean("start_toast", false)) {
-                Toast.makeText(context, "Recording started", Toast.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Recording started!", Toast.LENGTH_SHORT).show());
             }
-
         } catch (Exception e) {
             Log.e(TAG, "startVoiceRecoding: ", e);
-            Toast.makeText(context, "Recording start failed! " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            recorder = null;
+            new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Recording start failed!", Toast.LENGTH_SHORT).show());
         }
     }
 //--------------------------------------------------------------------------------------------------
@@ -68,20 +70,20 @@ public class RecorderHelper {
     public void stopVoiceRecoding() {
 
         try {
-            recorder.release();
             recorder.stop();
             recorder.reset();
+            recorder.release();
             recorder = null;
 
             if (preferences.getBoolean("saved_toast", false)) {
-                Toast.makeText(context, "Recording saved successfully!", Toast.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Recording saved successfully!", Toast.LENGTH_SHORT).show());
             }
         } catch (Exception e) {
             Log.e(TAG, "stopVoiceRecoding:", e);
             recorder = null;
 
             if (preferences.getBoolean("saved_toast", false)) {
-                Toast.makeText(context, "Recording saved!", Toast.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()).post(() -> Toast.makeText(context, "Recording saved!", Toast.LENGTH_SHORT).show());
             }
         }
     }

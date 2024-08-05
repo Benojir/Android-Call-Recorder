@@ -1,6 +1,6 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/general_header">
+    <PreferenceCategory app:title="@string/recording_header">
 
         <SwitchPreferenceCompat
             app:key="is_call_recording_enabled"
@@ -22,9 +22,12 @@
             app:summaryOn="@string/saved_toast_summary_on"
             app:summaryOff="@string/saved_toast_summary_off"/>
 
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/general_header">
+
         <ListPreference
             app:defaultValue="device_default"
-            app:dependency="is_call_recording_enabled"
             app:entries="@array/appearance_entries"
             app:entryValues="@array/appearance_values"
             app:key="appearance"
@@ -33,27 +36,11 @@
 
         <ListPreference
             app:defaultValue="sort_by_new"
-            app:dependency="is_call_recording_enabled"
             app:entries="@array/sort_by_entries"
             app:entryValues="@array/sort_by_values"
             app:key="sort_by"
             app:title="@string/sort_by_title"
             app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/recording_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
 
     </PreferenceCategory>
 
