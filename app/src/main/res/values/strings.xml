@@ -64,8 +64,15 @@
     <string name="call_recording_summary_on">Calls will be recorded automatically</string>
     <string name="call_recording_summary_off">Calls will not be recorded automatically</string>
     <string name="general_header">General</string>
-    <string name="start_toast">Recording start toast</string>
-    <string name="start_toast_summary_on">A toast will be shown when recrding will be started</string>
+    <string name="start_toast">Start toast</string>
+    <string name="start_toast_summary_on">A toast will be shown when recording will be started</string>
     <string name="start_toast_summary_off">No toast will be shown when recording started</string>
+    <string name="saved_toast">Saved toast</string>
+    <string name="saved_toast_summary_on">A toast will be shown when recording saved</string>
+    <string name="saved_toast_summary_off">No toast will be shown when recording saved</string>
+    <string name="appearance_title">Appearance</string>
+    <string name="theme_title">Theme</string>
+    <string name="sort_by_title">Sort by</string>
+    <string name="recording_header">Recorder</string>
 
 </resources>

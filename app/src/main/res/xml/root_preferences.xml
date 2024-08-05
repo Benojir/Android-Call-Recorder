@@ -8,24 +8,41 @@
             app:summaryOff="@string/call_recording_summary_off"
             app:summaryOn="@string/call_recording_summary_on" />
 
-        <CheckBoxPreference
+        <SwitchPreferenceCompat
             app:key="start_toast"
             app:title="@string/start_toast"
             app:dependency="is_call_recording_enabled"
             app:summaryOn="@string/start_toast_summary_on"
             app:summaryOff="@string/start_toast_summary_off"/>
 
+        <SwitchPreferenceCompat
+            app:key="saved_toast"
+            app:title="@string/saved_toast"
+            app:dependency="is_call_recording_enabled"
+            app:summaryOn="@string/saved_toast_summary_on"
+            app:summaryOff="@string/saved_toast_summary_off"/>
+
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
+            app:defaultValue="device_default"
+            app:dependency="is_call_recording_enabled"
+            app:entries="@array/appearance_entries"
+            app:entryValues="@array/appearance_values"
+            app:key="appearance"
+            app:title="@string/theme_title"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="sort_by_new"
+            app:dependency="is_call_recording_enabled"
+            app:entries="@array/sort_by_entries"
+            app:entryValues="@array/sort_by_values"
+            app:key="sort_by"
+            app:title="@string/sort_by_title"
             app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/sync_header">
+    <PreferenceCategory app:title="@string/recording_header">
 
         <SwitchPreferenceCompat
             app:key="sync"

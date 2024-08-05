@@ -3,6 +3,7 @@ package zoro.benojir.callrecorder.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,7 +44,6 @@ import zoro.benojir.callrecorder.R;
 import zoro.benojir.callrecorder.adapters.RecordingsListAdapter;
 import zoro.benojir.callrecorder.databinding.ActivityMainBinding;
 import zoro.benojir.callrecorder.helpers.CustomFunctions;
-import zoro.benojir.callrecorder.helpers.SharedPreferencesHelper;
 
 import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
@@ -62,15 +63,20 @@ public class MainActivity extends AppCompatActivity {
     private RecordingsListAdapter recyclerViewAdapter;
     private final JSONArray allFilesInfoJArray = new JSONArray();
     private boolean isBottomScrollButton;
+    private SharedPreferences preferences;
+    private String sortOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (new SharedPreferencesHelper(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.dark_mode))) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        if (preferences.getString("appearance", "device_default").equals("dark_mode")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else if (new SharedPreferencesHelper(MainActivity.this).getAppearanceValue().equalsIgnoreCase(getString(R.string.light_mode))) {
+        } else if (preferences.getString("appearance", "device_default").equals("light_mode")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         }
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -180,18 +186,21 @@ public class MainActivity extends AppCompatActivity {
 
                 new Thread(() -> {
 
-                    String sortOrder = new SharedPreferencesHelper(MainActivity.this).getRecordingSortOrder();
+                    sortOrder = preferences.getString("sort_by", "sort_by_new");
 
-                    if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_name_ascending))) {
-                        CustomFunctions.sortFilesByNameAscending(recordedFiles);
-                    } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_name_descending))) {
-                        CustomFunctions.sortFilesByNameDescending(recordedFiles);
-                    } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_new))) {
-                        CustomFunctions.sortNewestFilesFirst(recordedFiles);
-                    } else if (sortOrder.equalsIgnoreCase(getString(R.string.sort_by_old))) {
-                        CustomFunctions.sortOldestFilesFirst(recordedFiles);
-                    } else {
-                        CustomFunctions.sortNewestFilesFirst(recordedFiles);
+                    switch (sortOrder) {
+                        case "sort_by_name_ascending":
+                            CustomFunctions.sortFilesByNameAscending(recordedFiles);
+                            break;
+                        case "sort_by_name_descending":
+                            CustomFunctions.sortFilesByNameDescending(recordedFiles);
+                            break;
+                        case "sort_by_old":
+                            CustomFunctions.sortOldestFilesFirst(recordedFiles);
+                            break;
+                        default:
+                            CustomFunctions.sortNewestFilesFirst(recordedFiles);
+                            break;
                     }
 
                     for (File recordFile : recordedFiles) {
@@ -426,12 +435,35 @@ public class MainActivity extends AppCompatActivity {
 //__________________________________________________________________________________________________
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+        boolean isDarkModeOn = CustomFunctions.isDarkModeOn(this);
+        String appearance = preferences.getString("appearance", "device_default");
+
+        if (isDarkModeOn && appearance.equalsIgnoreCase("light_mode")) {
+            recreate();
+        } else if (!isDarkModeOn && appearance.equalsIgnoreCase("dark_mode")) {
+            recreate();
+        }
+
+        String shortOrderAfterReturn = preferences.getString("sort_by", "sort_by_new");
+
+        if (!sortOrder.equalsIgnoreCase(shortOrderAfterReturn)) {
+            recreate();
+        }
+    }
+
+
+//__________________________________________________________________________________________________
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
     }
 
-    // _________________________________________________________________________________________________
+// _________________________________________________________________________________________________
 
     @SuppressLint("BatteryLife")
     @Override
