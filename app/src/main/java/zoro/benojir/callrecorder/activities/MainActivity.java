@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button updateBtn = headView.findViewById(R.id.updateBtnInHeaderLayout);
 
-//        CustomFunctions.checkForUpdateOnStartApp(this, updateBtn);
+        CustomFunctions.checkForUpdateOnStartApp(this, updateBtn);
 
         updateBtn.setOnClickListener(view -> {
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_release_page_link)));
@@ -305,15 +305,7 @@ public class MainActivity extends AppCompatActivity {
 
             Intent intent;
 
-            if (item.getItemId() == R.id.check_update_action) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_release_page_link))));
-                return true;
-
-            } else if (item.getItemId() == R.id.donate_me_action) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.donation_page_link))));
-                return true;
-
-            } else if (item.getItemId() == R.id.send_mail_action) {
+            if (item.getItemId() == R.id.send_mail_action) {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.app_issue_page_link))));
                 return true;
 
@@ -342,9 +334,9 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 return true;
 
-            } else if (item.getItemId() == R.id.visitFb_app_action) {
+            } else if (item.getItemId() == R.id.visitTG_app_action) {
 
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.facebook_page_link)));
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.telegram_link)));
                 startActivity(intent);
                 return true;
 

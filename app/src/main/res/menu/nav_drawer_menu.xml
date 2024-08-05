@@ -3,20 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="More Options"
-        tools:ignore="HardcodedText">
-        <menu>
-            <item
-                android:id="@+id/check_update_action"
-                android:title="Check New Update"
-                android:icon="@drawable/update_24"/>
-
-            <item
-                android:id="@+id/donate_me_action"
-                android:title="Donate"
-                android:icon="@drawable/donation"/>
-        </menu>
-    </item>
     <item android:title="Feedback"
         tools:ignore="HardcodedText">
         <menu>
@@ -54,9 +40,9 @@
                 android:icon="@drawable/github"/>
 
             <item
-                android:id="@+id/visitFb_app_action"
-                android:title="Facebook"
-                android:icon="@drawable/facebook"/>
+                android:id="@+id/visitTG_app_action"
+                android:title="Telegram"
+                android:icon="@drawable/telegram"/>
         </menu>
 
     </item>

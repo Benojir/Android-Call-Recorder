@@ -1,35 +1,17 @@
 <resources>
     <string name="app_name">Call Recorder</string>
-
     <string name="not_system_app_message_title">App is not a system app.</string>
-    <string name="not_system_app_message_body">
-        After Android 9 or greater, it is not possible to record calls by using third party apps. So that\'s why you have to manually make this app as a system app. If you don\'t know how to make a third party app to system app, then you should read this tutorial post.
-    </string>
+    <string name="not_system_app_message_body">After Android 9 or greater, it is not possible to record calls by using third party apps. So that\'s why you have to manually make this app as a system app. If you don\'t know how to make a third party app to system app, then you should read this tutorial post.</string>
     <string name="tutorial_post_link">https://www.droidwin.com/how-to-convert-any-android-app-to-system-app/</string>
     <string name="header_layout_sub_text">Call Recorder</string>
     <string name="app_sharing_message">"Best automatic call recorder ever. Download it from GitHub now. "</string>
-
-    <string name="sort_by_new">Newest</string>
-    <string name="sort_by_old">Oldest</string>
-    <string name="sort_by_name_ascending">A-Z (Ascending)</string>
-    <string name="sort_by_name_descending">Z-A (Descending)</string>
-    <string name="device_default">Device default</string>
-    <string name="dark_mode">Dark mode</string>
-    <string name="light_mode">Light mode</string>
-
-    <string name="compose_shortcut_label_for_settings">Settings</string>
-
     <string name="report_issue_text">Something went wrong. Please report this issue.</string>
-
-    <string name="github_release_page_link">https://github.com/VenomDino/Android-Call-Recorder/releases</string>
-    <string name="github_release_tag_page_link">https://github.com/VenomDino/Android-Call-Recorder/releases/tag/</string>
-
-    <string name="app_issue_page_link">https://github.com/VenomDino/Android-Call-Recorder/issues/</string>
+    <string name="github_release_page_link">https://github.com/Benojir/Android-Call-Recorder/releases</string>
+    <string name="app_issue_page_link">https://github.com/Benojir/Android-Call-Recorder/issues/</string>
     <string name="more_apps_in_play_store">https://play.google.com/store/search?q=pub: Creative Papa&amp;c=apps</string>
-    <string name="website_link">https://venomdino.github.io/portfolio</string>
-    <string name="github_profile_link">https://github.com/VenomDino</string>
-    <string name="facebook_page_link">https://t.me/CreativePapa</string>
-    <string name="donation_page_link">https://t.me/CreativePapa</string>
+    <string name="website_link">https://benojir.github.io/portfolio</string>
+    <string name="github_profile_link">https://github.com/Benojir</string>
+    <string name="telegram_link">https://telegram.me/CreativePapa</string>
     <string name="app_info_page_opening_failed_message">Failed to open application setting info page. Please open app info page and allow all permissions manually from settings.</string>
     <string name="select">Select</string>
     <string name="play">Play</string>
@@ -45,21 +27,6 @@
     <string name="unknown">Unknown</string>
     <string name="app_version">"Version: "</string>
     <string name="title_activity_settings">SettingsActivity</string>
-
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="call_recording_title">Call recording</string>
     <string name="call_recording_summary_on">Calls will be recorded automatically</string>
     <string name="call_recording_summary_off">Calls will not be recorded automatically</string>
@@ -74,5 +41,6 @@
     <string name="theme_title">Theme</string>
     <string name="sort_by_title">Sort by</string>
     <string name="recording_header">Recorder</string>
-
+    <string name="version_check_url">https://raw.githubusercontent.com/Benojir/Android-Call-Recorder/main/magisk/updates/release/info.json</string>
+    <string name="compose_shortcut_label_for_settings">Settings</string>
 </resources>

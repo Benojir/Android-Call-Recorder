@@ -9,6 +9,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,6 +23,8 @@ import zoro.benojir.callrecorder.R;
 
 import org.apache.commons.io.comparator.LastModifiedFileComparator;
 import org.apache.commons.io.comparator.NameFileComparator;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.io.File;
@@ -33,9 +37,11 @@ import java.util.List;
 
 public class CustomFunctions {
 
-//__________________________________________________________________________________________________
+    private static final String TAG = "MADARA";
+
+    //__________________________________________________________________________________________________
     public static void hideKeyboard(Context context, View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 //__________________________________________________________________________________________________
@@ -46,18 +52,18 @@ public class CustomFunctions {
     }
 //__________________________________________________________________________________________________
 
-    public static boolean isSystemApp(Context context){
+    public static boolean isSystemApp(Context context) {
 
         boolean isSystemApp = false;
 
         PackageManager pm = context.getPackageManager();
         List<ApplicationInfo> installedApps = pm.getInstalledApplications(0);
 
-        for (ApplicationInfo ai: installedApps) {
+        for (ApplicationInfo ai : installedApps) {
 
             if ((ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
 
-                if (ai.packageName.equalsIgnoreCase(context.getPackageName())){
+                if (ai.packageName.equalsIgnoreCase(context.getPackageName())) {
                     isSystemApp = true;
                 }
             }
@@ -77,14 +83,15 @@ public class CustomFunctions {
 //        new Thread(() -> Arrays.sort(files, LastModifiedFileComparator.LASTMODIFIED_REVERSE)).start();
     }
 
-    public static void sortFilesByNameAscending(File[] files){
+    public static void sortFilesByNameAscending(File[] files) {
         Arrays.sort(files, NameFileComparator.NAME_COMPARATOR);
     }
 
-    public static void sortFilesByNameDescending(File[] files){
+    public static void sortFilesByNameDescending(File[] files) {
         Arrays.sort(files, NameFileComparator.NAME_REVERSE);
     }
-//__________________________________________________________________________________________________
+
+    //__________________________________________________________________________________________________
     public static String fileSizeFormatter(long size) {
         if (size <= 0) return "0 Bytes";
         final String[] units = new String[]{"Bytes", "KB", "MB", "GB", "TB"};
@@ -109,40 +116,39 @@ public class CustomFunctions {
     }
 //__________________________________________________________________________________________________
 
-    public static String timeFormatterFromSeconds(int seconds){
+    public static String timeFormatterFromSeconds(int seconds) {
 
         int hoursInt = 0, minutesInt = 0, secondsInt;
         String hoursStr = "00", minutesStr = "00", secondsStr;
 
-        if (seconds < 60){
+        if (seconds < 60) {
             secondsInt = seconds;
             secondsStr = String.valueOf(seconds);
-        }
-        else{
-            secondsInt = seconds%60;
+        } else {
+            secondsInt = seconds % 60;
             secondsStr = secondsInt + "";
-            minutesInt = (seconds - secondsInt)/60;
+            minutesInt = (seconds - secondsInt) / 60;
 
-            if (minutesInt > 60){
+            if (minutesInt > 60) {
 
-                hoursInt = (minutesInt - (minutesInt%60))/60;
-                minutesInt = minutesInt%60;
+                hoursInt = (minutesInt - (minutesInt % 60)) / 60;
+                minutesInt = minutesInt % 60;
 
-                hoursStr =  String.valueOf(hoursInt);
-                minutesStr =  String.valueOf(minutesInt);
+                hoursStr = String.valueOf(hoursInt);
+                minutesStr = String.valueOf(minutesInt);
             }
         }
 
-        if (secondsInt < 10){
+        if (secondsInt < 10) {
             secondsStr = "0" + secondsStr;
         }
-        if (minutesInt < 10){
-            if (minutesInt > 0){
+        if (minutesInt < 10) {
+            if (minutesInt > 0) {
                 minutesStr = "0" + minutesInt;
             }
         }
-        if (hoursInt < 10){
-            if (hoursInt > 0){
+        if (hoursInt < 10) {
+            if (hoursInt > 0) {
                 hoursStr = "0" + hoursInt;
             }
         }
@@ -151,29 +157,26 @@ public class CustomFunctions {
     }
 //__________________________________________________________________________________________________
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     public static void checkForUpdateOnStartApp(Context context, View button) {
-
-        String vTag;
-
-        try{
-            double nextVersion = Double.parseDouble(BuildConfig.VERSION_NAME) + 0.1;
-            vTag = "v" + nextVersion;
-        }
-        catch (Exception e){
-            vTag = "v";
-        }
-
-        String finalVTag = vTag;
 
         new Thread(() -> {
 
             try {
-                Jsoup.connect(context.getString(R.string.github_release_tag_page_link) + finalVTag).timeout(30000).get().title();
-                button.setVisibility(View.VISIBLE);
-            }
-            catch (IOException e) {
-                Log.e("MADARA", "error: ", e);
+                String versionJson = Jsoup.connect(context.getString(R.string.version_check_url))
+                        .timeout(30000)
+                        .get()
+                        .body()
+                        .text();
+
+                JSONObject versionObject = new JSONObject(versionJson);
+
+                if (BuildConfig.VERSION_CODE < Integer.parseInt(versionObject.getString("versionCode"))) {
+                    new Handler(Looper.getMainLooper()).post(() -> button.setVisibility(View.VISIBLE));
+                }
+
+                Log.d(TAG, "checkForUpdateOnStartApp: "+ versionObject.toString());
+            } catch (Exception e) {
+                Log.e(TAG, "error: ", e);
             }
         }).start();
     }
@@ -206,17 +209,16 @@ public class CustomFunctions {
     }
 //    ----------------------------------------------------------------------------------------------
 
-    public static void copyTextToClipboard(Context context, String text){
+    public static void copyTextToClipboard(Context context, String text) {
 
         ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clipData = ClipData.newPlainText(null, text);
 
-        if (clipboardManager != null){
+        if (clipboardManager != null) {
 
             clipboardManager.setPrimaryClip(clipData);
             Toast.makeText(context, "Copied to clipboard.", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             Toast.makeText(context, context.getString(R.string.report_issue_text), Toast.LENGTH_SHORT).show();
         }
 
