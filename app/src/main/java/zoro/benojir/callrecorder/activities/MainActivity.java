@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean isBottomScrollButton;
     private SharedPreferences preferences;
     private String sortOrder;
+    private String lastAppearance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +74,13 @@ public class MainActivity extends AppCompatActivity {
 
         if (preferences.getString("appearance", "device_default").equals("dark_mode")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            lastAppearance = "dark_mode";
         } else if (preferences.getString("appearance", "device_default").equals("light_mode")) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            lastAppearance = "light_mode";
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+            lastAppearance = "device_default";
         }
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
@@ -390,7 +396,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (item.getItemId() == R.id.menu_settings_action) {
 
-            Intent intent = new Intent(MainActivity.this, OldSettingsActivity.class);
+            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
             intent.putExtra("activity_started_by", getPackageName());
             startActivity(intent);
             return true;
@@ -438,12 +444,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        boolean isDarkModeOn = CustomFunctions.isDarkModeOn(this);
         String appearance = preferences.getString("appearance", "device_default");
 
-        if (isDarkModeOn && appearance.equalsIgnoreCase("light_mode")) {
-            recreate();
-        } else if (!isDarkModeOn && appearance.equalsIgnoreCase("dark_mode")) {
+        if (!lastAppearance.equalsIgnoreCase(appearance)) {
             recreate();
         }
 

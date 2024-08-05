@@ -5,22 +5,23 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.telecom.Call;
 import android.telecom.InCallService;
 
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 import zoro.benojir.callrecorder.BuildConfig;
 import zoro.benojir.callrecorder.R;
-import zoro.benojir.callrecorder.helpers.RecordingHelper;
-import zoro.benojir.callrecorder.helpers.SharedPreferencesHelper;
+import zoro.benojir.callrecorder.helpers.RecorderHelper;
 
 public class RecorderInCallService extends InCallService {
 
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID;
-    public RecordingHelper recordingHelper;
+    public RecorderHelper recorderHelper;
 
     private Context sContext;
     private String phoneNumber;
@@ -41,8 +42,9 @@ public class RecorderInCallService extends InCallService {
 
                 if (state == Call.STATE_ACTIVE) {
 
+                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(sContext);
 
-                    if (new SharedPreferencesHelper(sContext).isCallRecordingEnabled()) {
+                    if (preferences.getBoolean("is_call_recording_enabled", false)) {
                         createNotificationChannel();
 
                         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(sContext, CHANNEL_ID);
@@ -61,8 +63,8 @@ public class RecorderInCallService extends InCallService {
                             startForeground(1, notification);
                         }
 
-                        recordingHelper = new RecordingHelper(sContext, phoneNumber);
-                        recordingHelper.startVoiceRecoding();
+                        recorderHelper = new RecorderHelper(sContext, phoneNumber);
+                        recorderHelper.startRecoding();
                     }
                 }
             }
@@ -73,8 +75,8 @@ public class RecorderInCallService extends InCallService {
     public void onCallRemoved(Call call) {
         super.onCallRemoved(call);
 
-        if (recordingHelper != null) {
-            recordingHelper.stopVoiceRecoding();
+        if (recorderHelper != null) {
+            recorderHelper.stopVoiceRecoding();
         }
     }
 
