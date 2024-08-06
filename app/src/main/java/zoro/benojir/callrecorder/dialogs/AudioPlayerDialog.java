@@ -34,6 +34,8 @@ import zoro.benojir.callrecorder.helpers.CustomFunctions;
 public class AudioPlayerDialog {
 
     private static final String TAG = "MADARA";
+    private final Activity activity;
+    private final File file;
     private final Dialog dialog;
     private final TextView durationTV;
     private final TextView speedOptionSelectorTV;
@@ -42,6 +44,7 @@ public class AudioPlayerDialog {
     private ExoPlayer exoPlayer;
     private String totalAudioDuration = "00:00:00";
     private boolean isUserSeeking;
+    private boolean playingFinished;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable updateSeekBar = new Runnable() {
@@ -57,7 +60,8 @@ public class AudioPlayerDialog {
 
     //    ------------------------------------------------------------------------------------------
     public AudioPlayerDialog(Activity activity, File file) {
-
+        this.activity = activity;
+        this.file = file;
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -77,99 +81,48 @@ public class AudioPlayerDialog {
         String fileName = file.getName();
         fileNameTV.setText(fileName);
 
-        try {
-            exoPlayer = new ExoPlayer.Builder(activity).build();
-            exoPlayer.setMediaItem(MediaItem.fromUri(Uri.fromFile(file)));
-            exoPlayer.prepare();
-            exoPlayer.setPlayWhenReady(true);
+        initializeExoPlayer();
 
-            exoPlayer.addListener(new Player.Listener() {
-                @Override
-                public void onPlayerError(@NonNull PlaybackException error) {
-                    Player.Listener.super.onPlayerError(error);
-                    Toast.makeText(activity, "Cannot play this recording.", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    Log.e(TAG, "onPlayerError: ", error);
-                }
+        //--------------------------------------------------------------------------------------
 
-                @Override
-                public void onIsPlayingChanged(boolean isPlaying) {
-                    if (isPlaying) {
-                        startSeekBarUpdate();
-                    } else {
-                        stopSeekBarUpdate();
-                    }
-                }
-
-                @Override
-                public void onPlaybackStateChanged(int playbackState) {
-
-                    if (playbackState == Player.STATE_READY) { // calling everytime when the player is ready even after the user is seeking or buffering
-                        long audioDuration = exoPlayer.getDuration();
-                        int durationInSecs = (int) (audioDuration / 1000); // Convert to seconds
-                        totalAudioDuration = CustomFunctions.formatDuration(audioDuration);
-                        seekBar.setMax(durationInSecs);
-                    }
-                }
-
-                @Override
-                public void onTimelineChanged(@NonNull Timeline timeline, int reason) {
-                    Player.Listener.super.onTimelineChanged(timeline, reason);
-
-                    Log.d(TAG, "onTimelineChanged: " + exoPlayer.getCurrentPosition());
-                }
-            });
-
-            //--------------------------------------------------------------------------------------
-
-            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    if (fromUser) {
-                        long shouldSeekTo = progress * 1000L;
-                        exoPlayer.seekTo(shouldSeekTo);
-
-                        String formatted = CustomFunctions.formatDuration(shouldSeekTo) + " · " + totalAudioDuration;
-                        durationTV.setText(formatted);
-                    }
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    isUserSeeking = true;
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    isUserSeeking = false;
-                    long shouldSeekTo = seekBar.getProgress() * 1000L;
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    long shouldSeekTo = progress * 1000L;
                     exoPlayer.seekTo(shouldSeekTo);
 
                     String formatted = CustomFunctions.formatDuration(shouldSeekTo) + " · " + totalAudioDuration;
                     durationTV.setText(formatted);
-
-                    if (!exoPlayer.isPlaying()){
-                        exoPlayer.play();
-                        playOrPause.setImageResource(R.drawable.pause_24);
-                    }
                 }
-            });
+            }
 
-            //--------------------------------------------------------------------------------------
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                isUserSeeking = true;
+            }
 
-            dialog.setOnCancelListener(dialog -> {
-                if (exoPlayer != null) {
-                    exoPlayer.stop();
-                    exoPlayer.release();
-                    handler.removeCallbacks(updateSeekBar);
-                }
-            });
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                isUserSeeking = false;
+                long shouldSeekTo = seekBar.getProgress() * 1000L;
+                exoPlayer.seekTo(shouldSeekTo);
 
-        } catch (Exception e) {
-            Toast.makeText(activity, "Cannot play this recording.", Toast.LENGTH_SHORT).show();
-            dialog.dismiss();
-            Log.e(TAG, "AudioPlayerDialog: ", e);
-        }
+                String formatted = CustomFunctions.formatDuration(shouldSeekTo) + " · " + totalAudioDuration;
+                durationTV.setText(formatted);
+            }
+        });
+
+        //--------------------------------------------------------------------------------------
+
+        dialog.setOnCancelListener(dialog -> {
+            if (exoPlayer != null) {
+                exoPlayer.stop();
+                exoPlayer.release();
+                handler.removeCallbacks(updateSeekBar);
+            }
+        });
+
 
         actionsOnDialog();
         dialog.show();
@@ -180,12 +133,18 @@ public class AudioPlayerDialog {
 
         playOrPause.setOnClickListener(view -> {
             if (exoPlayer != null) {
-                if (exoPlayer.isPlaying()) {
-                    exoPlayer.pause();
-                    playOrPause.setImageResource(R.drawable.play_arrow_24);
-                } else {
-                    exoPlayer.play();
-                    playOrPause.setImageResource(R.drawable.pause_24);
+
+                if (playingFinished) {
+                    playingFinished = false;
+                    initializeExoPlayer();
+                } else{
+                    if (exoPlayer.isPlaying()) {
+                        exoPlayer.pause();
+                        playOrPause.setImageResource(R.drawable.play_arrow_24);
+                    } else {
+                        exoPlayer.play();
+                        playOrPause.setImageResource(R.drawable.pause_24);
+                    }
                 }
             }
         });
@@ -255,6 +214,67 @@ public class AudioPlayerDialog {
         });
     }
 
+    //    ------------------------------------------------------------------------------------------
+
+    private void initializeExoPlayer() {
+
+        playOrPause.setImageResource(R.drawable.pause_24);
+
+        exoPlayer = new ExoPlayer.Builder(activity).build();
+        exoPlayer.setMediaItem(MediaItem.fromUri(Uri.fromFile(file)));
+        exoPlayer.prepare();
+        exoPlayer.setPlayWhenReady(true);
+
+        exoPlayer.addListener(new Player.Listener() {
+            @Override
+            public void onPlayerError(@NonNull PlaybackException error) {
+                Player.Listener.super.onPlayerError(error);
+                Toast.makeText(activity, "Cannot play this recording.", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+                Log.e(TAG, "onPlayerError: ", error);
+            }
+
+            @Override
+            public void onIsPlayingChanged(boolean isPlaying) {
+                if (isPlaying) {
+                    startSeekBarUpdate();
+                } else {
+                    stopSeekBarUpdate();
+                }
+            }
+
+            @Override
+            public void onPlaybackStateChanged(int playbackState) {
+
+                if (playbackState == Player.STATE_READY) { // calling everytime when the player is ready even after the user is seeking or buffering
+                    long audioDuration = exoPlayer.getDuration();
+                    int durationInSecs = (int) (audioDuration / 1000); // Convert to seconds
+                    totalAudioDuration = CustomFunctions.formatDuration(audioDuration);
+                    seekBar.setMax(durationInSecs);
+                }
+                if (playbackState == Player.STATE_ENDED) {
+                    playOrPause.setImageResource(R.drawable.play_arrow_24);
+                    String finishedPlayingDuration = totalAudioDuration + " · " + totalAudioDuration;
+                    durationTV.setText(finishedPlayingDuration);
+                    seekBar.setProgress(seekBar.getMax());
+
+                    playingFinished = true;
+
+                    if (exoPlayer != null) {
+                        exoPlayer.stop();
+                        exoPlayer.release();
+                    }
+                }
+            }
+
+            @Override
+            public void onTimelineChanged(@NonNull Timeline timeline, int reason) {
+                Player.Listener.super.onTimelineChanged(timeline, reason);
+
+                Log.d(TAG, "onTimelineChanged: " + exoPlayer.getCurrentPosition());
+            }
+        });
+    }
     //    ------------------------------------------------------------------------------------------
 
     private void startSeekBarUpdate() {
