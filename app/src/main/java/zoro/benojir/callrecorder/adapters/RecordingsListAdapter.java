@@ -229,7 +229,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
                             @Override
                             public void onShowFileInfoOptionClicked(int position) {
-                                new FileInfoDialog(activity, fileInfo).show();
+                                new FileInfoDialog(activity, fileInfo);
                             }
                         });
                     }

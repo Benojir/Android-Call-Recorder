@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="15dp"
-    android:background="@drawable/shape_for_dialog_box"
+    android:padding="20dp"
     tools:ignore="HardcodedText">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="File Information"
         android:textColor="?attr/textColor"
+        android:textAlignment="textStart"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_marginBottom="20dp"/>
@@ -36,14 +36,15 @@
             android:id="@+id/fileNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="4dp"
             android:layout_marginStart="20dp"
-            android:text="Open in File Manager"
-            android:textColor="?attr/textColor"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:textSize="17sp" />
+            android:paddingHorizontal="4dp"
+            android:text="Open in File Manager"
+            android:textColor="?attr/textColor"
+            android:textSize="17sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
     <LinearLayout
@@ -65,14 +66,15 @@
             android:id="@+id/callDurationTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="4dp"
             android:layout_marginStart="20dp"
-            android:text="14:05:51"
-            android:textColor="?attr/textColor"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:textSize="17sp" />
+            android:paddingHorizontal="4dp"
+            android:text="14:05:51"
+            android:textColor="?attr/textColor"
+            android:textSize="17sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
     <LinearLayout
@@ -94,14 +96,15 @@
             android:id="@+id/filePathTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="4dp"
             android:layout_marginStart="20dp"
-            android:text="File path here"
-            android:textColor="?attr/textColor"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:textSize="17sp" />
+            android:paddingHorizontal="4dp"
+            android:text="File path here"
+            android:textColor="?attr/textColor"
+            android:textSize="17sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
     <LinearLayout
@@ -123,14 +126,15 @@
             android:id="@+id/fileTypeTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="4dp"
             android:layout_marginStart="20dp"
-            android:text="Audio (.m4a)"
-            android:textColor="?attr/textColor"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:textSize="17sp" />
+            android:paddingHorizontal="4dp"
+            android:text="Audio (.m4a)"
+            android:textColor="?attr/textColor"
+            android:textSize="17sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
     <LinearLayout
@@ -152,15 +156,16 @@
             android:id="@+id/fileSizeTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
             android:paddingStart="4dp"
             android:paddingEnd="4dp"
-            android:layout_marginStart="20dp"
             android:text="13.5 MB"
             android:textColor="?attr/textColor"
             android:textSize="17sp"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground"/>
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
     <LinearLayout
@@ -182,15 +187,16 @@
             android:id="@+id/lastModifiedTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
             android:layout_marginStart="20dp"
-            android:text="14/05/24"
-            android:textColor="?attr/textColor"
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:textSize="17sp" />
+            android:paddingStart="4dp"
+            android:paddingEnd="4dp"
+            android:text="14/05/24"
+            android:textColor="?attr/textColor"
+            android:textSize="17sp"
+            tools:ignore="TouchTargetSizeCheck" />
     </LinearLayout>
 
 </LinearLayout>
