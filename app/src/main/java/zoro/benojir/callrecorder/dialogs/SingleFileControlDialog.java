@@ -54,7 +54,7 @@ public class SingleFileControlDialog {
         });
 
         playOption.setOnClickListener(view -> {
-            singleItemLongClickListener.onPlayOptionClicked(itemPosition);
+            singleItemLongClickListener.onPlayWithOptionClicked(itemPosition);
             dialog.dismiss();
         });
 

@@ -43,7 +43,7 @@
         android:id="@+id/playOption"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/play"
+        android:text="@string/play_with"
         android:textColor="?attr/textColor"
         android:layout_gravity="center_vertical"
         app:drawableLeftCompat="@drawable/play_circle_24"

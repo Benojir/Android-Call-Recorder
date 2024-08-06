@@ -38,11 +38,21 @@ public class SingleFileOptionsHelper {
         try {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             Uri uri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", file);
-            intent.setDataAndType(uri, "audio/mpeg");
+            intent.setDataAndType(uri, "audio/*");
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            activity.startActivity(intent);
+
+            // Create a chooser intent
+            Intent chooserIntent = Intent.createChooser(intent, "Choose an app to play audio");
+
+            // Verify that there are applications available to handle the intent
+            if (intent.resolveActivity(activity.getPackageManager()) != null) {
+                activity.startActivity(chooserIntent);
+            } else {
+                // Handle the case where no suitable app is installed
+                Toast.makeText(activity, "No app available to play audio", Toast.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
-            Log.e(TAG, "onBindViewHolder: ", e);
+            Log.e(TAG, "Error playing audio: ", e);
         }
     }
 

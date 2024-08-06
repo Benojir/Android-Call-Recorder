@@ -14,7 +14,7 @@
     <string name="telegram_link">https://telegram.me/CreativePapa</string>
     <string name="app_info_page_opening_failed_message">Failed to open application setting info page. Please open app info page and allow all permissions manually from settings.</string>
     <string name="select">Select</string>
-    <string name="play">Play</string>
+    <string name="play_with">Play with</string>
     <string name="share">Share</string>
     <string name="rename">Rename</string>
     <string name="delete">Delete</string>

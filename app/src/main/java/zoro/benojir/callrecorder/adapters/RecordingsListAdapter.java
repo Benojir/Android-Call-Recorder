@@ -177,7 +177,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                             }
 
                             @Override
-                            public void onPlayOptionClicked(int position) {
+                            public void onPlayWithOptionClicked(int position) {
                                 fileOptionsHelper.playRecording();
                             }
 
@@ -454,7 +454,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
     public interface OnSingleItemLongClickListener {
         void onSelectOptionClicked(int position);
 
-        void onPlayOptionClicked(int position);
+        void onPlayWithOptionClicked(int position);
 
         void onShareOptionClicked(int position);
 
