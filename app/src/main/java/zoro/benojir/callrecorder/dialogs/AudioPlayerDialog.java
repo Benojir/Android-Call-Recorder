@@ -21,7 +21,6 @@ import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
 import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
-import androidx.media3.common.Timeline;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
 
@@ -95,11 +94,20 @@ public class AudioPlayerDialog {
                     String formatted = CustomFunctions.formatDuration(shouldSeekTo) + " · " + totalAudioDuration;
                     durationTV.setText(formatted);
                 }
+
+                if (progress < seekBar.getMax()){
+                    playingFinished = false;
+                }
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 isUserSeeking = true;
+
+                if (playingFinished) {
+                    exoPlayer.pause();
+                    playOrPause.setImageResource(R.drawable.play_arrow_24);
+                }
             }
 
             @Override
@@ -136,7 +144,10 @@ public class AudioPlayerDialog {
 
                 if (playingFinished) {
                     playingFinished = false;
-                    initializeExoPlayer();
+                    exoPlayer.seekTo(0);
+                    exoPlayer.play();
+                    seekBar.setProgress(0);
+                    playOrPause.setImageResource(R.drawable.pause_24);
                 } else{
                     if (exoPlayer.isPlaying()) {
                         exoPlayer.pause();
@@ -151,6 +162,12 @@ public class AudioPlayerDialog {
 
 
         skipBackward.setOnClickListener(view -> {
+            // If the playback had finished, ensure the player remains paused
+            if (playingFinished) {
+                exoPlayer.pause();
+                playOrPause.setImageResource(R.drawable.play_arrow_24);
+            }
+
             long currentPosition = exoPlayer.getCurrentPosition();
             long newPosition = Math.max(currentPosition - 5000, 0);
             exoPlayer.seekTo(newPosition);
@@ -164,6 +181,13 @@ public class AudioPlayerDialog {
 
 
         skipForward.setOnClickListener(view -> {
+            // If the playback had finished, ensure the player remains paused
+            if (playingFinished) {
+                exoPlayer.pause();
+                playOrPause.setImageResource(R.drawable.play_arrow_24);
+                Toast.makeText(activity, "AAA", Toast.LENGTH_SHORT).show();
+            }
+
             long currentPosition = exoPlayer.getCurrentPosition();
             long newPosition = Math.min(currentPosition + 5000, exoPlayer.getDuration());
             exoPlayer.seekTo(newPosition);
@@ -218,12 +242,12 @@ public class AudioPlayerDialog {
 
     private void initializeExoPlayer() {
 
-        playOrPause.setImageResource(R.drawable.pause_24);
-
         exoPlayer = new ExoPlayer.Builder(activity).build();
         exoPlayer.setMediaItem(MediaItem.fromUri(Uri.fromFile(file)));
         exoPlayer.prepare();
         exoPlayer.setPlayWhenReady(true);
+
+        playOrPause.setImageResource(R.drawable.pause_24);
 
         exoPlayer.addListener(new Player.Listener() {
             @Override
@@ -246,7 +270,7 @@ public class AudioPlayerDialog {
             @Override
             public void onPlaybackStateChanged(int playbackState) {
 
-                if (playbackState == Player.STATE_READY) { // calling everytime when the player is ready even after the user is seeking or buffering
+                if (playbackState == Player.STATE_READY) { // calling everytime when the player is ready even after the user is seeking or buffering but it is not onPlaying
                     long audioDuration = exoPlayer.getDuration();
                     int durationInSecs = (int) (audioDuration / 1000); // Convert to seconds
                     totalAudioDuration = CustomFunctions.formatDuration(audioDuration);
@@ -254,24 +278,14 @@ public class AudioPlayerDialog {
                 }
                 if (playbackState == Player.STATE_ENDED) {
                     playOrPause.setImageResource(R.drawable.play_arrow_24);
+
                     String finishedPlayingDuration = totalAudioDuration + " · " + totalAudioDuration;
                     durationTV.setText(finishedPlayingDuration);
+
                     seekBar.setProgress(seekBar.getMax());
 
                     playingFinished = true;
-
-                    if (exoPlayer != null) {
-                        exoPlayer.stop();
-                        exoPlayer.release();
-                    }
                 }
-            }
-
-            @Override
-            public void onTimelineChanged(@NonNull Timeline timeline, int reason) {
-                Player.Listener.super.onTimelineChanged(timeline, reason);
-
-                Log.d(TAG, "onTimelineChanged: " + exoPlayer.getCurrentPosition());
             }
         });
     }
