@@ -101,12 +101,10 @@ public class AudioPlayerDialog {
                 @Override
                 public void onPlaybackStateChanged(int playbackState) {
 
-                    if (playbackState == Player.STATE_READY) {
+                    if (playbackState == Player.STATE_READY) { // calling everytime when the player is ready even after the user is seeking or buffering
                         long audioDuration = exoPlayer.getDuration();
                         int durationInSecs = (int) (audioDuration / 1000); // Convert to seconds
                         totalAudioDuration = CustomFunctions.formatDuration(audioDuration);
-                        String formatted = "00:00:00 · " + totalAudioDuration;
-                        durationTV.setText(formatted);
                         seekBar.setMax(durationInSecs);
                     }
                 }
@@ -191,23 +189,25 @@ public class AudioPlayerDialog {
 
         skipBackward.setOnClickListener(view -> {
             long currentPosition = exoPlayer.getCurrentPosition();
-            exoPlayer.seekTo(currentPosition - 5000);
+            long newPosition = Math.max(currentPosition - 5000, 0);
+            exoPlayer.seekTo(newPosition);
 
-            if (currentPosition - 5000 < 0) {
-                seekBar.setProgress(0);
-            }
+            // Update SeekBar and TextView
+            seekBar.setProgress((int) (newPosition / 1000));
+            String formatted = CustomFunctions.formatDuration(newPosition) + " · " + totalAudioDuration;
+            durationTV.setText(formatted);
+            updateDurationTextView(newPosition);
         });
 
         skipForward.setOnClickListener(view -> {
             long currentPosition = exoPlayer.getCurrentPosition();
-            exoPlayer.seekTo(currentPosition + 5000);
+            long newPosition = Math.min(currentPosition + 5000, exoPlayer.getDuration());
+            exoPlayer.seekTo(newPosition);
 
-            if (currentPosition + 5000 > exoPlayer.getDuration()) {
-                seekBar.setProgress((int) exoPlayer.getDuration());
-            }
+            // Update SeekBar and TextView
+            seekBar.setProgress((int) (newPosition / 1000));
+            updateDurationTextView(newPosition);
         });
-
-
     }
 
     //    ------------------------------------------------------------------------------------------
@@ -225,5 +225,10 @@ public class AudioPlayerDialog {
         String formatted = CustomFunctions.formatDuration(currentPosition) + " · " + totalAudioDuration;
         durationTV.setText(formatted);
         seekBar.setProgress(currentProgressInSecs);
+    }
+
+    private void updateDurationTextView(long position) {
+        String formatted = CustomFunctions.formatDuration(position) + " · " + totalAudioDuration;
+        durationTV.setText(formatted);
     }
 }
