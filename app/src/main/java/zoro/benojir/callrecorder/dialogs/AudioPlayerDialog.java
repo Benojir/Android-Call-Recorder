@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.net.Uri;
 import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -16,35 +18,37 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 
 import zoro.benojir.callrecorder.R;
-import zoro.benojir.callrecorder.adapters.RecordingsListAdapter;
 
+@OptIn(markerClass = UnstableApi.class)
 public class AudioPlayerDialog {
 
     private static final String TAG = "MADARA";
-    private final JSONObject fileInfo;
     private final Dialog dialog;
     private final TextView fileNameTV;
-    private final PlayerView playerView;
     private final ImageButton backButton, skipBackward, skipForward;
     private ExoPlayer exoPlayer;
+    private final PlayerView playerView;
     private String fileName = "Unknown";
 
-
-    @OptIn(markerClass = UnstableApi.class)
-    public AudioPlayerDialog(Activity activity, JSONObject fileInfo) {
-        this.fileInfo = fileInfo;
+    public AudioPlayerDialog(Activity activity, File file) {
 
         dialog = new Dialog(activity);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_audio_player);
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        Window window = dialog.getWindow();
+        if (window != null) {
+            window.setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                    WindowManager.LayoutParams.MATCH_PARENT);
+            window.setBackgroundDrawableResource(android.R.color.black);
+
+            // Remove dim behind the dialog
+            window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
 
         fileNameTV = dialog.findViewById(R.id.file_name_tv);
 
@@ -53,12 +57,10 @@ public class AudioPlayerDialog {
         skipBackward = dialog.findViewById(R.id.backward_skip);
         skipForward = dialog.findViewById(R.id.forward_skip);
 
-
-
         try {
-            fileName = fileInfo.getString("file_name");
+            fileName = file.getName();
             exoPlayer = new ExoPlayer.Builder(activity).build();
-            exoPlayer.setMediaItem(MediaItem.fromUri(Uri.fromFile(new File(fileInfo.getString("absolute_path")))));
+            exoPlayer.setMediaItem(MediaItem.fromUri(Uri.fromFile(file)));
             exoPlayer.prepare();
             exoPlayer.setPlayWhenReady(true);
 
@@ -76,9 +78,29 @@ public class AudioPlayerDialog {
     }
 
     public void show() {
+
         fileNameTV.setText(fileName);
         actionsOnDialog();
         dialog.show();
+
+        dialog.setOnCancelListener(dialog -> {
+            if (exoPlayer != null) {
+                exoPlayer.stop();
+                exoPlayer.release();
+            }
+        });
+
+        playerView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                return true; // Indicate the event was handled
+            } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                v.performClick(); // Call performClick when ACTION_UP is detected
+                return true; // Indicate the event was handled
+            }
+            return false;
+        });
+
+        playerView.setOnClickListener(v -> playerView.showController());
     }
 
     private void actionsOnDialog() {
@@ -92,29 +114,8 @@ public class AudioPlayerDialog {
             dialog.dismiss();
         });
 
-        playOption.setOnClickListener(view -> {
-            singleItemLongClickListener.onPlayOptionClicked(itemPosition);
-            dialog.dismiss();
-        });
+        skipBackward.setOnClickListener(view -> exoPlayer.seekTo(exoPlayer.getCurrentPosition() - 5000));
 
-        shareOption.setOnClickListener(view -> {
-            singleItemLongClickListener.onShareOptionClicked(itemPosition);
-            dialog.dismiss();
-        });
-
-        renameOption.setOnClickListener(view -> {
-            singleItemLongClickListener.onRenameOptionClicked(itemPosition);
-            dialog.dismiss();
-        });
-
-        deleteOption.setOnClickListener(view -> {
-            singleItemLongClickListener.onDeleteOptionClicked(itemPosition);
-            dialog.dismiss();
-        });
-
-        fileInfoOption.setOnClickListener(view -> {
-            singleItemLongClickListener.onShowFileInfoOptionClicked(itemPosition);
-            dialog.dismiss();
-        });
+        skipForward.setOnClickListener(view -> exoPlayer.seekTo(exoPlayer.getCurrentPosition() + 5000));
     }
 }

@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import zoro.benojir.callrecorder.R;
 import zoro.benojir.callrecorder.activities.MainActivity;
+import zoro.benojir.callrecorder.dialogs.AudioPlayerDialog;
 import zoro.benojir.callrecorder.dialogs.FileInfoDialog;
 import zoro.benojir.callrecorder.dialogs.MultipleFilesControlDialog;
 import zoro.benojir.callrecorder.dialogs.SingleFileControlDialog;
@@ -101,7 +102,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                         enableSelectedItemCountMenu();
                     }
                 } else {
-                    fileOptionsHelper.playRecording();
+                    AudioPlayerDialog audioPlayerDialog = new AudioPlayerDialog(activity, file);
+                    audioPlayerDialog.show();
                 }
             });
 
