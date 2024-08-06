@@ -17,4 +17,5 @@
     <color name="light_link_blue">#2196F3</color>
     <color name="fade_blue">#3AA8FF</color>
     <color name="green">#00C708</color>
+    <color name="fade_white">#E0DEDE</color>
 </resources>

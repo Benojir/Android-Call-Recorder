@@ -45,4 +45,8 @@ dependencies {
 
     implementation 'org.jsoup:jsoup:1.16.1'
     implementation 'commons-io:commons-io:2.13.0'
+
+    implementation 'androidx.media3:media3-exoplayer:1.4.0'
+    implementation 'androidx.media3:media3-exoplayer-dash:1.4.0'
+    implementation 'androidx.media3:media3-ui:1.4.0'
 }
