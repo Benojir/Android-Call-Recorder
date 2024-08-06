@@ -1,6 +1,6 @@
 {
-    "zipUrl": "https://github.com/Benojir/Android-Call-Recorder/releases/download/1.3/call-recorder_v1.3-magisk.zip",
+    "zipUrl": "https://github.com/Benojir/Android-Call-Recorder/releases/download/1.3/Call-Recorder_v1.4-Magisk.zip",
     "changelog": "https://github.com/Benojir/Android-Call-Recorder/raw/master/magisk/updates/release/changelog.txt",
-    "version": "1.3",
-    "versionCode": 3
+    "version": "1.4",
+    "versionCode": 4
 }
