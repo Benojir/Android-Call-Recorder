@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -15,8 +16,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.PlaybackException;
+import androidx.media3.common.PlaybackParameters;
 import androidx.media3.common.Player;
 import androidx.media3.common.Timeline;
 import androidx.media3.common.util.UnstableApi;
@@ -187,6 +190,7 @@ public class AudioPlayerDialog {
             }
         });
 
+
         skipBackward.setOnClickListener(view -> {
             long currentPosition = exoPlayer.getCurrentPosition();
             long newPosition = Math.max(currentPosition - 5000, 0);
@@ -199,6 +203,7 @@ public class AudioPlayerDialog {
             updateDurationTextView(newPosition);
         });
 
+
         skipForward.setOnClickListener(view -> {
             long currentPosition = exoPlayer.getCurrentPosition();
             long newPosition = Math.min(currentPosition + 5000, exoPlayer.getDuration());
@@ -207,6 +212,46 @@ public class AudioPlayerDialog {
             // Update SeekBar and TextView
             seekBar.setProgress((int) (newPosition / 1000));
             updateDurationTextView(newPosition);
+        });
+
+
+        speedOptionSelectorTV.setOnClickListener(view -> {
+            PopupMenu speedMenu = new PopupMenu(view.getContext(), view);
+            MenuInflater inflater = speedMenu.getMenuInflater();
+            inflater.inflate(R.menu.speed_menu, speedMenu.getMenu());
+
+            speedMenu.setOnMenuItemClickListener(item -> {
+
+                float playbackSpeed;
+
+                if (item.getItemId() == R.id.speed_0_75) {
+                    playbackSpeed = 0.75f;
+                } else if (item.getItemId() == R.id.speed_1_0) {
+                    playbackSpeed = 1.0f;
+                } else if (item.getItemId() == R.id.speed_1_25) {
+                    playbackSpeed = 1.25f;
+                } else if (item.getItemId() == R.id.speed_1_5) {
+                    playbackSpeed = 1.5f;
+                } else if (item.getItemId() == R.id.speed_2_0) {
+                    playbackSpeed = 2.0f;
+                } else {
+                    playbackSpeed = 1.0f; // Default speed
+                }
+
+                // Set the playback speed for ExoPlayer
+                if (exoPlayer != null) {
+                    exoPlayer.setPlaybackParameters(new PlaybackParameters(playbackSpeed));
+                }
+
+                // Update the TextView to reflect the selected speed
+                String speedText = item.getTitle().toString();
+                speedOptionSelectorTV.setText(speedText);
+
+                return true;
+            });
+
+            // Show the PopupMenu
+            speedMenu.show();
         });
     }
 
