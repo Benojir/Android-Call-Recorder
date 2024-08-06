@@ -185,7 +185,6 @@ public class AudioPlayerDialog {
             if (playingFinished) {
                 exoPlayer.pause();
                 playOrPause.setImageResource(R.drawable.play_arrow_24);
-                Toast.makeText(activity, "AAA", Toast.LENGTH_SHORT).show();
             }
 
             long currentPosition = exoPlayer.getCurrentPosition();
