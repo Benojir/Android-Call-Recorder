@@ -32,6 +32,8 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class CustomFunctions {
 
@@ -48,6 +50,20 @@ public class CustomFunctions {
         int nightModeFlags = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
         return nightModeFlags == Configuration.UI_MODE_NIGHT_YES;
     }
+//__________________________________________________________________________________________________
+
+    public static String formatDuration(long durationMs) {
+        long hours = TimeUnit.MILLISECONDS.toHours(durationMs);
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(durationMs) % 60;
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(durationMs) % 60;
+
+        if (hours > 0) {
+            return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+        } else {
+            return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        }
+    }
+
 //__________________________________________________________________________________________________
 
     public static boolean isSystemApp(Context context) {

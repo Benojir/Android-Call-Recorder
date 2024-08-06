@@ -102,8 +102,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                         enableSelectedItemCountMenu();
                     }
                 } else {
-                    AudioPlayerDialog audioPlayerDialog = new AudioPlayerDialog(activity, file);
-                    audioPlayerDialog.show();
+                    new AudioPlayerDialog(activity, file);
                 }
             });
 

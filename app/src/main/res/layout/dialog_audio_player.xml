@@ -1,23 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/black"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:background="?attr/colorOnSecondary"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.media3.ui.PlayerView
-        android:id="@+id/exo_player_view"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        android:visibility="visible"
-        app:buffered_color="@color/fade_white"
-        app:controller_layout_id="@layout/exoplayer_controller"
-        app:resize_mode="fit"
-        app:show_buffering="never"
-        app:show_shuffle_button="false"
-        app:show_subtitle_button="true"
-        app:surface_type="texture_view"
-        app:use_artwork="true" />
+        android:layout_height="wrap_content"
+        android:id="@+id/fileNameTV"
+        android:text="This is demo text This is demo text this is demo text"
+        android:textColor="?attr/textColor"
+        android:textSize="17sp"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textStyle="bold"
+        android:layout_alignParentTop="true"
+        android:textAlignment="center"
+        android:padding="15dp"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:id="@+id/audio_thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="220dp"
+        android:contentDescription="Thumbnail"
+        android:src="@drawable/cat_listening_music"
+        android:adjustViewBounds="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/fileNameTV"
+        android:layout_marginVertical="10dp"
+        tools:ignore="HardcodedText" />
+
+    <RelativeLayout
+        android:id="@+id/timer_and_speed_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/audio_thumbnail"
+        android:paddingHorizontal="17dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:id="@+id/duration_timer"
+            android:text="00:00 · 12:01"
+            android:textColor="?attr/textColor"
+            tools:ignore="HardcodedText"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:layout_alignParentStart="true"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:id="@+id/speed_option_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:text="x1.25"
+            android:textColor="?attr/textColor"
+            android:layout_alignParentEnd="true"
+            android:padding="10dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:gravity="center"
+            tools:ignore="HardcodedText" />
+
+    </RelativeLayout>
+
+    <SeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/timer_and_speed_container"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="10dp"
+        android:min="0"
+        android:visibility="visible" />
+
+    <RelativeLayout
+        android:id="@+id/controls_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/seekBar"
+        android:padding="15dp">
+
+        <ImageButton
+            android:id="@+id/skipBackward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:contentDescription="Skip backward"
+            android:src="@drawable/skip_backward"
+            android:layout_toStartOf="@+id/playOrPause"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            tools:ignore="HardcodedText" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:id="@+id/playOrPause"
+            android:contentDescription="Play or Pause"
+            android:src="@drawable/pause_24"
+            android:layout_centerInParent="true"
+            tools:ignore="HardcodedText"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_marginHorizontal="20dp"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            android:id="@+id/skipForward"
+            android:contentDescription="Skip forward"
+            android:src="@drawable/skip_forward"
+            android:layout_toEndOf="@id/playOrPause"
+            android:background="@android:color/transparent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            tools:ignore="HardcodedText" />
+    </RelativeLayout>
 
 </RelativeLayout>

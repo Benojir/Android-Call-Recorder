@@ -15,6 +15,8 @@ import zoro.benojir.callrecorder.helpers.CustomFunctions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+
 public class FileInfoDialog {
 
     private static final String TAG = "MADARA";
@@ -49,11 +51,10 @@ public class FileInfoDialog {
             filePathTV.setText(fileInfoJObj.getString("absolute_path"));
 
             try(MediaMetadataRetriever retriever = new MediaMetadataRetriever()) {
-                retriever.setDataSource(fileInfoJObj.getString("absolute_path"));
+                retriever.setDataSource(new File(fileInfoJObj.getString("absolute_path")).getAbsolutePath());
                 long duration = Long.parseLong(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
                 retriever.release();
-                int durationInSeconds = (int) (duration/1000f);
-                fileDurationTV.setText(CustomFunctions.timeFormatterFromSeconds(durationInSeconds));
+                fileDurationTV.setText(CustomFunctions.formatDuration(duration));
             } catch (Exception e) {
                 Log.e(TAG, "showFileInfoDialog: ", e);
                 fileDurationTV.setText(context.getString(R.string.unknown));
