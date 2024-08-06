@@ -40,8 +40,8 @@ public class SingleFileControlDialog {
     }
 
     public void show(RecordingsListAdapter.OnSingleItemLongClickListener singleItemLongClickListener) throws JSONException {
-        String fineName = fileInfo.getString("file_name");
-        fileNameTV.setText(fineName);
+        String fileName = fileInfo.getString("file_name");
+        fileNameTV.setText(fileName);
         actionsOnDialog(singleItemLongClickListener);
         dialog.show();
     }

@@ -256,7 +256,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
 
-                JSONArray filteredFiles= new JSONArray();
+                JSONArray filteredFiles = new JSONArray();
 
                 if (charSequence == null || charSequence.length() == 0) {
                     filteredFiles = fileInfos2;
@@ -338,7 +338,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                 try {
                     File file = new File(fileInfos.getJSONObject(i).getString("absolute_path"));
                     selectedFilesUriList.add(Uri.fromFile(file));
-                } catch (Exception e){
+                } catch (Exception e) {
                     Log.e(TAG, "onBindViewHolder: ", e);
                 }
             }
@@ -375,7 +375,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
      * While modifying the list itself it remove an item from a list while iterating over it, it can cause
      * index shifting, which might lead to skipping elements.
      * To avoid this issue, you can iterate over the list in reverse order,
-     * which ensures that removing an item does not affect the subsequent elements that need to be removed. */
+     * which ensures that removing an item does not affect the subsequent elements that need to be removed.
+     */
 
     @SuppressLint("NotifyDataSetChanged")
     private void deleteAllSelectedItems() {
@@ -435,14 +436,14 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
 //    ----------------------------------------------------------------------------------------------
 
-    private void enableSelectedItemCountMenu(){
+    private void enableSelectedItemCountMenu() {
         MainActivity.searchBtn.setVisible(false);
         MainActivity.settingsBtn.setVisible(false);
         MainActivity.selectedItemsCountMenu.setVisible(true);
-        MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size()+"");
+        MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size() + "");
     }
 
-    private void disableSelectedItemCountMenu(){
+    private void disableSelectedItemCountMenu() {
         MainActivity.searchBtn.setVisible(true);
         MainActivity.settingsBtn.setVisible(true);
         MainActivity.selectedItemsCountMenu.setVisible(false);

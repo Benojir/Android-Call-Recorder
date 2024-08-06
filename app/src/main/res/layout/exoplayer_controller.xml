@@ -57,7 +57,7 @@
         android:paddingHorizontal="24dp">
 
         <ImageButton
-            android:id="@+id/backward_10"
+            android:id="@+id/backward_skip"
             android:src="@drawable/skip_backward"
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             android:contentDescription="Skip 5 seconds backward"
@@ -73,7 +73,7 @@
             tools:ignore="HardcodedText" />
 
         <ImageButton
-            android:id="@+id/forward_10"
+            android:id="@+id/forward_skip"
             android:src="@drawable/skip_forward"
             style="@style/ExoStyledControls.Button.Center.PlayPause"
             android:contentDescription="Skip 5 seconds forward"
