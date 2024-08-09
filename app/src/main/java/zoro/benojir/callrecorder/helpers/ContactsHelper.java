@@ -6,42 +6,39 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
+import android.telephony.PhoneNumberUtils;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
 public class ContactsHelper {
 
-    public static String getContactNameByPhoneNumber(String phone_number, Context context){
-
+    public static String getContactNameByPhoneNumber(Context context, String phoneNumber) {
         String contactName = "";
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
 
-            if (phone_number.isEmpty()){
-                contactName = "Unknown_";
-            }
-            else{
-                Uri uri=Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,Uri.encode(phone_number));
+            Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+            String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
 
-                String[] projection = new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME};
+            Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
 
-                Cursor cursor = context.getContentResolver().query(uri,projection,null,null,null);
-
-                if (cursor != null) {
-                    if(cursor.moveToFirst()) {
-                        contactName = cursor.getString(0);
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    String storedNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                    if (PhoneNumberUtils.compare(storedNumber, phoneNumber)) {
+                        contactName = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        break;
                     }
-                    cursor.close();
                 }
-
-                if (contactName.isEmpty()){
-                    contactName = "Unknown";
-                }
+                cursor.close();
             }
-        }
-        else {
+        } else {
             Toast.makeText(context, "Please grant contacts permission", Toast.LENGTH_SHORT).show();
+        }
+
+        if (contactName.isEmpty()){
+            contactName = "Unknown";
         }
 
         return contactName;

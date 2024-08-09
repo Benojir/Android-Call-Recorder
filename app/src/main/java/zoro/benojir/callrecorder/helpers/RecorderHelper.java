@@ -91,7 +91,7 @@ public class RecorderHelper {
 //    ----------------------------------------------------------------------------------------------
 
     private String getFileName() {
-        return ContactsHelper.getContactNameByPhoneNumber(phoneNumber, context)
+        return ContactsHelper.getContactNameByPhoneNumber(context, phoneNumber)
                 + "_("
                 + phoneNumber
                 + ")_"
