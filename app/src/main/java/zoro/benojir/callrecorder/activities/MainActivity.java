@@ -50,7 +50,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivity extends AppCompatActivity {
@@ -89,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
 //--------------------------------------------------------------------------------------------------
         MaterialToolbar toolbar = findViewById(R.id.toolbar_include);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_name));
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
+        }
 //--------------------------------------------------------------------------------------------------
         /* App is crashing when sharing multi files at once if I don't set this */
         StrictMode.VmPolicy.Builder smBuilder = new StrictMode.VmPolicy.Builder();
