@@ -12,8 +12,6 @@ import androidx.preference.PreferenceManager;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
-import java.util.Objects;
-
 import zoro.benojir.callrecorder.R;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -38,10 +36,11 @@ public class SettingsActivity extends AppCompatActivity {
                     .commit();
         }
 
-        getSupportFragmentManager();
         MaterialToolbar toolbar = findViewById(R.id.toolbar_include);
         setSupportActionBar(toolbar);
-        Objects.requireNonNull(getSupportActionBar()).setTitle("Settings");
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("Settings");
+        }
         toolbar.setNavigationIcon(AppCompatResources.getDrawable(this, R.drawable.arrow_back_24));
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
     }
