@@ -351,7 +351,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(@NonNull Menu menu) {
 
-        getMenuInflater().inflate(R.menu.menu_dropdown_right_corner, menu);
+        getMenuInflater().inflate(R.menu.action_bar_menu, menu);
 
         searchBtn = menu.findItem(R.id.menu_search_action);
         settingsBtn = menu.findItem(R.id.menu_settings_action);
