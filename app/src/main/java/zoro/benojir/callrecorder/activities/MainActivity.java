@@ -87,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 //--------------------------------------------------------------------------------------------------
-        getSupportFragmentManager();
         MaterialToolbar toolbar = findViewById(R.id.toolbar_include);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle(getResources().getString(R.string.app_name));
