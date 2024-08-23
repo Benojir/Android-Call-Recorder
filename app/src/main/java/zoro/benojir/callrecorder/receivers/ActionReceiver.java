@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import zoro.benojir.callrecorder.services.RecorderInCallService;
+import zoro.benojir.callrecorder.services.MyInCallService;
 
 public class ActionReceiver extends BroadcastReceiver {
 
@@ -15,7 +15,7 @@ public class ActionReceiver extends BroadcastReceiver {
         Bundle intentExtras = intent.getExtras();
 
         if (intentExtras.containsKey("stopRecording")){
-            context.stopService(new Intent(context, RecorderInCallService.class));
+            context.stopService(new Intent(context, MyInCallService.class));
         }
     }
 }

@@ -445,9 +445,11 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
     }
 
     private void disableSelectedItemCountMenu() {
-        MainActivity.searchBtn.setVisible(true);
-        MainActivity.settingsBtn.setVisible(true);
-        MainActivity.selectedItemsCountMenu.setVisible(false);
+        if (MainActivity.searchBtn != null && MainActivity.settingsBtn != null && MainActivity.selectedItemsCountMenu != null) {
+            MainActivity.searchBtn.setVisible(true);
+            MainActivity.settingsBtn.setVisible(true);
+            MainActivity.selectedItemsCountMenu.setVisible(false);
+        }
     }
 //    ----------------------------------------------------------------------------------------------
 

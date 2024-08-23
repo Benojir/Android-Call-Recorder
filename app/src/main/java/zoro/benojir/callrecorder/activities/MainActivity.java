@@ -252,9 +252,11 @@ public class MainActivity extends AppCompatActivity {
                             binding.recyclerView.setLayoutManager(linearLayoutManager);
                             binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                            if (searchBtn != null) {
-                                searchBtn.setVisible(true);
-                            }
+                            new Handler().postDelayed(() -> {
+                                if (searchBtn != null) {
+                                    searchBtn.setVisible(true);
+                                }
+                            }, 1000);
                         } else {
                             binding.nothingFoundDesignContainer.setVisibility(View.VISIBLE);
                             binding.recyclerView.setVisibility(View.GONE);
@@ -444,7 +446,7 @@ public class MainActivity extends AppCompatActivity {
 
         String shortOrderAfterReturn = preferences.getString("sort_by", "sort_by_new");
 
-        if (!sortOrder.equalsIgnoreCase(shortOrderAfterReturn)) {
+        if (sortOrder != null && !sortOrder.equalsIgnoreCase(shortOrderAfterReturn)) {
             recreate();
         }
     }

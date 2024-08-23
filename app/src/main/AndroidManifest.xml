@@ -73,7 +73,7 @@
         </receiver>
 
         <service
-            android:name=".services.RecorderInCallService"
+            android:name=".services.MyInCallService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="microphone"
