@@ -1,4 +1,4 @@
-### Version 1.2
+### Version 1.5
 
 * Fixed known issues
 * Updated UI to material 3

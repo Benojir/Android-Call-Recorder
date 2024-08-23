@@ -1,7 +1,7 @@
 id=zoro.benojir.callrecorder
 name=Call Recorder
-version=v1.4
-versionCode=4
+version=v1.5
+versionCode=5
 author=Benojir Sultana
 description=Record calls automatically without announcement.
 updateJson=https://raw.githubusercontent.com/Benojir/Android-Call-Recorder/main/magisk/updates/release/info.json
