@@ -6,13 +6,17 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $projectRoot = (Resolve-Path -LiteralPath "$PSScriptRoot\..").Path
+$moduleProperties = Get-Content -LiteralPath (Join-Path $projectRoot 'magisk-module\module.prop')
+$version = ($moduleProperties | Where-Object { $_ -match '^version=' }) -replace '^version=v?', ''
+$versionCode = ($moduleProperties | Where-Object { $_ -match '^versionCode=' }) -replace '^versionCode=', ''
+if ($version -notmatch '^\d+\.\d+(\.\d+)?$' -or $versionCode -notmatch '^\d+$') { throw 'Invalid module version metadata.' }
 $apk = (Resolve-Path -LiteralPath $ApkPath).Path
 if (!$AndroidSdk) { $AndroidSdk = "$env:LOCALAPPDATA\Android\Sdk" }
 $buildTools = Get-ChildItem -LiteralPath "$AndroidSdk\build-tools" -Directory | Sort-Object Name -Descending | Select-Object -First 1
 if (!$buildTools) { throw 'Android SDK build-tools are required to validate the APK.' }
 $badging = & "$($buildTools.FullName)\aapt.exe" dump badging $apk
-if ($LASTEXITCODE -ne 0 -or $badging[0] -notmatch "name='zoro\.benojir\.callrecorder'.*versionCode='6'") {
-    throw 'Expected Call Recorder v2.0 (versionCode 6). Refusing to package an old or unrelated APK.'
+if ($LASTEXITCODE -ne 0 -or $badging[0] -notmatch "name='zoro\.benojir\.callrecorder'.*versionCode='$versionCode'") {
+    throw "Expected Call Recorder v$version (versionCode $versionCode). Refusing to package an old or unrelated APK."
 }
 & "$($buildTools.FullName)\apksigner.bat" verify $apk
 if ($LASTEXITCODE -ne 0) { throw 'APK must be signed before it can be installed as a privileged application.' }
@@ -21,7 +25,7 @@ if ($isDebuggable -and !$DebugBuild) { throw 'Debug APK detected. Pass -DebugBui
 New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
 $outputRoot = (Resolve-Path -LiteralPath $OutputDirectory).Path
 $suffix = if ($DebugBuild) { '-debug' } else { '' }
-$zipPath = Join-Path $outputRoot "Call-Recorder-v2.0-universal$suffix.zip"
+$zipPath = Join-Path $outputRoot "Call-Recorder-v$version-universal$suffix.zip"
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $stream = [IO.File]::Open($zipPath, [IO.FileMode]::Create)
@@ -43,5 +47,5 @@ try {
     [IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $apk,
         'system/priv-app/zoro.benojir.callrecorder/app-release.apk', [IO.Compression.CompressionLevel]::Optimal) | Out-Null
 } finally { $archive.Dispose(); $stream.Dispose() }
-Copy-Item -LiteralPath $apk -Destination (Join-Path $outputRoot "Call-Recorder-v2.0$suffix.apk") -Force
+Copy-Item -LiteralPath $apk -Destination (Join-Path $outputRoot "Call-Recorder-v$version$suffix.apk") -Force
 Write-Output "Created $zipPath"

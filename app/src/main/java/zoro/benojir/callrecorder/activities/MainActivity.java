@@ -127,6 +127,7 @@ public class MainActivity extends LockedActivity {
         ((MaterialButton) findViewById(R.id.pauseRecording)).setText(RecordingService.isPaused() ? R.string.resume_recording : R.string.pause_recording);
         String status = recording ? (RecordingService.isPaused() ? "Recording paused" : "Recording in progress")
                 : RecorderHelper.hasCallAudioPermission(this) ? "Privileged audio available · Configure in Settings"
+                : CustomFunctions.isSystemApp(this) ? "System app · Check protected audio permission in Settings"
                 : "Microphone mode · Set up accessibility in Settings";
         ((TextView) findViewById(R.id.recorderStatus)).setText(status);
     }

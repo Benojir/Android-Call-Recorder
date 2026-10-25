@@ -4,6 +4,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.telecom.Call;
 import android.telecom.InCallService;
+import android.telecom.DisconnectCause;
+import android.media.AudioManager;
 import androidx.preference.PreferenceManager;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +18,9 @@ public class MyInCallService extends InCallService {
     private final Map<Call, Call.Callback> callbacks = new HashMap<>();
     private String session;
     private String number = "";
+    private boolean endScheduled;
     private final Runnable endSession = () -> {
+        endScheduled = false;
         if (!tracker.hasLiveCall()) {
             RecordingSessions.end(this, session);
             session = null;
@@ -35,27 +39,42 @@ public class MyInCallService extends InCallService {
         call.registerCallback(callback, handler);
         update(call, call.getState()); // Calls can already be active when this service binds.
     }
-    private void update(Call call, int state) {
+    void update(Call call, int state) {
         tracker.update(call, state);
         if (call.getDetails() != null && call.getDetails().getHandle() != null && number.isEmpty())
             number = call.getDetails().getHandle().getSchemeSpecificPart();
-        reconcile();
+        boolean terminal = state == Call.STATE_DISCONNECTING;
+        if (state == Call.STATE_DISCONNECTED) {
+            DisconnectCause cause = call.getDetails() == null ? null : call.getDetails().getDisconnectCause();
+            terminal = cause != null && cause.getCode() != DisconnectCause.UNKNOWN && cause.getCode() != DisconnectCause.OTHER;
+            terminal |= getSystemService(AudioManager.class).getMode() != AudioManager.MODE_IN_CALL;
+        }
+        reconcile(terminal);
     }
-    private void reconcile() {
-        handler.removeCallbacks(endSession);
+    private void reconcile(boolean terminal) {
+        if (tracker.hasLiveCall() || terminal) {
+            handler.removeCallbacks(endSession);
+            endScheduled = false;
+        }
         if (session == null && tracker.hasActiveCall()
                 && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("is_call_recording_enabled", false)) {
             session = RecordingSessions.begin(this, "phone", number);
         }
-        // Conference replacement may briefly remove every child before the parent arrives.
-        // Held, dialing and connecting members keep the same recorder alive.
-        if (!tracker.hasLiveCall()) handler.postDelayed(endSession, 1800);
+        if (session != null && !tracker.hasLiveCall()) {
+            if (terminal) endSession.run();
+            else if (!endScheduled) {
+                // Only an ambiguous removal gets a small conference-reordering window.
+                // Repeated cleanup callbacks never push this deadline farther away.
+                endScheduled = true;
+                handler.postDelayed(endSession, 250);
+            }
+        }
     }
     @Override public void onCallRemoved(Call call) {
         Call.Callback callback = callbacks.remove(call);
         if (callback != null) call.unregisterCallback(callback);
         tracker.remove(call);
-        reconcile();
+        reconcile(false);
         super.onCallRemoved(call);
     }
     @Override public void onDestroy() {

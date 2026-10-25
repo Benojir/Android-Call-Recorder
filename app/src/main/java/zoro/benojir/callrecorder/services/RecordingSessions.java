@@ -51,13 +51,7 @@ public final class RecordingSessions {
     }
     private static void stopCapture(Context context, String id) {
         manager(context).cancel(id, 2);
-        if (RecordingService.isRunning()) {
-            try { context.startService(command(context, RecordingService.END, id)); }
-            catch (RuntimeException e) {
-                Log.w("RecordingSessions", "Recorder is shutting down", e);
-                if (id.equals(RecordingService.activeSession())) context.stopService(new Intent(context, RecordingService.class));
-            }
-        }
+        RecordingService.endSession(id);
     }
     public static void discard(String id) { sessions.remove(id); }
     public static Intent command(Context context, String action, String id) {

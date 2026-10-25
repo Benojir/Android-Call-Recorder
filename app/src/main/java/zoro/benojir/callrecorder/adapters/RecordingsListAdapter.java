@@ -103,12 +103,13 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             holder.fileNameTV.setText(fileName);
             holder.fileInfoTV.setText(fileSizeAndDate);
 
-            File file = new File(fileInfos.getJSONObject(holder.getAdapterPosition()).getString("absolute_path"));
+            File file = new File(row.getString("absolute_path"));
             SingleFileOptionsHelper fileOptionsHelper = new SingleFileOptionsHelper(activity, file);
 
             //................................................................
 
-            holder.itemView.setOnClickListener(view -> {
+            holder.mainLayout.setOnClickListener(view -> {
+                if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return;
 
                 if (isSelectionModeOn) {
 
@@ -130,7 +131,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                         enableSelectedItemCountMenu();
                     }
                 } else {
-                    new AudioPlayerDialog(activity, file);
+                    playInApp(file);
                 }
             });
 
@@ -154,7 +155,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
             //................................................................
 
-            holder.itemView.setOnLongClickListener(view -> {
+            holder.mainLayout.setOnLongClickListener(view -> {
+                if (holder.getBindingAdapterPosition() == RecyclerView.NO_POSITION) return false;
                 try {
                     if (isSelectionModeOn) {
                         MultipleFilesControlDialog multipleFilesControlDialog = new MultipleFilesControlDialog(activity, selectedItemsPositionsList);
@@ -282,6 +284,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
     public int getItemCount() {
         return fileInfos.length();
     }
+
+    protected void playInApp(File file) { new AudioPlayerDialog(activity, file); }
 
     public int libraryCount() { return fileInfos2.length(); }
     public long libraryBytes() {

@@ -68,22 +68,8 @@ public class CustomFunctions {
 
     public static boolean isSystemApp(Context context) {
 
-        boolean isSystemApp = false;
-
-        PackageManager pm = context.getPackageManager();
-        List<ApplicationInfo> installedApps = pm.getInstalledApplications(0);
-
-        for (ApplicationInfo ai : installedApps) {
-
-            if ((ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-
-                if (ai.packageName.equalsIgnoreCase(context.getPackageName())) {
-                    isSystemApp = true;
-                }
-            }
-        }
-
-        return isSystemApp;
+        int flags = context.getApplicationInfo().flags;
+        return (flags & (ApplicationInfo.FLAG_SYSTEM | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP)) != 0;
     }
 //__________________________________________________________________________________________________
 

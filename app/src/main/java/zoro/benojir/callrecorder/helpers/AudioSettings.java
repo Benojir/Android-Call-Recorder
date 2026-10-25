@@ -3,6 +3,10 @@ package zoro.benojir.callrecorder.helpers;
 /** Android audio-source values, kept independent of the framework for regression tests. */
 public final class AudioSettings {
     private AudioSettings() { }
+    public static boolean useCompatibleCallAudio(String selection, boolean privileged,
+                                                  boolean phone, boolean enabled, int source) {
+        return enabled && privileged && phone && "auto".equals(selection) && source == 4;
+    }
     public static int[] sources(String selection, boolean privileged, boolean phone) {
         if ("auto".equals(selection)) return privileged && phone ? new int[]{4, 1} : new int[]{6, 1};
         int source;

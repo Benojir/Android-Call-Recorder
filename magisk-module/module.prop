@@ -1,7 +1,7 @@
 id=zoro.benojir.callrecorder
 name=Call Recorder
-version=v2.0
-versionCode=6
+version=v2.0.3
+versionCode=9
 author=Benojir Sultana
 description=Call recording with configurable audio, conference sessions, app lock and optional microphone/VoIP support. Magisk, KernelSU/Next and APatch.
 updateJson=https://raw.githubusercontent.com/Benojir/Android-Call-Recorder/main/magisk/updates/release/info.json

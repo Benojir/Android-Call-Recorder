@@ -12,6 +12,7 @@ import android.telephony.TelephonyManager;
 import android.view.accessibility.AccessibilityEvent;
 import androidx.preference.PreferenceManager;
 import zoro.benojir.callrecorder.helpers.RecorderHelper;
+import zoro.benojir.callrecorder.helpers.CustomFunctions;
 
 /** User-enabled accessibility microphone sharing. No screen text, gestures or message content. */
 @SuppressWarnings("deprecation")
@@ -39,6 +40,10 @@ public class CallAccessibilityService extends AccessibilityService implements Sh
     };
     @Override protected void onServiceConnected() {
         super.onServiceConnected();
+        if (CustomFunctions.isSystemApp(this) || RecorderHelper.hasCallAudioPermission(this)) {
+            disableSelf();
+            return;
+        }
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.registerOnSharedPreferenceChangeListener(this);
         telephony = getSystemService(TelephonyManager.class);
@@ -64,10 +69,9 @@ public class CallAccessibilityService extends AccessibilityService implements Sh
         }
     }
     @Override public void onAccessibilityEvent(AccessibilityEvent event) { }
-    @Override public void onInterrupt() {
-        RecordingSessions.end(this, session);
-        session = null;
-    }
+    // This callback interrupts accessibility feedback, not the phone call.
+    // Keep the session (including a user Stop) until the call actually ends.
+    @Override public void onInterrupt() { }
     @Override public void onSharedPreferenceChanged(SharedPreferences prefs, String key) { reconcile(); }
     @Override public void onDestroy() {
         handler.removeCallbacksAndMessages(null);

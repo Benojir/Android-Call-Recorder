@@ -36,4 +36,10 @@ public class CallSessionTrackerTest {
         CallSessionTracker<String> calls = new CallSessionTracker<>();
         calls.update("already_active", 4); assertTrue(calls.hasActiveCall());
     }
+    @Test public void unansweredWaitingCallDoesNotExtendDisconnectedCall() {
+        CallSessionTracker<String> calls = new CallSessionTracker<>();
+        calls.update("connected", 4); calls.update("waiting", 2);
+        calls.update("connected", 7);
+        assertFalse(calls.hasLiveCall());
+    }
 }

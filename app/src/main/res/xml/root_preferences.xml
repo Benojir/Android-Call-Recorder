@@ -3,6 +3,7 @@
         <SwitchPreferenceCompat app:key="is_call_recording_enabled" app:title="Automatic call recording"
             app:summary="Record cellular calls when connected. Conference and held calls share one session." />
         <Preference app:key="permissions" app:title="Permissions and installation status" />
+        <Preference app:key="recording_result" app:title="Last recording result" />
         <SwitchPreferenceCompat app:key="accessibility_recording" app:title="Non-root microphone recording"
             app:summary="Optional accessibility support. Remote audio depends on your device; speakerphone may help." />
         <Preference app:key="accessibility_settings" app:title="Enable accessibility service"
@@ -14,6 +15,8 @@
         <Preference app:title="Choosing an audio source" app:summary="@string/audio_source_help" app:selectable="false" />
         <ListPreference app:key="audio_source" app:title="Audio source" app:defaultValue="auto"
             app:entries="@array/audio_source_entries" app:entryValues="@array/audio_source_values" app:useSimpleSummaryProvider="true" />
+        <SwitchPreferenceCompat app:key="compatible_call_audio" app:title="Compatible automatic call audio" app:defaultValue="true"
+            app:summary="For privileged cellular calls with Automatic source: uses the original AMR-NB / M4A path at 8 kHz, 12.2 kbps. Turn off to use custom encoder settings." />
         <ListPreference app:key="audio_encoder" app:title="Format and encoder" app:defaultValue="aac"
             app:entries="@array/audio_encoder_entries" app:entryValues="@array/audio_encoder_values" app:useSimpleSummaryProvider="true" />
         <ListPreference app:key="sample_rate" app:title="AAC sample rate" app:defaultValue="44100"

@@ -49,8 +49,8 @@ public class AudioPlayerDialog {
     private final Runnable updateSeekBar = new Runnable() {
         @Override
         public void run() {
+            if (exoPlayer == null) return;
             if (!isUserSeeking && exoPlayer.isPlaying()) {
-                seekBar.setProgress((int) exoPlayer.getCurrentPosition());
                 updateUIWhilePlaying(exoPlayer.getCurrentPosition());
             }
             handler.postDelayed(this, 1000);
@@ -125,10 +125,10 @@ public class AudioPlayerDialog {
         //--------------------------------------------------------------------------------------
 
         dialog.setOnDismissListener(dialog -> {
+            handler.removeCallbacks(updateSeekBar);
             if (exoPlayer != null) {
-                exoPlayer.stop();
                 exoPlayer.release();
-                handler.removeCallbacks(updateSeekBar);
+                exoPlayer = null;
             }
         });
 
@@ -292,6 +292,7 @@ public class AudioPlayerDialog {
     //    ------------------------------------------------------------------------------------------
 
     private void startSeekBarUpdate() {
+        handler.removeCallbacks(updateSeekBar);
         handler.post(updateSeekBar);
     }
 

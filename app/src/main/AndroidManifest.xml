@@ -82,7 +82,6 @@
             android:name=".services.MyInCallService"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="microphone"
             android:permission="android.permission.BIND_INCALL_SERVICE" >
             <intent-filter>
                 <action android:name="android.telecom.InCallService" />

@@ -10,7 +10,8 @@ public final class CallSessionTracker<T> {
     public void remove(T call) { calls.remove(call); }
     public boolean hasActiveCall() { return calls.containsValue(4); }
     public boolean hasLiveCall() {
-        for (int state : calls.values()) if (state != 7 && state != 10) return true;
+        // A waiting/unanswered incoming call must not extend the previous recording.
+        for (int state : calls.values()) if (state != 7 && state != 10 && state != 2) return true;
         return false;
     }
     public void clear() { calls.clear(); }

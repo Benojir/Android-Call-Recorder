@@ -2,17 +2,11 @@ package zoro.benojir.callrecorder.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.net.Uri;
+import android.media.MediaMetadataRetriever;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
-import androidx.media3.common.MediaItem;
-import androidx.media3.common.PlaybackException;
-import androidx.media3.common.Player;
-import androidx.media3.exoplayer.ExoPlayer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,7 +44,7 @@ public class FileInfoDialog {
             fileLastModifiedTV.setText(fileInfoJObj.getString("modified_date"));
             filePathTV.setText(fileInfoJObj.getString("absolute_path"));
 
-            // Use ExoPlayer to get the duration
+            // Read metadata without allocating a playback engine or audio session.
             File audioFile = new File(fileInfoJObj.getString("absolute_path"));
             getAudioDuration(audioFile, fileDurationTV);
 
@@ -66,29 +60,11 @@ public class FileInfoDialog {
     }
 
     private void getAudioDuration(File audioFile, TextView fileDurationTV) {
-        ExoPlayer exoPlayer = new ExoPlayer.Builder(context).build();
-        MediaItem mediaItem = MediaItem.fromUri(Uri.fromFile(audioFile));
-        exoPlayer.setMediaItem(mediaItem);
-        exoPlayer.prepare();
-
-        exoPlayer.addListener(new Player.Listener() {
-            @Override
-            public void onPlaybackStateChanged(int playbackState) {
-                if (playbackState == Player.STATE_READY) {
-                    long duration = exoPlayer.getDuration();
-                    fileDurationTV.setText(CustomFunctions.formatDuration(duration));
-                    exoPlayer.release();
-                } else if (playbackState == Player.STATE_IDLE || playbackState == Player.STATE_ENDED) {
-                    fileDurationTV.setText(context.getString(R.string.unknown));
-                    exoPlayer.release();
-                }
-            }
-
-            @Override
-            public void onPlayerError(@NonNull PlaybackException error) {
-                fileDurationTV.setText(context.getString(R.string.unknown));
-                exoPlayer.release();
-            }
-        });
+        try (MediaMetadataRetriever metadata = new MediaMetadataRetriever()) {
+            metadata.setDataSource(audioFile.getAbsolutePath());
+            String duration = metadata.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+            fileDurationTV.setText(duration == null ? context.getString(R.string.unknown)
+                    : CustomFunctions.formatDuration(Long.parseLong(duration)));
+        } catch (Exception e) { fileDurationTV.setText(context.getString(R.string.unknown)); }
     }
 }

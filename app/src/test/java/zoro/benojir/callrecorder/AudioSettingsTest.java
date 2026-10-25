@@ -5,6 +5,14 @@ import zoro.benojir.callrecorder.helpers.RecordingCategory;
 import static org.junit.Assert.*;
 
 public class AudioSettingsTest {
+    @Test public void automaticPrivilegedVoiceCallUsesCompatibleCodecOnlyWhenEnabled() {
+        assertTrue(AudioSettings.useCompatibleCallAudio("auto", true, true, true, 4));
+        assertFalse(AudioSettings.useCompatibleCallAudio("auto", true, true, false, 4));
+        assertFalse(AudioSettings.useCompatibleCallAudio("4", true, true, true, 4));
+        assertFalse(AudioSettings.useCompatibleCallAudio("auto", false, true, true, 1));
+        assertFalse(AudioSettings.useCompatibleCallAudio("auto", true, false, true, 4));
+        assertFalse(AudioSettings.useCompatibleCallAudio("auto", true, true, true, 1));
+    }
     @Test public void nonRootNeverAttemptsProtectedSources() {
         assertArrayEquals(new int[]{6, 1}, AudioSettings.sources("auto", false, true));
         for (String protectedSource : new String[]{"2", "3", "4"})
