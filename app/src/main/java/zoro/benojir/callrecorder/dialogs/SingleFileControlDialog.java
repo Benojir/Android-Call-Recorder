@@ -24,6 +24,7 @@ public class SingleFileControlDialog {
         this.itemPosition = position;
 
         dialog = new Dialog(activity);
+        zoro.benojir.callrecorder.helpers.AppLock.track(activity, dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_single_file_options);

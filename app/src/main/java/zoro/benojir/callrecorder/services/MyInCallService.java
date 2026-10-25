@@ -1,101 +1,69 @@
 package zoro.benojir.callrecorder.services;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.pm.ServiceInfo;
-import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.telecom.Call;
 import android.telecom.InCallService;
-import android.util.Log;
-
-import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import zoro.benojir.callrecorder.BuildConfig;
-import zoro.benojir.callrecorder.R;
-import zoro.benojir.callrecorder.helpers.RecorderHelper;
+import zoro.benojir.callrecorder.helpers.CallSessionTracker;
 
 public class MyInCallService extends InCallService {
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final CallSessionTracker<Call> tracker = new CallSessionTracker<>();
+    private final Map<Call, Call.Callback> callbacks = new HashMap<>();
+    private String session;
+    private String number = "";
+    private final Runnable endSession = () -> {
+        if (!tracker.hasLiveCall()) {
+            RecordingSessions.end(this, session);
+            session = null;
+            number = "";
+        }
+    };
 
-    public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID;
-    private final Map<Call, RecorderHelper> activeRecorders = new HashMap<>();
-    private Context sContext;
-
-    @Override
-    public void onCallAdded(Call call) {
+    @Override public void onCallAdded(Call call) {
         super.onCallAdded(call);
-        sContext = this;
-
-        call.registerCallback(new Call.Callback() {
-            @Override
-            public void onStateChanged(Call call, int state) {
-                super.onStateChanged(call, state);
-                Log.d("MyInCallService", "Call state changed: " + state);
-
-                if (state == Call.STATE_ACTIVE) {
-                    startRecording(call);
-                } else if (state == Call.STATE_DISCONNECTED || state == Call.STATE_DISCONNECTING) {
-                    stopRecording(call);
-                }
-            }
-        });
+        Call.Callback callback = new Call.Callback() {
+            @Override public void onStateChanged(Call changed, int state) { update(changed, state); }
+            @Override public void onChildrenChanged(Call changed, List<Call> children) { update(changed, changed.getState()); }
+            @Override public void onParentChanged(Call changed, Call parent) { update(changed, changed.getState()); }
+        };
+        callbacks.put(call, callback);
+        call.registerCallback(callback, handler);
+        update(call, call.getState()); // Calls can already be active when this service binds.
     }
-
-    @Override
-    public void onCallRemoved(Call call) {
+    private void update(Call call, int state) {
+        tracker.update(call, state);
+        if (call.getDetails() != null && call.getDetails().getHandle() != null && number.isEmpty())
+            number = call.getDetails().getHandle().getSchemeSpecificPart();
+        reconcile();
+    }
+    private void reconcile() {
+        handler.removeCallbacks(endSession);
+        if (session == null && tracker.hasActiveCall()
+                && PreferenceManager.getDefaultSharedPreferences(this).getBoolean("is_call_recording_enabled", false)) {
+            session = RecordingSessions.begin(this, "phone", number);
+        }
+        // Conference replacement may briefly remove every child before the parent arrives.
+        // Held, dialing and connecting members keep the same recorder alive.
+        if (!tracker.hasLiveCall()) handler.postDelayed(endSession, 1800);
+    }
+    @Override public void onCallRemoved(Call call) {
+        Call.Callback callback = callbacks.remove(call);
+        if (callback != null) call.unregisterCallback(callback);
+        tracker.remove(call);
+        reconcile();
         super.onCallRemoved(call);
-        stopRecording(call);
     }
-
-    private void startRecording(Call call) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(sContext);
-        if (preferences.getBoolean("is_call_recording_enabled", false)) {
-            createNotificationChannel();
-
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(sContext, CHANNEL_ID)
-                    .setContentTitle("Call Recorder")
-                    .setContentText("Call recording in progress")
-                    .setSmallIcon(R.drawable.keyboard_voice)
-                    .setOngoing(true);
-
-            Notification notification = notificationBuilder.build();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE);
-            } else {
-                startForeground(1, notification);
-            }
-
-            RecorderHelper recorderHelper = new RecorderHelper(sContext, call.getDetails().getHandle().getSchemeSpecificPart());
-            recorderHelper.startRecoding();
-            activeRecorders.put(call, recorderHelper);
-        }
-    }
-
-    private void stopRecording(Call call) {
-        RecorderHelper recorderHelper = activeRecorders.remove(call);
-        if (recorderHelper != null) {
-            recorderHelper.stopVoiceRecoding();
-        }
-
-        if (activeRecorders.isEmpty()) {
-            stopForeground(true);
-        }
-    }
-
-    private void createNotificationChannel() {
-        NotificationChannel serviceChannel = new NotificationChannel(
-                CHANNEL_ID,
-                "Call Recorder Service Channel",
-                NotificationManager.IMPORTANCE_NONE
-        );
-        NotificationManager manager = getSystemService(NotificationManager.class);
-        manager.createNotificationChannel(serviceChannel);
+    @Override public void onDestroy() {
+        handler.removeCallbacksAndMessages(null);
+        for (Map.Entry<Call, Call.Callback> entry : callbacks.entrySet()) entry.getKey().unregisterCallback(entry.getValue());
+        callbacks.clear();
+        tracker.clear();
+        RecordingSessions.end(this, session);
+        super.onDestroy();
     }
 }

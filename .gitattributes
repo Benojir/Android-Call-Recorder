@@ -1,0 +1,6 @@
+*.sh text eol=lf
+**/update-binary text eol=lf
+**/updater-script text eol=lf
+*.prop text eol=lf
+*.java text eol=lf
+*.xml text eol=lf

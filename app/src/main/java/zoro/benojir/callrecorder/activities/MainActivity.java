@@ -1,494 +1,231 @@
 package zoro.benojir.callrecorder.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.PowerManager;
-import android.os.StrictMode;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.snackbar.Snackbar;
-
-import zoro.benojir.callrecorder.BuildConfig;
-import zoro.benojir.callrecorder.R;
-import zoro.benojir.callrecorder.adapters.RecordingsListAdapter;
-import zoro.benojir.callrecorder.databinding.ActivityMainBinding;
-import zoro.benojir.callrecorder.helpers.CustomFunctions;
-
-import org.apache.commons.io.FilenameUtils;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.File;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import zoro.benojir.callrecorder.R;
+import zoro.benojir.callrecorder.adapters.RecordingsListAdapter;
+import zoro.benojir.callrecorder.helpers.AppLock;
+import zoro.benojir.callrecorder.helpers.CustomFunctions;
+import zoro.benojir.callrecorder.helpers.RecorderHelper;
+import zoro.benojir.callrecorder.helpers.RecordingCategory;
+import zoro.benojir.callrecorder.services.RecordingService;
+import zoro.benojir.callrecorder.services.RecordingSessions;
 
-public class MainActivity extends AppCompatActivity {
-
-    private ActivityMainBinding binding;
-    private static final int REQUEST_PERMISSION_CODE = 4528;
-    public static final String TAG = "MADARA";
-    private boolean doubleBackPressed;
+public class MainActivity extends LockedActivity {
     public static MenuItem searchBtn, settingsBtn, selectedItemsCountMenu;
-    private RecordingsListAdapter recyclerViewAdapter;
-    private final JSONArray allFilesInfoJArray = new JSONArray();
-    private boolean isBottomScrollButton;
+    private final ExecutorService loader = Executors.newSingleThreadExecutor();
+    private RecordingsListAdapter adapter;
     private SharedPreferences preferences;
-    private String sortOrder;
-    private String lastAppearance;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private String category = "all";
+    private String search = "";
+    private int loadGeneration;
+    private boolean permissionsAsked;
+    private final BroadcastReceiver changes = new BroadcastReceiver() {
+        @Override public void onReceive(Context context, Intent intent) { if (!AppLock.needsUnlock(MainActivity.this)) loadRecordings(); }
+    };
+    @Override protected void onCreate(Bundle state) {
+        SettingsActivity.applyTheme(this);
+        super.onCreate(state);
+        setContentView(R.layout.activity_main);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (preferences.getString("appearance", "device_default").equals("dark_mode")) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            lastAppearance = "dark_mode";
-        } else if (preferences.getString("appearance", "device_default").equals("light_mode")) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            lastAppearance = "light_mode";
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            lastAppearance = "device_default";
-        }
-
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-//--------------------------------------------------------------------------------------------------
-        MaterialToolbar toolbar = findViewById(R.id.toolbar_include);
+        permissionsAsked = state != null && state.getBoolean("permissions_asked");
+        if (state != null) category = state.getString("category", "all");
+        MaterialToolbar toolbar = findViewById(R.id.libraryToolbar);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(getResources().getString(R.string.app_name));
-        }
-//--------------------------------------------------------------------------------------------------
-        /* App is crashing when sharing multi files at once if I don't set this */
-        StrictMode.VmPolicy.Builder smBuilder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(smBuilder.build());
-//--------------------------------------------------------------------------------------------------
-
-        View headView = binding.navigationViewMenu.getHeaderView(0);
-
-        if (CustomFunctions.isDarkModeOn(this)) {
-            headView.setBackground(AppCompatResources.getDrawable(this, R.drawable.header_bg_night));
-        }
-
-        String versionString = getString(R.string.app_version) + BuildConfig.VERSION_NAME;
-        ((TextView) headView.findViewById(R.id.header_layout_version_tv)).setText(versionString);
-
-        Button updateBtn = headView.findViewById(R.id.updateBtnInHeaderLayout);
-
-        CustomFunctions.checkForUpdateOnStartApp(this, updateBtn);
-
-        updateBtn.setOnClickListener(view -> {
-            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_release_page_link)));
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(i);
-        });
-
-//--------------------------------------------------------------------------------------------------
-
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, binding.getRoot(), toolbar, 0, 0);
-        binding.getRoot().addDrawerListener(toggle);
-        binding.getRoot().addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-                CustomFunctions.hideKeyboard(MainActivity.this, drawerView);
-            }
-
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-                CustomFunctions.hideKeyboard(MainActivity.this, drawerView);
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-                CustomFunctions.hideKeyboard(MainActivity.this, drawerView);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-
-            }
-        });
-        toggle.syncState();
-
-        navigationViewItemsClickedActions();
-
-//        ------------------------------------------------------------------------------------------
-
-        if (!CustomFunctions.isSystemApp(this)) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-            builder.setTitle(getString(R.string.not_system_app_message_title));
-            builder.setMessage(getString(R.string.not_system_app_message_body));
-            builder.setIcon(R.drawable.error);
-            builder.setCancelable(false);
-            builder.setPositiveButton("OK", (dialog, which) -> {
-                dialog.dismiss();
-                finishAndRemoveTask();
+        RecyclerView list = findViewById(R.id.recyclerView);
+        list.setLayoutManager(new LinearLayoutManager(this));
+        ChipGroup chips = findViewById(R.id.categoryChips);
+        List<String> categories = new ArrayList<>();
+        categories.add("all"); categories.addAll(Arrays.asList(RecordingCategory.VALUES));
+        for (String value : categories) {
+            Chip chip = new Chip(this);
+            chip.setId(View.generateViewId()); chip.setCheckable(true);
+            chip.setText("all".equals(value) ? "All" : RecordingCategory.label(value));
+            chip.setChecked(category.equals(value));
+            chips.addView(chip);
+            chip.setOnCheckedChangeListener((button, checked) -> {
+                if (checked) { category = value; applyFilter(); }
             });
-            builder.setNegativeButton("Read Post", (dialog, which) -> {
+        }
+        findViewById(R.id.setupRecorder).setOnClickListener(v -> openSettings());
+        findViewById(R.id.recordNow).setOnClickListener(v -> manualRecording());
+        findViewById(R.id.pauseRecording).setOnClickListener(v -> control(RecordingService.UI_PAUSE));
+        findViewById(R.id.stopRecording).setOnClickListener(v -> control(RecordingService.UI_STOP));
+        ContextCompat.registerReceiver(this, changes, new IntentFilter(RecordingService.CHANGED), ContextCompat.RECEIVER_NOT_EXPORTED);
+    }
+    @Override protected void onAppUnlocked() {
+        if (preferences == null) return;
+        if (!permissionsAsked || getIntent().getBooleanExtra("request_permissions", false)) {
+            permissionsAsked = true;
+            getIntent().removeExtra("request_permissions");
+            requestPermissionsIfNeeded();
+        }
+        loadRecordings();
+    }
+    private void requestPermissionsIfNeeded() {
+        List<String> needed = new ArrayList<>();
+        for (String permission : new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.READ_CONTACTS, Manifest.permission.READ_PHONE_STATE})
+            if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) needed.add(permission);
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED)
+            needed.add(Manifest.permission.POST_NOTIFICATIONS);
+        if (!needed.isEmpty()) ActivityCompat.requestPermissions(this, needed.toArray(new String[0]), 4528);
+    }
+    private void manualRecording() {
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 4528); return;
+        }
+        String[] names = new String[RecordingCategory.VALUES.length];
+        for (int i = 0; i < names.length; i++) names[i] = RecordingCategory.label(RecordingCategory.VALUES[i]);
+        new AlertDialog.Builder(this).setTitle("Record now · choose category")
+                .setItems(names, (d, index) -> RecordingSessions.begin(this, RecordingCategory.VALUES[index], "manual"))
+                .setNegativeButton("Cancel", null).show();
+    }
+    private void control(String action) {
+        String id = RecordingService.activeSession();
+        if (id != null) startService(RecordingSessions.command(this, action, id));
+    }
+    private void updateStatus() {
+        boolean recording = RecordingService.activeSession() != null;
+        findViewById(R.id.recordNow).setVisibility(recording ? View.GONE : View.VISIBLE);
+        findViewById(R.id.pauseRecording).setVisibility(recording ? View.VISIBLE : View.GONE);
+        findViewById(R.id.stopRecording).setVisibility(recording ? View.VISIBLE : View.GONE);
+        ((MaterialButton) findViewById(R.id.pauseRecording)).setText(RecordingService.isPaused() ? R.string.resume_recording : R.string.pause_recording);
+        String status = recording ? (RecordingService.isPaused() ? "Recording paused" : "Recording in progress")
+                : RecorderHelper.hasCallAudioPermission(this) ? "Privileged audio available · Configure in Settings"
+                : "Microphone mode · Set up accessibility in Settings";
+        ((TextView) findViewById(R.id.recorderStatus)).setText(status);
+    }
+    private void loadRecordings() {
+        updateStatus();
+        final int generation = ++loadGeneration;
+        final String sort = preferences.getString("sort_by", "sort_by_new");
+        findViewById(R.id.libraryProgress).setVisibility(adapter == null ? View.VISIBLE : View.GONE);
+        loader.execute(() -> {
+            List<File> files = new ArrayList<>();
+            File external = getExternalFilesDir("recordings");
+            if (external != null) scan(external, files);
+            scan(new File(getFilesDir(), "recordings"), files);
+            Comparator<File> ordering = "sort_by_old".equals(sort) ? Comparator.comparingLong(File::lastModified)
+                    : "sort_by_name_ascending".equals(sort) ? Comparator.comparing(File::getName, String.CASE_INSENSITIVE_ORDER)
+                    : "sort_by_name_descending".equals(sort) ? Comparator.comparing(File::getName, String.CASE_INSENSITIVE_ORDER).reversed()
+                    : Comparator.comparingLong(File::lastModified).reversed();
+            files.sort(ordering);
+            JSONArray items = new JSONArray();
+            long bytes = 0;
+            for (File file : files) {
                 try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.tutorial_post_link))));
-                    new Handler(Looper.getMainLooper()).postDelayed(this::finishAndRemoveTask, 2000);
-                } catch (Exception e) {
-                    Toast.makeText(this, "No app found to open this link", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    onBackPressed();
-                }
+                    String folder = file.getParentFile().getName();
+                    String source = "recordings".equals(folder) ? "phone" : RecordingCategory.safeCategory(folder);
+                    JSONObject item = new JSONObject();
+                    item.put("file_name", file.getName());
+                    item.put("display_name", file.getName().replaceFirst("_\\d{4}-\\d{2}-\\d{2}.*$", "").replaceFirst("\\.(m4a|amr)$", ""));
+                    item.put("category", source);
+                    item.put("date_group", DateFormat.getDateInstance(DateFormat.MEDIUM).format(new Date(file.lastModified())));
+                    item.put("size", CustomFunctions.fileSizeFormatter(file.length()));
+                    item.put("bytes", file.length());
+                    item.put("modified_date", CustomFunctions.timeFormatter(file.lastModified()));
+                    item.put("absolute_path", file.getAbsolutePath());
+                    items.put(item); bytes += file.length();
+                } catch (Exception ignored) { }
+            }
+            final long totalBytes = bytes;
+            runOnUiThread(() -> {
+                if (isDestroyed() || generation != loadGeneration) return;
+                adapter = new RecordingsListAdapter(this, items);
+                ((RecyclerView) findViewById(R.id.recyclerView)).setAdapter(adapter);
+                adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+                    @Override public void onChanged() { emptyState(); }
+                    @Override public void onItemRangeRemoved(int start, int count) { emptyState(); }
+                });
+                ((TextView) findViewById(R.id.librarySummary)).setText(getString(R.string.recording_summary, items.length(), CustomFunctions.fileSizeFormatter(totalBytes)));
+                findViewById(R.id.libraryProgress).setVisibility(View.GONE);
+                applyFilter();
             });
-            builder.create();
-            builder.show();
-
-        } else {
-            checkPermissions();
-
-            File recordingFolderPath = getExternalFilesDir("/recordings/");
-
-            if (!recordingFolderPath.exists()) {
-                recordingFolderPath.mkdirs();
-            }
-
-            File[] recordedFiles = recordingFolderPath.listFiles();
-            AtomicInteger increment = new AtomicInteger(1);
-
-            if (recordedFiles != null && recordedFiles.length > 0) {
-
-                binding.nothingFoundDesignContainer.setVisibility(View.GONE);
-                binding.recyclerView.setVisibility(View.VISIBLE);
-                binding.filesLoadingDesignContainer.setVisibility(View.VISIBLE);
-
-                new Thread(() -> {
-
-                    sortOrder = preferences.getString("sort_by", "sort_by_new");
-
-                    switch (sortOrder) {
-                        case "sort_by_name_ascending":
-                            CustomFunctions.sortFilesByNameAscending(recordedFiles);
-                            break;
-                        case "sort_by_name_descending":
-                            CustomFunctions.sortFilesByNameDescending(recordedFiles);
-                            break;
-                        case "sort_by_old":
-                            CustomFunctions.sortOldestFilesFirst(recordedFiles);
-                            break;
-                        default:
-                            CustomFunctions.sortNewestFilesFirst(recordedFiles);
-                            break;
-                    }
-
-                    for (File recordFile : recordedFiles) {
-
-                        runOnUiThread(() -> {
-                            String loadingFiles = "Loading files " + increment + "/" + recordedFiles.length;
-                            binding.totalFilesLoadedTV.setText(loadingFiles);
-                        });
-
-                        increment.getAndIncrement();
-
-                        boolean isValidRecordedFile = recordFile.isFile() && FilenameUtils.getExtension(recordFile.getAbsolutePath()).equalsIgnoreCase("m4a") && recordFile.length() > 0;
-
-                        if (isValidRecordedFile) {
-
-                            JSONObject fileInfo = new JSONObject();
-
-                            try {
-                                fileInfo.put("file_name", recordFile.getName());
-                                fileInfo.put("size", CustomFunctions.fileSizeFormatter(recordFile.length()));
-                                fileInfo.put("modified_date", CustomFunctions.timeFormatter(recordFile.lastModified()));
-                                fileInfo.put("absolute_path", recordFile.getAbsolutePath());
-
-                                allFilesInfoJArray.put(fileInfo);
-                            } catch (Exception e) {
-                                Log.e(TAG, "onCreate: ", e);
-                            }
-                        }
-                    }
-
-                    runOnUiThread(() -> {
-
-                        if (allFilesInfoJArray.length() > 0) {
-
-                            binding.filesLoadingDesignContainer.setVisibility(View.GONE);
-
-                            recyclerViewAdapter = new RecordingsListAdapter(MainActivity.this, allFilesInfoJArray);
-                            binding.recyclerView.setAdapter(recyclerViewAdapter);
-
-                            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-                            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-
-                            binding.recyclerView.setLayoutManager(linearLayoutManager);
-                            binding.recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-                            new Handler().postDelayed(() -> {
-                                if (searchBtn != null) {
-                                    searchBtn.setVisible(true);
-                                }
-                            }, 1000);
-                        } else {
-                            binding.nothingFoundDesignContainer.setVisibility(View.VISIBLE);
-                            binding.recyclerView.setVisibility(View.GONE);
-                            binding.filesLoadingDesignContainer.setVisibility(View.GONE);
-                        }
-                    });
-                }).start();
-
-
-                binding.scrollButtonTopBottomFAB.setOnClickListener(v -> {
-                    if (isBottomScrollButton){
-                        binding.recyclerView.scrollToPosition(binding.recyclerView.getAdapter().getItemCount() - 1);
-                    } else {
-                        binding.recyclerView.scrollToPosition(0);
-                    }
-                });
-
-                binding.recyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
-                    @Override
-                    public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-
-                        if (newState == RecyclerView.SCROLL_STATE_IDLE) { // No scrolling
-                            new Handler().postDelayed(() -> binding.scrollButtonTopBottomFAB.setVisibility(View.GONE), 2000); // delay of 2 seconds before hiding the fab
-                        }
-                    }
-
-                    @Override
-                    public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-
-                        if (dy > 0) { // scrolling down
-                            isBottomScrollButton = true;
-                            binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_downward);
-                        } else if (dy < 0) { // scrolling up
-                            isBottomScrollButton = false;
-                            binding.scrollButtonTopBottomFAB.setImageResource(R.drawable.arrow_upward);
-                        }
-                        binding.scrollButtonTopBottomFAB.setVisibility(View.VISIBLE);
-                    }
-                });
-            }
-        }
-    }
-
-//    ----------------------------------------------------------------------------------------------
-
-    private void navigationViewItemsClickedActions() {
-        binding.navigationViewMenu.setNavigationItemSelectedListener(item -> {
-
-            Intent intent;
-
-            if (item.getItemId() == R.id.send_mail_action) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.app_issue_page_link))));
-                return true;
-
-            } else if (item.getItemId() == R.id.share_app_action) {
-
-                intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.app_sharing_message) + "\n" + getString(R.string.github_release_page_link));
-                startActivity(Intent.createChooser(intent, "Share via"));
-                return true;
-
-            } else if (item.getItemId() == R.id.more_app_action) {
-
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.more_apps_in_play_store)));
-                startActivity(intent);
-                return true;
-
-            } else if (item.getItemId() == R.id.visitWeb_app_action) {
-
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.website_link)));
-                startActivity(intent);
-                return true;
-
-            } else if (item.getItemId() == R.id.visitGitHub_app_action) {
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_profile_link)));
-                startActivity(intent);
-                return true;
-
-            } else if (item.getItemId() == R.id.visitTG_app_action) {
-
-                intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.telegram_link)));
-                startActivity(intent);
-                return true;
-
-            } else {
-                return false;
-            }
         });
     }
-
-//__________________________________________________________________________________________________
-
-    @Override
-    public boolean onCreateOptionsMenu(@NonNull Menu menu) {
-
+    private void scan(File directory, List<File> files) {
+        File[] children = directory.listFiles();
+        if (children == null) return;
+        for (File file : children) {
+            if (file.isDirectory() && Arrays.asList(RecordingCategory.VALUES).contains(file.getName())) scan(file, files);
+            else if (file.isFile() && file.length() > 0 && (file.getName().endsWith(".m4a") || file.getName().endsWith(".amr"))
+                    && !file.getAbsolutePath().equals(RecordingService.activeOutput())) files.add(file);
+        }
+    }
+    private void applyFilter() { if (adapter != null) adapter.filterLibrary(category, search); }
+    private void emptyState() {
+        if (adapter != null) ((TextView) findViewById(R.id.librarySummary)).setText(getString(R.string.recording_summary,
+                adapter.libraryCount(), CustomFunctions.fileSizeFormatter(adapter.libraryBytes())));
+        boolean empty = adapter == null || adapter.getItemCount() == 0;
+        findViewById(R.id.emptyLibrary).setVisibility(empty ? View.VISIBLE : View.GONE);
+        ((TextView) findViewById(R.id.emptyTitle)).setText("all".equals(category) && search.isEmpty() ? R.string.empty_library : R.string.no_filter_results);
+    }
+    @Override public boolean onCreateOptionsMenu(@NonNull Menu menu) {
         getMenuInflater().inflate(R.menu.action_bar_menu, menu);
-
         searchBtn = menu.findItem(R.id.menu_search_action);
         settingsBtn = menu.findItem(R.id.menu_settings_action);
         selectedItemsCountMenu = menu.findItem(R.id.menu_selected_items_count);
-
-        searchBtn.setVisible(false);
-
         SearchView searchView = (SearchView) searchBtn.getActionView();
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-        searchView.setQueryHint("Search recordings...");
+        searchView.setQueryHint("Search recordings");
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                recyclerViewAdapter.getFilter().filter(newText);
-                return false;
-            }
+            @Override public boolean onQueryTextSubmit(String query) { return false; }
+            @Override public boolean onQueryTextChange(String query) { search = query; applyFilter(); return true; }
         });
-
-        searchView.setOnFocusChangeListener((view, b) -> {
-            CustomFunctions.hideKeyboard(MainActivity.this, view);
-            searchView.clearFocus();
-        });
-
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        if (item.getItemId() == R.id.menu_settings_action) {
-
-            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-            intent.putExtra("activity_started_by", getPackageName());
-            startActivity(intent);
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
+    @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.menu_settings_action) { openSettings(); return true; }
+        return super.onOptionsItemSelected(item);
     }
-
-//__________________________________________________________________________________________________
-
-    private void checkPermissions() {
-
-        boolean arePermissionsGranted = ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
-
-        if (!arePermissionsGranted) {
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.RECORD_AUDIO,
-                    Manifest.permission.READ_CONTACTS
-            }, REQUEST_PERMISSION_CODE);
-        }
+    private void openSettings() { startActivity(new Intent(this, SettingsActivity.class)); }
+    @Override public void onRequestPermissionsResult(int request, @NonNull String[] permissions, @NonNull int[] results) {
+        super.onRequestPermissionsResult(request, permissions, results);
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED)
+            Toast.makeText(this, "Microphone permission is required to record. You can grant it from Android App info.", Toast.LENGTH_LONG).show();
+        updateStatus();
     }
-
-//__________________________________________________________________________________________________
-
-    @Override
-    public void onBackPressed() {
-        if (binding.getRoot().isDrawerOpen(GravityCompat.START)) {
-            binding.getRoot().closeDrawer(GravityCompat.START);
-        } else {
-            if (doubleBackPressed) {
-                super.onBackPressed();
-                finish();
-            } else {
-                this.doubleBackPressed = true;
-                Snackbar.make(binding.getRoot(), "Double back press to exit.", Snackbar.LENGTH_LONG).show();
-                new Handler(Looper.getMainLooper()).postDelayed(() -> doubleBackPressed = false, 2000);
-            }
-        }
+    @Override protected void onSaveInstanceState(@NonNull Bundle out) {
+        out.putBoolean("permissions_asked", permissionsAsked); out.putString("category", category);
+        super.onSaveInstanceState(out);
     }
-
-//__________________________________________________________________________________________________
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        String appearance = preferences.getString("appearance", "device_default");
-
-        if (!lastAppearance.equalsIgnoreCase(appearance)) {
-            recreate();
-        }
-
-        String shortOrderAfterReturn = preferences.getString("sort_by", "sort_by_new");
-
-        if (sortOrder != null && !sortOrder.equalsIgnoreCase(shortOrderAfterReturn)) {
-            recreate();
-        }
-    }
-
-
-//__________________________________________________________________________________________________
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-    }
-
-// _________________________________________________________________________________________________
-
-    @SuppressLint("BatteryLife")
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode != REQUEST_PERMISSION_CODE || grantResults.length < 2
-                || grantResults[0] != PackageManager.PERMISSION_GRANTED
-                || grantResults[1] != PackageManager.PERMISSION_GRANTED
-        ) {
-            Toast.makeText(this, "Please allow all permission", Toast.LENGTH_SHORT).show();
-
-            try {
-                startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName())));
-            } catch (Exception e) {
-                CustomFunctions.simpleAlert(this, "Error", getString(R.string.app_info_page_opening_failed_message), "OK", AppCompatResources.getDrawable(this, R.drawable.error));
-            }
-        } else {
-
-            Intent intent = new Intent();
-            String packageName = getPackageName();
-            PowerManager pm = (PowerManager) getSystemService(POWER_SERVICE);
-
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
-                intent.setData(Uri.parse("package:" + packageName));
-                startActivity(intent);
-            }
-        }
+    @Override protected void onDestroy() {
+        unregisterReceiver(changes); loader.shutdownNow();
+        searchBtn = null; settingsBtn = null; selectedItemsCountMenu = null;
+        super.onDestroy();
     }
 }

@@ -62,6 +62,7 @@ public class AudioPlayerDialog {
         this.activity = activity;
         this.file = file;
         dialog = new Dialog(activity);
+        zoro.benojir.callrecorder.helpers.AppLock.track(activity, dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_audio_player);
@@ -123,7 +124,7 @@ public class AudioPlayerDialog {
 
         //--------------------------------------------------------------------------------------
 
-        dialog.setOnCancelListener(dialog -> {
+        dialog.setOnDismissListener(dialog -> {
             if (exoPlayer != null) {
                 exoPlayer.stop();
                 exoPlayer.release();

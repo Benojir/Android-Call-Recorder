@@ -1,52 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:paddingHorizontal="14dp"
-    android:paddingVertical="14dp"
-    android:id="@+id/mainLayout"
-    tools:ignore="HardcodedText">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:orientation="vertical"
-        tools:ignore="HardcodedText,UselessParent">
-
-        <TextView
-            android:id="@+id/fileNameTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:singleLine="true"
-            android:text="+915454552522d Nur Alam"
-            android:textColor="?attr/textColor"
-            android:textSize="17sp" />
-
-        <TextView
-            android:id="@+id/fileInfoTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="25-10-2022    577.6 KB"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <ImageView
-        android:id="@+id/selectionIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:contentDescription="Selected"
-        android:src="@drawable/done_icon"
-        android:visibility="gone"
-        app:tint="@color/black" />
-
-</RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:orientation="vertical">
+    <TextView android:id="@+id/dateHeader" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingTop="16dp" android:paddingBottom="8dp" android:textAppearance="?attr/textAppearanceLabelLarge" android:textColor="?attr/colorOnSurfaceVariant" />
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp" app:cardCornerRadius="20dp" app:cardElevation="0dp"
+        app:cardBackgroundColor="?attr/colorSurfaceContainer" app:strokeWidth="0dp">
+        <RelativeLayout android:id="@+id/mainLayout" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:padding="16dp" android:clickable="true" android:focusable="true" android:foreground="?android:attr/selectableItemBackground">
+            <ImageView android:id="@+id/recordingAvatar" android:layout_width="40dp" android:layout_height="40dp"
+                android:layout_centerVertical="true" android:layout_alignParentStart="true" android:padding="8dp"
+                android:src="@drawable/keyboard_voice" android:importantForAccessibility="no" app:tint="?attr/colorPrimary" />
+            <ImageView android:id="@+id/selectionIcon" android:layout_width="24dp" android:layout_height="24dp"
+                android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:contentDescription="@string/select"
+                android:src="@drawable/done_icon" app:tint="?attr/colorPrimary" android:visibility="gone" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical"
+                android:layout_toEndOf="@id/recordingAvatar" android:layout_toStartOf="@id/selectionIcon" android:layout_marginStart="12dp">
+                <TextView android:id="@+id/recordingCategory" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:textAppearance="?attr/textAppearanceLabelSmall" android:textColor="?attr/colorPrimary" />
+                <TextView android:id="@+id/fileNameTV" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" android:maxLines="1" android:ellipsize="end"
+                    android:textAppearance="?attr/textAppearanceTitleMedium" android:textColor="?attr/colorOnSurface" />
+                <TextView android:id="@+id/fileInfoTV" android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp" android:maxLines="1" android:ellipsize="end"
+                    android:textAppearance="?attr/textAppearanceBodySmall" android:textColor="?attr/colorOnSurfaceVariant" />
+            </LinearLayout>
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>

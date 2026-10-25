@@ -20,6 +20,7 @@ public class MultipleFilesControlDialog {
         this.selectedItemsPositionsList = selectedItemsPositionsList;
 
         dialog = new Dialog(activity);
+        zoro.benojir.callrecorder.helpers.AppLock.track(activity, dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_multiple_selected_files_options);

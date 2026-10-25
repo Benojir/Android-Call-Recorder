@@ -6,41 +6,20 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
-import android.telephony.PhoneNumberUtils;
-import android.widget.Toast;
 
-import androidx.core.content.ContextCompat;
-
-public class ContactsHelper {
-
-    public static String getContactNameByPhoneNumber(Context context, String phoneNumber) {
-        String contactName = "";
-
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-
-            Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-            String[] projection = new String[]{ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER};
-
-            Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-
-            if (cursor != null) {
-                while (cursor.moveToNext()) {
-                    String storedNumber = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    if (PhoneNumberUtils.compare(storedNumber, phoneNumber)) {
-                        contactName = cursor.getString(cursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        break;
-                    }
-                }
-                cursor.close();
+public final class ContactsHelper {
+    private ContactsHelper() { }
+    public static String getContactNameByPhoneNumber(Context context, String number) {
+        if (number == null || number.isEmpty() || context.checkSelfPermission(Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+            return "Unknown";
+        Uri lookup = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(number));
+        try (Cursor cursor = context.getContentResolver().query(lookup,
+                new String[]{ContactsContract.PhoneLookup.DISPLAY_NAME}, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                String name = cursor.getString(0);
+                if (name != null && !name.isEmpty()) return name;
             }
-        } else {
-            Toast.makeText(context, "Please grant contacts permission", Toast.LENGTH_SHORT).show();
-        }
-
-        if (contactName.isEmpty()){
-            contactName = "Unknown";
-        }
-
-        return contactName;
+        } catch (RuntimeException ignored) { /* Contacts are optional and may be revoked mid-call. */ }
+        return "Unknown";
     }
 }

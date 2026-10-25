@@ -20,6 +20,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.content.FileProvider;
+import zoro.benojir.callrecorder.helpers.RecordingCategory;
+import java.util.Locale;
 
 import zoro.benojir.callrecorder.R;
 import zoro.benojir.callrecorder.activities.MainActivity;
@@ -50,8 +53,28 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
     public RecordingsListAdapter(Activity activity, JSONArray fileInfos) {
         this.activity = activity;
-        this.fileInfos = fileInfos;
+        this.fileInfos = new JSONArray();
+        for (int i = 0; i < fileInfos.length(); i++) this.fileInfos.put(fileInfos.opt(i));
         this.fileInfos2 = fileInfos;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void filterLibrary(String category, String query) {
+        selectedItemsPositionsList.clear();
+        selectedFilesUriList.clear();
+        isSelectionModeOn = false;
+        disableSelectedItemCountMenu();
+        String term = query.trim().toLowerCase(Locale.ROOT);
+        JSONArray result = new JSONArray();
+        for (int i = 0; i < fileInfos2.length(); i++) {
+            JSONObject item = fileInfos2.optJSONObject(i);
+            if (item != null && ("all".equals(category) || category.equals(item.optString("category", "phone")))
+                    && (item.optString("file_name").toLowerCase(Locale.ROOT).contains(term)
+                    || item.optString("modified_date").toLowerCase(Locale.ROOT).contains(term)
+                    || RecordingCategory.label(item.optString("category", "phone")).toLowerCase(Locale.ROOT).contains(term))) result.put(item);
+        }
+        fileInfos = result;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -66,9 +89,14 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
     public void onBindViewHolder(@NonNull MyCustomViewHolder holder, int position) {
 
         try {
-            String fileName = fileInfos.getJSONObject(holder.getAdapterPosition()).getString("file_name");
-            String modifiedDate = fileInfos.getJSONObject(holder.getAdapterPosition()).getString("modified_date");
-            String fileSize = fileInfos.getJSONObject(holder.getAdapterPosition()).getString("size");
+            JSONObject row = fileInfos.getJSONObject(position);
+            String fileName = row.optString("display_name", row.getString("file_name"));
+            String modifiedDate = row.getString("modified_date");
+            String fileSize = row.getString("size");
+            holder.categoryTV.setText(RecordingCategory.label(row.optString("category", "phone")));
+            String group = row.optString("date_group", "Recordings");
+            holder.dateHeader.setText(group);
+            holder.dateHeader.setVisibility(position == 0 || !group.equals(fileInfos.getJSONObject(position - 1).optString("date_group")) ? View.VISIBLE : View.GONE);
 
             String fileSizeAndDate = modifiedDate + "\t\t(" + fileSize + ")";
 
@@ -88,7 +116,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
                         selectedItemsPositionsList.remove((Integer) holder.getAdapterPosition());
                         removeUnselectedItemUI(holder);
-                        selectedFilesUriList.remove(Uri.fromFile(file));
+                        selectedFilesUriList.remove(fileUri(file));
                         enableSelectedItemCountMenu();
 
                         if (selectedItemsPositionsList.isEmpty()) {
@@ -98,7 +126,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                     } else {
                         selectedItemsPositionsList.add(holder.getAdapterPosition());
                         setSelectedItemUI(holder);
-                        selectedFilesUriList.add(Uri.fromFile(file));
+                        selectedFilesUriList.add(fileUri(file));
                         enableSelectedItemCountMenu();
                     }
                 } else {
@@ -150,7 +178,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                                 Intent intent = new Intent();
                                 intent.setAction(Intent.ACTION_SEND_MULTIPLE);
                                 intent.putExtra(Intent.EXTRA_SUBJECT, "Here are some files.");
-                                intent.setType("audio/mpeg");
+                                intent.setType("audio/*");
+                                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                 intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, selectedFilesUriList);
                                 activity.startActivity(Intent.createChooser(intent, "Share to"));
                             }
@@ -172,7 +201,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                                 isSelectionModeOn = true;
                                 selectedItemsPositionsList.add(holder.getAdapterPosition());
                                 setSelectedItemUI(holder);
-                                selectedFilesUriList.add(Uri.fromFile(file));
+                                selectedFilesUriList.add(fileUri(file));
                                 enableSelectedItemCountMenu();
                             }
 
@@ -190,6 +219,12 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                             public void onRenameOptionClicked(int position) {
                                 fileOptionsHelper.renameFile((fileInfoJObject, success) -> {
                                     if (success) {
+                                        for (int i = 0; i < fileInfos2.length(); i++) {
+                                            if (file.getAbsolutePath().equals(fileInfos2.optJSONObject(i).optString("absolute_path"))) {
+                                                fileInfos2.put(i, fileInfoJObject);
+                                                break;
+                                            }
+                                        }
                                         fileInfos.put(position, fileInfoJObject);
                                         notifyItemChanged(position);
                                     } else {
@@ -206,21 +241,19 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
                                     if (success) {
 
                                         fileInfos.remove(position);
-                                        notifyItemRemoved(position);
                                         selectedItemsPositionsList.remove((Integer) position);
 
-                                        new Thread(() -> {
-                                            for (int i = 0; i < fileInfos2.length(); i++) {
-                                                try {
-                                                    if (fileInfos2.getJSONObject(i).getString("absolute_path").equals(file1.getAbsolutePath())) {
-                                                        fileInfos2.remove(i);
-                                                        break;
-                                                    }
-                                                } catch (JSONException e) {
-                                                    Log.e(TAG, "onDeleteOptionClicked: ", e);
+                                        for (int i = 0; i < fileInfos2.length(); i++) {
+                                            try {
+                                                if (fileInfos2.getJSONObject(i).getString("absolute_path").equals(file1.getAbsolutePath())) {
+                                                    fileInfos2.remove(i);
+                                                    break;
                                                 }
+                                            } catch (JSONException e) {
+                                                Log.e(TAG, "onDeleteOptionClicked: ", e);
                                             }
-                                        }).start();
+                                        }
+                                        notifyDataSetChanged();
                                     } else {
                                         Toast.makeText(activity, "Failed to delete file.", Toast.LENGTH_SHORT).show();
                                     }
@@ -248,6 +281,13 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
     @Override
     public int getItemCount() {
         return fileInfos.length();
+    }
+
+    public int libraryCount() { return fileInfos2.length(); }
+    public long libraryBytes() {
+        long size = 0;
+        for (int i = 0; i < fileInfos2.length(); i++) size += fileInfos2.optJSONObject(i).optLong("bytes");
+        return size;
     }
 
     @Override
@@ -302,6 +342,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
         private final TextView fileNameTV;
         private final TextView fileInfoTV;
         private final ImageView selectionIcon;
+        private final TextView categoryTV;
+        private final TextView dateHeader;
 
         public MyCustomViewHolder(View itemView) {
             super(itemView);
@@ -309,6 +351,8 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             fileNameTV = itemView.findViewById(R.id.fileNameTV);
             fileInfoTV = itemView.findViewById(R.id.fileInfoTV);
             selectionIcon = itemView.findViewById(R.id.selectionIcon);
+            categoryTV = itemView.findViewById(R.id.recordingCategory);
+            dateHeader = itemView.findViewById(R.id.dateHeader);
         }
     }
 
@@ -338,7 +382,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
 
                 try {
                     File file = new File(fileInfos.getJSONObject(i).getString("absolute_path"));
-                    selectedFilesUriList.add(Uri.fromFile(file));
+                    selectedFilesUriList.add(fileUri(file));
                 } catch (Exception e) {
                     Log.e(TAG, "onBindViewHolder: ", e);
                 }
@@ -394,6 +438,7 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             pd.setCancelable(false);
             pd.setMessage("Deleting files...");
             pd.show();
+            zoro.benojir.callrecorder.helpers.AppLock.track(activity, pd);
 
             Collections.sort(selectedItemsPositionsList);
             new Thread(() -> {
@@ -432,16 +477,21 @@ public class RecordingsListAdapter extends RecyclerView.Adapter<RecordingsListAd
             }).start();
         });
         builder.setNegativeButton("Cancel", (dialogInterface, which) -> dialogInterface.dismiss());
-        builder.show();
+        zoro.benojir.callrecorder.helpers.AppLock.track(activity, builder.show());
     }
 
 //    ----------------------------------------------------------------------------------------------
 
     private void enableSelectedItemCountMenu() {
+        if (MainActivity.searchBtn == null || MainActivity.settingsBtn == null || MainActivity.selectedItemsCountMenu == null) return;
         MainActivity.searchBtn.setVisible(false);
         MainActivity.settingsBtn.setVisible(false);
         MainActivity.selectedItemsCountMenu.setVisible(true);
         MainActivity.selectedItemsCountMenu.setTitle(selectedItemsPositionsList.size() + "");
+    }
+
+    private Uri fileUri(File file) {
+        return FileProvider.getUriForFile(activity, activity.getPackageName() + ".provider", file);
     }
 
     private void disableSelectedItemCountMenu() {

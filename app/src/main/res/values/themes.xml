@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.VoiceRecorder" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/theme_color_light</item>
+        <item name="colorPrimary">#4057BB</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <item name="colorAccent">@color/theme_color_light</item>
@@ -17,6 +17,12 @@
         <item name="backgroundColor">@color/theme_color_light</item>
         <item name="textColor">@color/black</item>
         <item name="scrollButtonBackgroundColor">@color/theme_color_light</item>
+        <item name="colorPrimaryContainer">#E1E5FF</item>
+        <item name="colorOnPrimaryContainer">#17234B</item>
+        <item name="colorSurface">#FAF8FF</item>
+        <item name="colorSurfaceContainer">#F0EFF8</item>
+        <item name="colorOnSurface">#1B1B23</item>
+        <item name="colorOnSurfaceVariant">#484957</item>
     </style>
 
     <style name="CustomToolbarTitle" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">

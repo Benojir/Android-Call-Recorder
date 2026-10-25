@@ -62,7 +62,8 @@ public class SingleFileOptionsHelper {
         try {
             Intent intent = new Intent(Intent.ACTION_SEND);
             Uri uri = FileProvider.getUriForFile(activity, activity.getApplicationContext().getPackageName() + ".provider", file);
-            intent.setDataAndType(uri, "audio/mpeg");
+            intent.setDataAndType(uri, "audio/*");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.putExtra(Intent.EXTRA_STREAM, uri);
             activity.startActivity(Intent.createChooser(intent, "Share via"));
         } catch (Exception e) {
@@ -115,7 +116,11 @@ public class SingleFileOptionsHelper {
 
                     if (!newName.equalsIgnoreCase("")) {
 
-                        newName += ".m4a";
+                        if (newName.contains("/") || newName.contains("\\") || newName.equals(".") || newName.equals("..")) {
+                            Toast.makeText(activity, "Use a file name without path separators", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        newName += oldName.substring(oldName.lastIndexOf('.'));
 
                         File oldNameFile = new File(filePath);
                         File newNameFile = new File(oldNameFile.getParent().concat("/" + newName));
@@ -129,8 +134,11 @@ public class SingleFileOptionsHelper {
                             try {
                                 tempFileJObj.put("file_name", newName);
                                 tempFileJObj.put("size", CustomFunctions.fileSizeFormatter(newNameFile.length()));
+                                tempFileJObj.put("bytes", newNameFile.length());
                                 tempFileJObj.put("modified_date", CustomFunctions.timeFormatter(newNameFile.lastModified()));
                                 tempFileJObj.put("absolute_path", newNameFile.getAbsolutePath());
+                                tempFileJObj.put("category", "recordings".equals(newNameFile.getParentFile().getName()) ? "phone" : RecordingCategory.safeCategory(newNameFile.getParentFile().getName()));
+                                tempFileJObj.put("date_group", java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(new java.util.Date(newNameFile.lastModified())));
                                 listener.onComplete(tempFileJObj, true);
                             } catch (JSONException e) {
                                 try {
@@ -158,6 +166,7 @@ public class SingleFileOptionsHelper {
                 .create();
 
         dialog.show();
+        AppLock.track(activity, dialog);
     }
 
 //    ----------------------------------------------------------------------------------------------
@@ -180,7 +189,7 @@ public class SingleFileOptionsHelper {
             }
         });
         builder.setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.dismiss());
-        builder.show();
+        AppLock.track(activity, builder.show());
     }
 
 //    ----------------------------------------------------------------------------------------------

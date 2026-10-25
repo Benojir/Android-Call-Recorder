@@ -1,47 +1,50 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <PreferenceCategory app:title="@string/recording_header">
-
-        <SwitchPreferenceCompat
-            app:key="is_call_recording_enabled"
-            app:title="@string/call_recording_title"
-            app:summaryOff="@string/call_recording_summary_off"
-            app:summaryOn="@string/call_recording_summary_on" />
-
-        <SwitchPreferenceCompat
-            app:key="start_toast"
-            app:title="@string/start_toast"
-            app:dependency="is_call_recording_enabled"
-            app:summaryOn="@string/start_toast_summary_on"
-            app:summaryOff="@string/start_toast_summary_off"/>
-
-        <SwitchPreferenceCompat
-            app:key="saved_toast"
-            app:title="@string/saved_toast"
-            app:dependency="is_call_recording_enabled"
-            app:summaryOn="@string/saved_toast_summary_on"
-            app:summaryOff="@string/saved_toast_summary_off"/>
-
+    <PreferenceCategory app:title="Recording">
+        <SwitchPreferenceCompat app:key="is_call_recording_enabled" app:title="Automatic call recording"
+            app:summary="Record cellular calls when connected. Conference and held calls share one session." />
+        <Preference app:key="permissions" app:title="Permissions and installation status" />
+        <SwitchPreferenceCompat app:key="accessibility_recording" app:title="Non-root microphone recording"
+            app:summary="Optional accessibility support. Remote audio depends on your device; speakerphone may help." />
+        <Preference app:key="accessibility_settings" app:title="Enable accessibility service"
+            app:summary="Turn on Call Recorder microphone support in Android settings" />
+        <SwitchPreferenceCompat app:key="start_toast" app:title="Show recording started message" />
+        <SwitchPreferenceCompat app:key="saved_toast" app:title="Show recording saved message" />
     </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/general_header">
-
-        <ListPreference
-            app:defaultValue="device_default"
-            app:entries="@array/appearance_entries"
-            app:entryValues="@array/appearance_values"
-            app:key="appearance"
-            app:title="@string/theme_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <ListPreference
-            app:defaultValue="sort_by_new"
-            app:entries="@array/sort_by_entries"
-            app:entryValues="@array/sort_by_values"
-            app:key="sort_by"
-            app:title="@string/sort_by_title"
-            app:useSimpleSummaryProvider="true" />
-
+    <PreferenceCategory app:title="Audio configuration">
+        <Preference app:title="Choosing an audio source" app:summary="@string/audio_source_help" app:selectable="false" />
+        <ListPreference app:key="audio_source" app:title="Audio source" app:defaultValue="auto"
+            app:entries="@array/audio_source_entries" app:entryValues="@array/audio_source_values" app:useSimpleSummaryProvider="true" />
+        <ListPreference app:key="audio_encoder" app:title="Format and encoder" app:defaultValue="aac"
+            app:entries="@array/audio_encoder_entries" app:entryValues="@array/audio_encoder_values" app:useSimpleSummaryProvider="true" />
+        <ListPreference app:key="sample_rate" app:title="AAC sample rate" app:defaultValue="44100"
+            app:entries="@array/sample_rate_entries" app:entryValues="@array/sample_rate_values" app:useSimpleSummaryProvider="true" />
+        <ListPreference app:key="bit_rate" app:title="AAC bitrate" app:defaultValue="128000"
+            app:entries="@array/bit_rate_entries" app:entryValues="@array/bit_rate_values" app:useSimpleSummaryProvider="true" />
     </PreferenceCategory>
-
+    <PreferenceCategory app:title="Internet calls">
+        <SwitchPreferenceCompat app:key="voip_enabled" app:title="Detect VoIP calls" app:summary="@string/voip_limitations" />
+        <Preference app:key="notification_access" app:title="Enable notification access"
+            app:summary="Call notifications identify supported apps. Message content is not stored." />
+        <SwitchPreferenceCompat app:key="voip_whatsapp" app:title="WhatsApp / WhatsApp Business" app:defaultValue="true" app:dependency="voip_enabled" />
+        <SwitchPreferenceCompat app:key="voip_telegram" app:title="Telegram / Telegram X" app:defaultValue="true" app:dependency="voip_enabled" />
+        <SwitchPreferenceCompat app:key="voip_messenger" app:title="Facebook Messenger" app:defaultValue="true" app:dependency="voip_enabled" />
+        <SwitchPreferenceCompat app:key="voip_instagram" app:title="Instagram" app:defaultValue="true" app:dependency="voip_enabled" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Recording notification">
+        <SwitchPreferenceCompat app:key="notification_stop" app:title="Show Stop button" app:defaultValue="true"
+            app:summary="Stopping saves the file and prevents automatic restart during the same call" />
+        <SwitchPreferenceCompat app:key="notification_pause" app:title="Show Pause / Resume button" app:defaultValue="true"
+            app:summary="Pause keeps the same file; resume continues recording" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Privacy">
+        <SwitchPreferenceCompat app:key="app_lock_ui" app:title="App lock" app:persistent="false"
+            app:summary="Protect recordings and settings with an in-app PIN. Locks when the app enters the background." />
+        <Preference app:key="change_pin" app:title="Change app PIN" />
+    </PreferenceCategory>
+    <PreferenceCategory app:title="Library">
+        <ListPreference app:key="appearance" app:title="@string/theme_title" app:defaultValue="device_default"
+            app:entries="@array/appearance_entries" app:entryValues="@array/appearance_values" app:useSimpleSummaryProvider="true" />
+        <ListPreference app:key="sort_by" app:title="@string/sort_by_title" app:defaultValue="sort_by_new"
+            app:entries="@array/sort_by_entries" app:entryValues="@array/sort_by_values" app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 </PreferenceScreen>

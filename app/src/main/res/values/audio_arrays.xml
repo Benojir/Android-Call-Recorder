@@ -1,0 +1,10 @@
+<resources>
+    <string-array name="audio_source_entries"><item>Automatic (recommended)</item><item>Microphone</item><item>Voice recognition microphone</item><item>Voice communication microphone</item><item>Camcorder microphone</item><item>Voice call (privileged)</item><item>Voice uplink (privileged)</item><item>Voice downlink (privileged)</item></string-array>
+    <string-array name="audio_source_values"><item>auto</item><item>1</item><item>6</item><item>7</item><item>5</item><item>4</item><item>2</item><item>3</item></string-array>
+    <string-array name="audio_encoder_entries"><item>AAC / M4A</item><item>AMR narrowband / AMR (8 kHz, 12.2 kbps)</item><item>AMR wideband / AMR (16 kHz, 23.85 kbps)</item></string-array>
+    <string-array name="audio_encoder_values"><item>aac</item><item>amr_nb</item><item>amr_wb</item></string-array>
+    <string-array name="sample_rate_entries"><item>8 kHz</item><item>16 kHz</item><item>22.05 kHz</item><item>44.1 kHz</item><item>48 kHz</item></string-array>
+    <string-array name="sample_rate_values"><item>8000</item><item>16000</item><item>22050</item><item>44100</item><item>48000</item></string-array>
+    <string-array name="bit_rate_entries"><item>32 kbps</item><item>64 kbps</item><item>96 kbps</item><item>128 kbps</item><item>192 kbps</item><item>256 kbps</item></string-array>
+    <string-array name="bit_rate_values"><item>32000</item><item>64000</item><item>96000</item><item>128000</item><item>192000</item><item>256000</item></string-array>
+</resources>

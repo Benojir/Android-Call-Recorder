@@ -1,112 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="HardcodedText">
-
-        <include
-            android:id="@+id/toolbar_include"
-            layout="@layout/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar_include"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/nothingFoundDesignContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:layout_below="@id/toolbar_include"
-            tools:ignore="UseCompoundDrawables">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:contentDescription="Empty"
-                android:maxWidth="120dp"
-                android:maxHeight="120dp"
-                android:src="@drawable/empty_logo" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="No recordings"
-                android:textSize="18sp" />
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical" android:background="?attr/colorSurface">
+    <com.google.android.material.appbar.MaterialToolbar android:id="@+id/libraryToolbar"
+        android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
+        app:title="@string/app_name" app:subtitle="Private · On your device" />
+    <com.google.android.material.card.MaterialCardView android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginHorizontal="16dp" android:layout_marginTop="8dp"
+        app:cardCornerRadius="24dp" app:cardBackgroundColor="?attr/colorPrimaryContainer" app:strokeWidth="0dp" app:cardElevation="0dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="20dp" android:orientation="vertical">
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/library_subtitle"
+                android:textAppearance="?attr/textAppearanceLabelLarge" android:textColor="?attr/colorOnPrimaryContainer" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp"
+                android:text="@string/library_title" android:textAppearance="?attr/textAppearanceHeadlineMedium" android:textColor="?attr/colorOnPrimaryContainer" />
+            <TextView android:id="@+id/librarySummary" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="12dp" android:textAppearance="?attr/textAppearanceBodyMedium" android:textColor="?attr/colorOnPrimaryContainer" />
+            <TextView android:id="@+id/recorderStatus" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="6dp" android:textAppearance="?attr/textAppearanceBodySmall" android:textColor="?attr/colorOnPrimaryContainer" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="12dp">
+                <com.google.android.material.button.MaterialButton android:id="@+id/recordNow" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="@string/record_manual" app:icon="@drawable/keyboard_voice" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/pauseRecording" style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/pause_recording" android:visibility="gone" />
+                <com.google.android.material.button.MaterialButton android:id="@+id/stopRecording" style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:text="@string/stop_recording" android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/filesLoadingDesignContainer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:layout_below="@+id/toolbar_include"
-            android:orientation="vertical"
-            android:visibility="invisible">
-
-            <ProgressBar
-                android:id="@+id/totalFilesLoadingProgressBar"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:indeterminateTint="?attr/backgroundColor" />
-
-            <TextView
-                android:id="@+id/totalFilesLoadedTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:text="Files are sorting..."
-                android:textColor="?attr/textColor"
-                android:textSize="16sp" />
+    </com.google.android.material.card.MaterialCardView>
+    <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" android:scrollbars="none" android:fillViewport="true">
+        <com.google.android.material.chip.ChipGroup android:id="@+id/categoryChips" android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:paddingHorizontal="16dp" app:singleLine="true" app:singleSelection="true" app:selectionRequired="true" />
+    </HorizontalScrollView>
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/recyclerView" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:clipToPadding="false" android:paddingHorizontal="16dp" android:paddingBottom="24dp" />
+        <LinearLayout android:id="@+id/emptyLibrary" android:layout_width="match_parent" android:layout_height="match_parent"
+            android:orientation="vertical" android:gravity="center" android:padding="32dp">
+            <ImageView android:layout_width="64dp" android:layout_height="64dp" android:src="@drawable/keyboard_voice"
+                app:tint="?attr/colorPrimary" android:importantForAccessibility="no" />
+            <TextView android:id="@+id/emptyTitle" android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:layout_marginTop="20dp" android:gravity="center" android:text="@string/empty_library" android:textAppearance="?attr/textAppearanceTitleLarge" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp"
+                android:gravity="center" android:text="@string/empty_library_hint" android:textAppearance="?attr/textAppearanceBodyMedium" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/setupRecorder" style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:text="@string/setup_recorder" />
         </LinearLayout>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/scrollButtonTopBottomFAB"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginEnd="25dp"
-            android:layout_marginBottom="25dp"
-            android:adjustViewBounds="true"
-            android:backgroundTint="?attr/scrollButtonBackgroundColor"
-            android:contentDescription="Scroll to Top"
-            android:src="@drawable/arrow_upward"
-            android:visibility="gone"
-            app:borderWidth="0dp"
-            app:fabSize="normal"
-            app:tint="@color/white" />
-
-    </RelativeLayout>
-
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/navigationViewMenu"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:clickable="true"
-        android:fitsSystemWindows="false"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
-        app:headerLayout="@layout/header_layout"
-        app:menu="@menu/nav_drawer_menu"
-        tools:ignore="VisualLintBounds" />
-
-</androidx.drawerlayout.widget.DrawerLayout>
+        <ProgressBar android:id="@+id/libraryProgress" android:layout_width="48dp" android:layout_height="48dp"
+            android:layout_gravity="center" android:visibility="gone" android:contentDescription="@string/recordings_loading" />
+    </FrameLayout>
+</LinearLayout>

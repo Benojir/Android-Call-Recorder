@@ -30,6 +30,7 @@ public class FileInfoDialog {
         this.context = context;
 
         final Dialog dialog = new Dialog(context);
+        zoro.benojir.callrecorder.helpers.AppLock.track(context, dialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
         dialog.setContentView(R.layout.dialog_file_properties);

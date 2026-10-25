@@ -2,9 +2,9 @@
     <!-- Base application theme. -->
     <style name="Theme.VoiceRecorder" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/theme_color_light</item>
+        <item name="colorPrimary">#BDC3FF</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">#15266C</item>
         <item name="colorAccent">@color/theme_color_light</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -17,5 +17,11 @@
         <item name="backgroundColor">@color/theme_color_dark</item>
         <item name="textColor">@color/white</item>
         <item name="scrollButtonBackgroundColor">@color/theme_color_dark</item>
+        <item name="colorPrimaryContainer">#2C3D84</item>
+        <item name="colorOnPrimaryContainer">#E1E5FF</item>
+        <item name="colorSurface">#121318</item>
+        <item name="colorSurfaceContainer">#202128</item>
+        <item name="colorOnSurface">#E4E1EB</item>
+        <item name="colorOnSurfaceVariant">#C5C5D3</item>
     </style>
 </resources>

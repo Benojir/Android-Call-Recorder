@@ -1,0 +1,22 @@
+<resources>
+    <string name="accessibility_label">Call Recorder microphone support</string>
+    <string name="accessibility_description">Optional microphone sharing for call recording without root. Enable non-root recording inside Call Recorder as well. Phone state permission detects cellular calls. No screen content is read or stored. Android and your device may block remote audio; speakerphone may help. Recordings are stored locally.</string>
+    <string name="voip_listener_label">Call Recorder VoIP detection</string>
+    <string name="library_title">Your call library</string>
+    <string name="library_subtitle">Conversations, organised.</string>
+    <string name="empty_library">Your recordings will appear here</string>
+    <string name="empty_library_hint">Set up automatic recording in Settings, or start a recording below.</string>
+    <string name="record_manual">Record now</string>
+    <string name="pause_recording">Pause</string>
+    <string name="resume_recording">Resume</string>
+    <string name="stop_recording">Stop</string>
+    <string name="recording_summary">%1$d recordings · %2$s</string>
+    <string name="all_recordings">All</string>
+    <string name="setup_recorder">Recorder setup</string>
+    <string name="no_filter_results">No recordings in this category</string>
+    <string name="recording_category">Recording category</string>
+    <string name="recordings_loading">Loading recordings…</string>
+    <string name="voip_limitations">VoIP detection uses ongoing call notifications from selected apps and the active communication audio route. Apps may omit these notifications. Audio capture depends on your ROM and audio hardware. Automatic uses microphone for VoIP; privileged voice sources can be tried manually but do not guarantee remote audio. Playback capture cannot bypass call audio restrictions.</string>
+    <string name="non_root_limitations">Enable this option and the accessibility service, then allow microphone and phone state permissions. It records microphone audio where Android permits it; speakerphone may help capture the other person. Two-sided audio is not guaranteed. No screen text is accessed. Background restrictions may require tapping the call notification to start.</string>
+    <string name="audio_source_help">Automatic tries privileged voice-call audio for cellular calls, otherwise voice-recognition microphone, then microphone. Manual sources are tried exactly as selected. Protected voice sources require CAPTURE_AUDIO_OUTPUT; merely having root is not sufficient. Settings apply to the next recording.</string>
+</resources>
